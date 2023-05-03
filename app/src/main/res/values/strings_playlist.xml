@@ -1,0 +1,14 @@
+<resources>
+    <string name="pl_btn_save">Save Playlist</string>
+    <string name="pl_btn_close">Close</string>
+    <string name="pl_btn_add_local">Add Local Playlist</string>
+    <string name="pl_btn_add_new">New Playlist</string>
+    <string name="pl_btn_delete_current">Delete Playlist</string>
+    <string name="pl_hint_update_period">Update period</string>
+    <string name="pl_hint_current_playlist">Current Playlist</string>
+    <string name="pl_hint_name">Playlist name</string>
+    <string name="pl_hint_address">Url or Uri</string>
+
+
+    <string name="pl_settings_playlist">Settings Playlist</string>
+</resources>

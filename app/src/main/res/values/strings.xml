@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Video App</string>
+    <string name="storage_access">Storage Access</string>
+    <string name="storage_access_permission_text">Access for video files is required</string>
+    <string name="grant_access">Request for access</string>
+    <string name="settings">App Settings</string>
+
+    <string name="playlist_update_6_hours">6 Hours</string>
+    <string name="playlist_update_12_hours">12 Hours</string>
+    <string name="playlist_update_24_hours">24 Hours</string>
+    <string name="playlist_update_2_days">2 Days</string>
+    <string name="playlist_update_1_week">1 Week</string>
+    <string name="playlist_update_never">Never</string>
+</resources>
