@@ -1,3 +1,10 @@
+/*
+ *  Created by Medvediev Viktor [mvproject] on 03.05.23, 18:06
+ *  Copyright © 2023
+ *  last modified : 03.05.23, 17:52
+ *
+ */
+
 plugins {
     id("com.android.application") version "7.4.1" apply false
     id("com.android.library") version "7.4.1" apply false

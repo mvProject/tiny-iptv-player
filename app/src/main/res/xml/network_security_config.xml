@@ -1,4 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~  Created by Medvediev Viktor [mvproject] on 03.05.23, 18:06
+  ~  Copyright © 2023
+  ~  last modified : 03.05.23, 18:03
+  ~
+  -->
+
 <network-security-config>
     <base-config cleartextTrafficPermitted="false">
         <trust-anchors>

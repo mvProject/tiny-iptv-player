@@ -1,0 +1,109 @@
+CREATE TABLE PlaylistChannelEntity (
+    id INTEGER NOT NULL,
+    channelName TEXT NOT NULL,
+    channelLogo TEXT NOT NULL,
+    channelUrl TEXT NOT NULL,
+    channelGroup TEXT NOT NULL,
+    epgId INTEGER,
+    epgAlterId INTEGER,
+    parentListId INTEGER NOT NULL,
+
+    CONSTRAINT PK_ChannelEntity PRIMARY KEY (channelName,channelUrl,parentListId)
+);
+
+CREATE TABLE FavoriteChannelEntity (
+    id INTEGER NOT NULL,
+    channelId INTEGER NOT NULL,
+    parentListId INTEGER NOT NULL,
+
+    CONSTRAINT PK_FavoriteChannelEntity PRIMARY KEY (id,channelId,parentListId)
+);
+
+getChannelEntityById:
+SELECT *
+FROM PlaylistChannelEntity
+WHERE id = :id;
+
+getAllChannelEntitiesByListId:
+SELECT *
+FROM PlaylistChannelEntity
+WHERE parentListId = :id
+ORDER BY channelName;
+
+getAllChannelGroupsByListId:
+SELECT channelGroup
+FROM PlaylistChannelEntity
+WHERE parentListId = :id;
+
+getAllChannelCountByListId:
+SELECT COUNT(*)
+FROM PlaylistChannelEntity
+WHERE parentListId = :id;
+
+getGroupedChannelEntitiesByListId:
+SELECT *
+FROM PlaylistChannelEntity
+WHERE parentListId = :id AND channelGroup = :group
+ORDER BY channelName;
+
+getChannelsEntitiesByIds:
+SELECT *
+FROM PlaylistChannelEntity
+WHERE parentListId = :id AND id IN :ids
+ORDER BY channelName;
+
+getGroupedChannelCountByListId:
+SELECT
+channelGroup,
+COUNT(*)
+FROM PlaylistChannelEntity
+WHERE parentListId = :id AND channelGroup = :group;
+
+insertChannelEntity:
+INSERT OR REPLACE
+INTO PlaylistChannelEntity
+VALUES ?;
+
+deleteChannelEntityByListId:
+DELETE FROM PlaylistChannelEntity
+WHERE parentListId = :id;
+
+insertFavoriteChannelEntity:
+INSERT OR REPLACE
+INTO FavoriteChannelEntity
+VALUES ?;
+
+getFavoriteChannelsByListId:
+SELECT channelId
+FROM FavoriteChannelEntity
+WHERE parentListId = :id;
+
+deleteFavoriteChannelListId:
+DELETE FROM FavoriteChannelEntity
+WHERE parentListId = :id AND channelId = :channelId;
+
+getChannelsWithMainInfo:
+SELECT
+PlaylistChannelEntity.id AS channelId,
+PlaylistChannelEntity.channelName,
+PlaylistChannelEntity.channelUrl,
+PlaylistChannelEntity.channelGroup,
+PlaylistChannelEntity.parentListId,
+ChannelInfoMainEntity.channelInfoLogo,
+ChannelInfoMainEntity.channelInfoId
+FROM PlaylistChannelEntity
+INNER JOIN ChannelInfoMainEntity ON (ChannelInfoMainEntity.channelInfoName = PlaylistChannelEntity.channelName)
+WHERE parentListId = :id;
+
+getChannelsWithAlterInfo:
+SELECT
+PlaylistChannelEntity.id AS channelId,
+PlaylistChannelEntity.channelName,
+PlaylistChannelEntity.channelUrl,
+PlaylistChannelEntity.channelGroup,
+PlaylistChannelEntity.parentListId,
+ChannelInfoAlterEntity.channelInfoLogo,
+ChannelInfoAlterEntity.channelInfoId
+FROM PlaylistChannelEntity
+INNER JOIN ChannelInfoAlterEntity ON (ChannelInfoAlterEntity.channelInfoName LIKE '%' || PlaylistChannelEntity.channelName || '%')
+WHERE parentListId = :id AND channelLogo = "";

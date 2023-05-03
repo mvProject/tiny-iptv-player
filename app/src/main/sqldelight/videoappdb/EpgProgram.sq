@@ -1,0 +1,81 @@
+CREATE TABLE EpgProgramEntity (
+    channelId INTEGER NOT NULL,
+    programStart INTEGER NOT NULL,
+    programEnd INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+
+    CONSTRAINT PK_EpgProgram PRIMARY KEY (title,programStart, channelId)
+);
+
+CREATE INDEX EpgProgramEntity_id ON EpgProgramEntity(channelId);
+
+CREATE TABLE ChannelInfoMainEntity (
+    channelInfoId INTEGER NOT NULL,
+    channelInfoName TEXT NOT NULL,
+    channelInfoLogo TEXT NOT NULL,
+
+    CONSTRAINT PK_ChannelInfoMainEntity PRIMARY KEY (channelInfoName,channelInfoLogo)
+);
+
+CREATE TABLE ChannelInfoAlterEntity (
+    channelId TEXT NOT NULL,
+    channelInfoId INTEGER NOT NULL,
+    channelInfoName TEXT NOT NULL,
+    channelInfoLogo TEXT NOT NULL,
+
+    CONSTRAINT PK_ChannelInfoAlterEntity PRIMARY KEY (channelInfoName,channelInfoLogo)
+);
+
+insertChannelInfoMainEntity:
+INSERT OR REPLACE
+INTO ChannelInfoMainEntity
+VALUES ?;
+
+insertChannelInfoAlterEntity:
+INSERT OR REPLACE
+INTO ChannelInfoAlterEntity
+VALUES ?;
+
+
+getEpgProgramsById:
+SELECT *
+FROM EpgProgramEntity
+WHERE channelId = :id AND programEnd > :time;
+
+getEpgProgramsByIdWithLimit:
+SELECT *
+FROM EpgProgramEntity
+WHERE channelId = :id AND programEnd > :time
+LIMIT :limit;
+
+getEpgProgramsByIds:
+SELECT *
+FROM EpgProgramEntity
+WHERE channelId IN :ids AND programEnd > :time;
+
+getEpgInfoByAlterIds:
+SELECT *
+FROM ChannelInfoAlterEntity
+WHERE channelInfoId IN :ids;
+
+getAlterEpgInfo:
+SELECT *
+FROM ChannelInfoAlterEntity;
+
+getEpgPrograms:
+SELECT *
+FROM EpgProgramEntity;
+
+insertEpgProgram:
+INSERT OR REPLACE
+INTO EpgProgramEntity
+VALUES ?;
+
+deleteEpgProgramsById:
+DELETE FROM EpgProgramEntity
+WHERE channelId = :id;
+
+deleteEpgProgramsByIdTime:
+DELETE FROM EpgProgramEntity
+WHERE channelId = :id AND programStart < :time;
