@@ -7,29 +7,28 @@
 
 package com.mvproject.videoapp.components.channels
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -41,12 +40,12 @@ import com.mvproject.videoapp.ui.theme.dimens
 import io.github.aakira.napier.Napier
 
 @Composable
-fun ChannelListView(
+fun ChannelGridView(
     modifier: Modifier = Modifier,
     channel: PlaylistChannelWithEpg,
-    onEpgRequest: (PlaylistChannelWithEpg) -> Unit = {},
-    onFavoriteClick: (PlaylistChannelWithEpg) -> Unit = {}
+    onEpgRequest: (PlaylistChannelWithEpg) -> Unit = {}
 ) {
+
     SideEffect {
         Napier.e("testing PlaylistGroupDataItemView SideEffect item ${channel.channelName}")
     }
@@ -55,42 +54,52 @@ fun ChannelListView(
         onEpgRequest(channel)
     }
 
-    Row(
+    Column(
         modifier = modifier
-            .padding(MaterialTheme.dimens.size8),
-        verticalAlignment = Alignment.CenterVertically
+            .heightIn(140.dp)
+            .padding(MaterialTheme.dimens.size4),
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.SpaceEvenly
     ) {
-
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(channel.channelLogo)
-                .crossfade(true)
-                .placeholder(R.drawable.no_channel_logo)
-                .error(R.drawable.no_channel_logo)
-                .build(),
-            contentDescription = null,
-            modifier = Modifier
-                .size(MaterialTheme.dimens.size42)
-                .clip(RoundedCornerShape(MaterialTheme.dimens.size4))
-        )
-
-        Spacer(
-            modifier = Modifier
-                .width(MaterialTheme.dimens.size4)
-        )
-
-        Column(
-            Modifier.weight(MaterialTheme.dimens.weight5)
+        Row(
+            modifier = modifier
+                .padding(MaterialTheme.dimens.size8),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
+
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(channel.channelLogo)
+                    .crossfade(true)
+                    .placeholder(R.drawable.no_channel_logo)
+                    .error(R.drawable.no_channel_logo)
+                    .build(),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(MaterialTheme.dimens.size42)
+                    .clip(RoundedCornerShape(MaterialTheme.dimens.size4))
+            )
+
+            Spacer(
+                modifier = Modifier
+                    .width(MaterialTheme.dimens.size4)
+            )
+
             Text(
                 text = channel.channelName,
                 fontSize = 16.sp,
                 style = MaterialTheme.typography.h4,
                 modifier = Modifier
-                    .padding(start = MaterialTheme.dimens.size4),
+                    .fillMaxWidth()
+                    .padding(horizontal = MaterialTheme.dimens.size4),
                 color = MaterialTheme.colors.onBackground
             )
-
+        }
+        Row(
+            modifier = modifier
+                .padding(horizontal = MaterialTheme.dimens.size8),
+            verticalAlignment = Alignment.Top
+        ) {
             channel.channelEpg.forEach {
                 ScheduleEpgView(
                     modifier = Modifier
@@ -105,33 +114,17 @@ fun ChannelListView(
                     fontSize = 14.sp,
                     style = MaterialTheme.typography.h5,
                     modifier = Modifier
+                        .fillMaxWidth()
                         .padding(start = MaterialTheme.dimens.size4),
                     color = MaterialTheme.colors.onBackground
                 )
             }
         }
-
-        Spacer(
-            modifier = Modifier
-                .width(MaterialTheme.dimens.size4)
-        )
-
-        IconButton(
-            modifier = Modifier.weight(MaterialTheme.dimens.weight1),
-            onClick = { onFavoriteClick(channel) }
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.Favorite,
-                contentDescription = "PLAYBACK_TOGGLE",
-                tint = if (channel.isInFavorites) Color.Red else Color.DarkGray
-            )
-        }
     }
 }
 
-
 @Composable
 @Preview(showBackground = true)
-fun PreviewChannelListView() {
-    ChannelListView(channel = testProgram)
+fun PreviewChannelGridView() {
+    ChannelGridView(channel = testProgram)
 }

@@ -28,7 +28,7 @@ import com.mvproject.videoapp.ui.theme.dimens
 import com.mvproject.videoapp.utils.TimeUtils.convertTimeToReadableFormat
 
 @Composable
-fun ScheduleEpgView(
+fun PlayerEpgView(
     modifier: Modifier = Modifier,
     program: EpgProgram,
     textColor: Color = MaterialTheme.colors.onBackground,
@@ -59,16 +59,6 @@ fun ScheduleEpgView(
             .alpha(cardAlpha)
 
     ) {
-        if (isProgramProgressShow) {
-            LinearProgressIndicator(
-                progress = program.programProgress,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                color = textColor,
-                backgroundColor = backColor,
-            )
-        }
-
         val text = StringBuilder().apply {
             append(program.start.convertTimeToReadableFormat())
             append(" - ")
@@ -82,5 +72,15 @@ fun ScheduleEpgView(
             color = textColor,
             overflow = TextOverflow.Ellipsis
         )
+
+        if (isProgramProgressShow) {
+            LinearProgressIndicator(
+                progress = program.programProgress,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                color = textColor,
+                backgroundColor = backColor,
+            )
+        }
     }
 }
