@@ -1,11 +1,11 @@
 /*
- *  Created by Medvediev Viktor [mvproject] on 04.05.23, 10:59
+ *  Created by Medvediev Viktor [mvproject] on 04.05.23, 16:40
  *  Copyright © 2023
- *  last modified : 04.05.23, 10:58
+ *  last modified : 04.05.23, 10:59
  *
  */
 
-package com.mvproject.videoapp.presentation.settings
+package com.mvproject.videoapp.presentation.settings.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

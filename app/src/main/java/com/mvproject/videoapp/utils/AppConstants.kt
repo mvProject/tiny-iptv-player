@@ -25,4 +25,8 @@ object AppConstants {
     const val PLAYLIST_LOCAL_TYPE = "content://"
     const val PLAYLIST_REMOTE_TYPE = "http://"
     const val PLAYLIST_REMOTE_SEC_TYPE = "https://"
+
+
+    const val PROGRESS_STATE_COMPLETE = 1f
+    const val COUNT_ZERO_FLOAT = 0f
 }

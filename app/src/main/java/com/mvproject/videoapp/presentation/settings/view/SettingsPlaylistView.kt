@@ -1,11 +1,11 @@
 /*
- *  Created by Medvediev Viktor [mvproject] on 04.05.23, 10:59
+ *  Created by Medvediev Viktor [mvproject] on 04.05.23, 16:40
  *  Copyright © 2023
- *  last modified : 04.05.23, 10:58
+ *  last modified : 04.05.23, 10:59
  *
  */
 
-package com.mvproject.videoapp.presentation.settings
+package com.mvproject.videoapp.presentation.settings.view
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -39,6 +39,7 @@ import com.mvproject.videoapp.R
 import com.mvproject.videoapp.components.toolbars.AppBarWithBackNav
 import com.mvproject.videoapp.data.models.playlist.Playlist
 import com.mvproject.videoapp.navigation.PlaylistScreenRoute
+import com.mvproject.videoapp.presentation.settings.viewmodel.SettingsPlaylistViewModel
 import com.mvproject.videoapp.ui.theme.dimens
 import com.mvproject.videoapp.utils.AppConstants.EMPTY_STRING
 

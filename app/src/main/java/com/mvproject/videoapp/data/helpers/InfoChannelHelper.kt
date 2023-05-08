@@ -30,7 +30,7 @@ class InfoChannelHelper(
         Napier.i("testing checkPlaylistChannelsInfo complete")
     }
 
-    //todo perform after epg info add
+    // todo perform after epg info add
     suspend fun checkAllPlaylistsChannelsInfo() {
         val allPlaylists = playlistsRepository.getAllPlaylists().map { it.id }
         checkAllPlaylistMainInfo(playlistIds = allPlaylists)

@@ -9,7 +9,7 @@ package com.mvproject.videoapp.navigation
 
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.androidx.AndroidScreen
-import com.mvproject.videoapp.presentation.settings.SettingsEpgView
+import com.mvproject.videoapp.presentation.settings.view.SettingsEpgView
 
 class SettingsScreenEpgRoute : AndroidScreen() {
 

@@ -64,6 +64,7 @@ data class Dimens(
     val weight10: Float = 10f,
 
     val fraction50: Float = 0.5f,
+    val fraction60: Float = 0.6f,
     val fraction70: Float = 0.7f,
     val fraction80: Float = 0.8f,
     val fraction90: Float = 0.9f,

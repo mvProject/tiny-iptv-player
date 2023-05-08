@@ -5,7 +5,7 @@
  *
  */
 
-package com.mvproject.videoapp.presentation.settings
+package com.mvproject.videoapp.presentation.settings.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

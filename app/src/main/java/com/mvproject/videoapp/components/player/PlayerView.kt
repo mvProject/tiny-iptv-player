@@ -10,6 +10,7 @@ package com.mvproject.videoapp.components.player
 import android.view.SurfaceView
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.SideEffect
@@ -21,28 +22,39 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.media3.common.Player
 import com.mvproject.videoapp.components.modifiers.adaptiveLayout
+import com.mvproject.videoapp.components.modifiers.defaultPlayerHorizontalGestures
 import com.mvproject.videoapp.components.modifiers.defaultPlayerTapGestures
+import com.mvproject.videoapp.components.modifiers.defaultPlayerVerticalGestures
+import com.mvproject.videoapp.data.enums.player.PlayerCommands
 import com.mvproject.videoapp.data.enums.player.PlayerUICommands
+import com.mvproject.videoapp.data.enums.player.ViewSettingsRequest
+import com.mvproject.videoapp.data.models.epg.EpgProgram
 import com.mvproject.videoapp.presentation.player.VideoViewViewModel
 import io.github.aakira.napier.Napier
 
 @Composable
-fun VideoPlayerView(
+fun PlayerView(
     modifier: Modifier = Modifier,
     playerState: VideoViewViewModel.ControlUIState,
+    programs: List<EpgProgram>,
     player: Player,
+    onViewSettingsAction: (action: ViewSettingsRequest) -> Unit = {},
+    onPlayerCommand: (command: PlayerCommands) -> Unit = {},
     onPlayerUICommand: (command: PlayerUICommands) -> Unit = {},
-    controller: @Composable () -> Unit,
 ) {
+
     SideEffect {
-        Napier.w("testing VideoPlayerView SideEffect")
+        Napier.w("testing PlayerView SideEffect")
     }
 
     val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
 
     Box(
         modifier = modifier
-            .defaultPlayerTapGestures(onPlayerUICommand)
+            .fillMaxSize()
+            .defaultPlayerHorizontalGestures(onPlayerCommand = onPlayerCommand)
+            .defaultPlayerVerticalGestures(onAction = onViewSettingsAction)
+            .defaultPlayerTapGestures(onPlayerUICommand = onPlayerUICommand),
     ) {
         AndroidView(
             modifier = Modifier
@@ -68,7 +80,13 @@ fun VideoPlayerView(
             }
         )
 
-        controller()
+        PlayerControlsContainer(
+            modifier = Modifier.fillMaxSize(),
+            playerState = playerState,
+            programs = programs,
+            onPlayerCommand = onPlayerCommand,
+            onPlayerUICommand = onPlayerUICommand
+        )
     }
 
     DisposableEffect(lifecycleOwner) {

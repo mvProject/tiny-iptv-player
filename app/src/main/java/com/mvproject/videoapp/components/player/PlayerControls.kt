@@ -30,7 +30,7 @@ import com.mvproject.videoapp.data.enums.player.PlayerUICommands
 import com.mvproject.videoapp.presentation.player.VideoViewViewModel
 
 @Composable
-fun PlayerControl(
+fun PlayerControls(
     modifier: Modifier = Modifier,
     playerState: VideoViewViewModel.ControlUIState,
     onPlayerCommand: (command: PlayerCommands) -> Unit = {},

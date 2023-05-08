@@ -33,7 +33,7 @@ import com.mvproject.videoapp.utils.calculateBrightnessProgress
 import io.github.aakira.napier.Napier
 
 @Composable
-fun PlayControls(
+fun PlayerControlsContainer(
     modifier: Modifier,
     contentColor: Color = Color.White,
     playerState: VideoViewViewModel.ControlUIState,
@@ -43,7 +43,7 @@ fun PlayControls(
 ) {
 
     SideEffect {
-        Napier.d("testing PlayControls SideEffect")
+        Napier.d("testing PlayerControlsContainer SideEffect")
     }
 
     CompositionLocalProvider(LocalContentColor provides contentColor) {
@@ -133,7 +133,7 @@ fun PlayControls(
             exit = fadeOut()
         ) {
 
-            ProgramItem(
+            PlayerChannelView(
                 modifier = modifier,
                 channelName = playerState.currentChannel,
                 program = programs,

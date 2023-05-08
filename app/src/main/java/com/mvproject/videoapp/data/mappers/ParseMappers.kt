@@ -38,8 +38,8 @@ object ParseMappers {
 
     fun ChannelsInfoParseModel.toChannelInfoMainEntity() = with(this) {
         ChannelInfoMainEntity(
-            channelInfoId = id.toLong(),
-            channelInfoName = title,
+            channelInfoId = id.trim().toLong(),
+            channelInfoName = title.trim(),
             channelInfoLogo = logo,
         )
     }
@@ -48,7 +48,7 @@ object ParseMappers {
         ChannelInfoAlterEntity(
             channelId = channelId,
             channelInfoId = channelId.hashCode().toLong(),
-            channelInfoName = channelNames,
+            channelInfoName = channelNames.trim(),
             channelInfoLogo = channelIcon,
         )
     }

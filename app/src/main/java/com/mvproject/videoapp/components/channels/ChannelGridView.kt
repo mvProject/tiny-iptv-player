@@ -34,7 +34,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.mvproject.videoapp.PreviewTestData.testProgram
 import com.mvproject.videoapp.R
-import com.mvproject.videoapp.components.epg.ScheduleEpgView
+import com.mvproject.videoapp.components.epg.ScheduleEpgItemView
 import com.mvproject.videoapp.data.models.channels.PlaylistChannelWithEpg
 import com.mvproject.videoapp.ui.theme.dimens
 import io.github.aakira.napier.Napier
@@ -101,7 +101,7 @@ fun ChannelGridView(
             verticalAlignment = Alignment.Top
         ) {
             channel.channelEpg.forEach {
-                ScheduleEpgView(
+                ScheduleEpgItemView(
                     modifier = Modifier
                         .padding(start = MaterialTheme.dimens.size4),
                     program = it

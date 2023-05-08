@@ -173,6 +173,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
 
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.31.1-alpha")
+    implementation("com.google.accompanist:accompanist-adaptive:0.31.1-alpha")
+    implementation("androidx.compose.material3:material3-window-size-class:1.0.1")
 }
 
 sqldelight {

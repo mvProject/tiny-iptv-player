@@ -28,9 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.mvproject.videoapp.components.epg.ChannelEpgInfo
+import com.mvproject.videoapp.components.epg.PlayerEpgItemView
 import com.mvproject.videoapp.data.enums.player.PlayerCommands
 import com.mvproject.videoapp.data.enums.player.PlayerUICommands
 import com.mvproject.videoapp.data.models.epg.EpgProgram
@@ -39,7 +37,7 @@ import com.mvproject.videoapp.ui.theme.dimens
 import io.github.aakira.napier.Napier
 
 @Composable
-fun ProgramItem(
+fun PlayerChannelView(
     modifier: Modifier = Modifier,
     channelName: String,
     program: List<EpgProgram>,
@@ -52,7 +50,7 @@ fun ProgramItem(
     }
 
     Box(
-        modifier = modifier.alpha(0.7f)
+        modifier = modifier.alpha(MaterialTheme.dimens.alpha70)
     ) {
         Column(
             modifier = Modifier
@@ -60,7 +58,10 @@ fun ProgramItem(
                 .wrapContentHeight()
                 .background(
                     Color.DarkGray,
-                    shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                    shape = RoundedCornerShape(
+                        topStart = MaterialTheme.dimens.size16,
+                        topEnd = MaterialTheme.dimens.size16
+                    )
                 )
                 .align(Alignment.BottomCenter)
                 .padding(MaterialTheme.dimens.size4),
@@ -71,7 +72,7 @@ fun ProgramItem(
                 modifier = Modifier
                     .fillMaxWidth(),
                 text = channelName,
-                fontSize = 18.sp,
+                fontSize = MaterialTheme.dimens.font18,
                 color = Color.LightGray,
                 overflow = TextOverflow.Ellipsis,
                 textAlign = TextAlign.Center
@@ -82,8 +83,9 @@ fun ProgramItem(
                     .height(MaterialTheme.dimens.size2)
             )
 
-            program.forEach {
-                ChannelEpgInfo(it)
+            // todo user may select count
+            program.take(1).forEach {
+                PlayerEpgItemView(it)
             }
 
             Spacer(
@@ -91,7 +93,7 @@ fun ProgramItem(
                     .height(MaterialTheme.dimens.size2)
             )
 
-            PlayerControl(
+            PlayerControls(
                 modifier = Modifier
                     .fillMaxWidth(),
                 playerState = playerState,
@@ -102,43 +104,10 @@ fun ProgramItem(
     }
 }
 
-data class Program(
-    val currentProgram: String,
-    val nextProgram: String,
-    val dateTimeStart: Long,
-    val dateTimeEnd: Long,
-) {
-    val programProgress
-        get() = calculateProgramProgress(
-            startTime = dateTimeStart,
-            endTime = dateTimeEnd
-        )
-}
-
-
-val programTest
-    get() : Program {
-        val diff = 5400000L
-        val start = System.currentTimeMillis() - 1200000L
-        val end = start + diff
-        return Program(
-            currentProgram = "CurrentProgram",
-            nextProgram = "Next Program",
-            dateTimeStart = start,
-            dateTimeEnd = end
-        )
-    }
-const val ROTATION_STATE_UP = 180f
-const val ROTATION_STATE_DOWN = 0f
-const val ANIM_DURATION_300 = 300
-const val PROGRESS_STATE_COMPLETE = 1f
-const val COUNT_ZERO_FLOAT = 0f
-
-
 @Preview(showBackground = true)
 @Composable
 fun ProgramViewPreview() {
-    ProgramItem(
+    PlayerChannelView(
         program = emptyList(),
         channelName = "Current Channel",
         playerState = VideoViewViewModel.ControlUIState(50, 15)
@@ -148,7 +117,7 @@ fun ProgramViewPreview() {
 @Preview(showBackground = true)
 @Composable
 fun ProgramViewPreviewAlter() {
-    ProgramItem(
+    PlayerChannelView(
         program = emptyList(),
         channelName = "Current Channel",
         playerState = VideoViewViewModel.ControlUIState(50, 15)

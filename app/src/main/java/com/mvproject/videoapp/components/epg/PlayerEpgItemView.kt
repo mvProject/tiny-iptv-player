@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.LinearProgressIndicator
@@ -29,14 +29,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mvproject.videoapp.components.player.COUNT_ZERO_FLOAT
-import com.mvproject.videoapp.components.player.PROGRESS_STATE_COMPLETE
 import com.mvproject.videoapp.data.models.epg.EpgProgram
 import com.mvproject.videoapp.ui.theme.dimens
+import com.mvproject.videoapp.utils.AppConstants.COUNT_ZERO_FLOAT
+import com.mvproject.videoapp.utils.AppConstants.PROGRESS_STATE_COMPLETE
 import com.mvproject.videoapp.utils.TimeUtils.convertTimeToReadableFormat
 
 @Composable
-fun ChannelEpgInfo(
+fun PlayerEpgItemView(
     program: EpgProgram
 ) {
     Column(
@@ -56,7 +56,7 @@ fun ChannelEpgInfo(
 
         Spacer(
             modifier = Modifier
-                .padding(vertical = 2.dp)
+                .height(2.dp)
         )
 
         val isProgramProgressShow by remember {
@@ -102,7 +102,5 @@ fun ChannelEpgInfo(
                 )
             }
         }
-
-
     }
 }

@@ -21,14 +21,14 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
-import com.mvproject.videoapp.components.player.COUNT_ZERO_FLOAT
-import com.mvproject.videoapp.components.player.PROGRESS_STATE_COMPLETE
 import com.mvproject.videoapp.data.models.epg.EpgProgram
 import com.mvproject.videoapp.ui.theme.dimens
+import com.mvproject.videoapp.utils.AppConstants.COUNT_ZERO_FLOAT
+import com.mvproject.videoapp.utils.AppConstants.PROGRESS_STATE_COMPLETE
 import com.mvproject.videoapp.utils.TimeUtils.convertTimeToReadableFormat
 
 @Composable
-fun PlayerEpgView(
+fun ScheduleEpgItemView(
     modifier: Modifier = Modifier,
     program: EpgProgram,
     textColor: Color = MaterialTheme.colors.onBackground,
@@ -59,6 +59,16 @@ fun PlayerEpgView(
             .alpha(cardAlpha)
 
     ) {
+        if (isProgramProgressShow) {
+            LinearProgressIndicator(
+                progress = program.programProgress,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                color = textColor,
+                backgroundColor = backColor,
+            )
+        }
+
         val text = StringBuilder().apply {
             append(program.start.convertTimeToReadableFormat())
             append(" - ")
@@ -72,15 +82,5 @@ fun PlayerEpgView(
             color = textColor,
             overflow = TextOverflow.Ellipsis
         )
-
-        if (isProgramProgressShow) {
-            LinearProgressIndicator(
-                progress = program.programProgress,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                color = textColor,
-                backgroundColor = backColor,
-            )
-        }
     }
 }

@@ -29,9 +29,8 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.MainActivity"
+            android:name=".presentation.main.view.MainActivity"
             android:exported="true"
-            android:screenOrientation="fullSensor"
             android:theme="@style/Theme.VideoApp">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
