@@ -12,6 +12,8 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.pm.ActivityInfo
 import android.view.View
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.ui.unit.Constraints
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -129,14 +131,14 @@ fun calculateProperBrightnessRange(value: Int): Int {
         value >= 30 -> 30
         else -> value
     }
-    Napier.i("calculateProperBrightnessRange value: $value, actualValue: $actualValue")
+//    Napier.i("calculateProperBrightnessRange value: $value, actualValue: $actualValue")
     return actualValue
 }
 
 fun calculateProperBrightnessValue(value: Int): Float {
     val d = 1f / 30
     val res = d * value
-    Napier.i("testing1 calculateProperBrightnessValue value: $value, res: $res")
+//    Napier.i("testing1 calculateProperBrightnessValue value: $value, res: $res")
     return res
 }
 
@@ -146,12 +148,18 @@ fun Activity.setBrightness(value: Float) {
     this.window.attributes = lp
 }
 
-fun Activity.setOrientation(isFullScreen: Boolean) {
-    Napier.e("testing1 setOrientation value: $isFullScreen")
-    requestedOrientation = if (isFullScreen) {
-        ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+fun Activity.setOrientation(windowSizeClass: WindowSizeClass, isFullScreen: Boolean = false) {
+    requestedOrientation = if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded) {
+        Napier.e("testing setOrientation is expanded: LANDSCAPE")
+        ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
     } else {
-        ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        if (isFullScreen) {
+            Napier.e("testing setOrientation isFullScreen:$isFullScreen: LANDSCAPE")
+            ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+        } else {
+            Napier.e("testing setOrientation isFullScreen:$isFullScreen: PORTRAIT")
+            ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+        }
     }
 }
 

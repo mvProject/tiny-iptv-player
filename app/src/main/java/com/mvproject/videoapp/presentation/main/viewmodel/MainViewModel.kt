@@ -5,7 +5,7 @@
  *
  */
 
-package com.mvproject.videoapp.presentation
+package com.mvproject.videoapp.presentation.main.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,6 +22,7 @@ class MainViewModel(
     fun prepareInfo() {
         viewModelScope.launch {
             epgManager.prepareEpgInfo()
+            infoChannelHelper.checkAllPlaylistsChannelsInfo()
         }
     }
 
@@ -34,12 +35,6 @@ class MainViewModel(
     fun loadAlterEpg() {
         viewModelScope.launch {
             epgManager.getAlterEpg()
-        }
-    }
-
-    fun checkAllPlaylistsChannelsInfo() {
-        viewModelScope.launch {
-            infoChannelHelper.checkAllPlaylistsChannelsInfo()
         }
     }
 }
