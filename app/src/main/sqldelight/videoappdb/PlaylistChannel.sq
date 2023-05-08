@@ -105,5 +105,5 @@ PlaylistChannelEntity.parentListId,
 ChannelInfoAlterEntity.channelInfoLogo,
 ChannelInfoAlterEntity.channelInfoId
 FROM PlaylistChannelEntity
-INNER JOIN ChannelInfoAlterEntity ON (ChannelInfoAlterEntity.channelInfoName LIKE '%' || PlaylistChannelEntity.channelName || '%')
-WHERE parentListId = :id AND channelLogo = "";
+INNER JOIN ChannelInfoAlterEntity ON (ChannelInfoAlterEntity.channelInfoName = PlaylistChannelEntity.channelName)
+WHERE parentListId = :id;

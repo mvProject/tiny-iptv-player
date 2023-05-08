@@ -29,6 +29,7 @@ class EpgManager(
     suspend fun getMainEpgData() {
         val epgDataResult = networkRepository.loadEpgData()
 
+        Napier.e("testing getMainEpgData start")
         val duration = measureTime {
             // EpgParser.parseTarGzEpg(
             //     data = epgDataResult,
@@ -56,7 +57,7 @@ class EpgManager(
                 )
             }
         }
-        Napier.e("testing getEpg duration sec ${duration.inWholeSeconds}, min  ${duration.inWholeMinutes}")
+        Napier.e("testing getMainEpgData duration sec ${duration.inWholeSeconds}, min  ${duration.inWholeMinutes}")
     }
 
 
@@ -66,7 +67,9 @@ class EpgManager(
 
     @OptIn(ExperimentalTime::class)
     suspend fun getAlterEpg() {
+        Napier.e("testing getAlterEpg start")
         val alterData = epgInfoRepository.getEpgInfoByAlterIds()
+        Napier.e("testing getAlterEpg alterDataCount:${alterData.count()}")
         val duration = measureTime {
             alterData.forEach {
                 val alterPrograms = try {

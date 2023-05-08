@@ -46,19 +46,39 @@ class EpgInfoRepository(
 
     private suspend fun updateChannelInfoAlterData() {
         val infoResult = networkRepository.loadAlterInfo().channels
-        insertChannelInfoAlterData(infoData = infoResult)
-        Napier.w("testing updateChannelInfoAlterData $infoResult")
+
+        val filtered =
+            infoResult.filter { it.channelId.isNotEmpty() && it.channelIcon.isNotEmpty() }
+
+        val properList = buildList {
+            filtered.forEach { chn ->
+                if (chn.channelNames.contains(" • ")) {
+                    val splitNames = chn.channelNames.split(" • ")
+                    splitNames.forEach { spl ->
+                        add(
+                            AvailableChannelParseModel(
+                                channelId = chn.channelId,
+                                channelIcon = chn.channelIcon,
+                                channelNames = spl
+                            )
+                        )
+                    }
+                } else add(chn)
+            }
+        }
+        insertChannelInfoAlterData(infoData = properList)
         preferenceRepository.setAlterInfoExist(state = true)
-        Napier.i("testing updateChannelInfoAlterData complete")
+        Napier.i("testing updateChannelInfoAlterData complete ${properList.count()}")
         // todo check available playlists and update (if not updated)
     }
 
     private suspend fun updateChannelInfoMainData() {
         val infoResult = parseChannelInfoMainData()
-        insertChannelInfoMainData(infoData = infoResult)
-        Napier.w("testing updateChannelInfoMainData $infoResult")
+        val filtered =
+            infoResult.filter { it.id.isNotEmpty() && it.logo.isNotEmpty() }
+        insertChannelInfoMainData(infoData = filtered)
         preferenceRepository.setMainInfoExist(state = true)
-        Napier.i("testing updateChannelInfoMainData complete")
+        Napier.i("testing updateChannelInfoMainData complete ${filtered.count()}")
         // todo check available playlists and update (if not updated)
     }
 
@@ -80,12 +100,11 @@ class EpgInfoRepository(
     private suspend fun insertChannelInfoMainData(infoData: List<ChannelsInfoParseModel>) {
         withContext(Dispatchers.IO) {
             queries.transaction {
+                queries.deleteChannelInfoMainEntities()
                 infoData.forEach { item ->
-                    if (item.id.isNotEmpty() && item.logo.isNotEmpty()) {
-                        queries.insertChannelInfoMainEntity(
-                            item.toChannelInfoMainEntity()
-                        )
-                    }
+                    queries.insertChannelInfoMainEntity(
+                        item.toChannelInfoMainEntity()
+                    )
                 }
             }
         }
@@ -94,12 +113,11 @@ class EpgInfoRepository(
     private suspend fun insertChannelInfoAlterData(infoData: List<AvailableChannelParseModel>) {
         withContext(Dispatchers.IO) {
             queries.transaction {
+                queries.deleteChannelInfoAlterEntities()
                 infoData.forEach { item ->
-                    if (item.channelId.isNotEmpty() && item.channelIcon.isNotEmpty()) {
-                        queries.insertChannelInfoAlterEntity(
-                            item.toChannelInfoAlterEntity()
-                        )
-                    }
+                    queries.insertChannelInfoAlterEntity(
+                        item.toChannelInfoAlterEntity()
+                    )
                 }
             }
         }

@@ -32,10 +32,16 @@ INSERT OR REPLACE
 INTO ChannelInfoMainEntity
 VALUES ?;
 
+deleteChannelInfoMainEntities:
+DELETE FROM ChannelInfoMainEntity;
+
 insertChannelInfoAlterEntity:
 INSERT OR REPLACE
 INTO ChannelInfoAlterEntity
 VALUES ?;
+
+deleteChannelInfoAlterEntities:
+DELETE FROM ChannelInfoAlterEntity;
 
 
 getEpgProgramsById:
@@ -71,6 +77,10 @@ insertEpgProgram:
 INSERT OR REPLACE
 INTO EpgProgramEntity
 VALUES ?;
+
+deleteEpgProgramsByIds:
+DELETE FROM EpgProgramEntity
+WHERE channelId IN :ids;
 
 deleteEpgProgramsById:
 DELETE FROM EpgProgramEntity
