@@ -87,6 +87,51 @@ class PreferenceRepository(private val dataStore: DataStore<Preferences>) {
     }.first()
 
 
+    suspend fun setEpgInfoLastUpdate(timestamp: Long) {
+        dataStore.edit { settings ->
+            settings[EPG_INFO_LAST_UPDATE] = timestamp
+        }
+    }
+
+    suspend fun getEpgInfoLastUpdate() = dataStore.data.map { preferences ->
+        preferences[EPG_INFO_LAST_UPDATE]
+    }.first()
+
+    suspend fun setPlaylistLastUpdate(playlistId: Long, timestamp: Long) {
+        dataStore.edit { settings ->
+            val playlistLastUpdateKey =
+                longPreferencesKey(PLAYLIST_LAST_UPDATE + playlistId.toString())
+            settings[playlistLastUpdateKey] = timestamp
+        }
+    }
+
+    suspend fun getPlaylistLastUpdate(playlistId: Long) = dataStore.data.map { preferences ->
+        val playlistLastUpdateKey =
+            longPreferencesKey(PLAYLIST_LAST_UPDATE + playlistId.toString())
+        preferences[playlistLastUpdateKey]
+    }.first()
+
+    suspend fun setMainEpgLastUpdate(timestamp: Long) {
+        dataStore.edit { settings ->
+            settings[EPG_MAIN_LAST_UPDATE] = timestamp
+        }
+    }
+
+    suspend fun getMainEpgLastUpdate() = dataStore.data.map { preferences ->
+        preferences[EPG_MAIN_LAST_UPDATE]
+    }.first()
+
+    suspend fun setAlterEpgLastUpdate(timestamp: Long) {
+        dataStore.edit { settings ->
+            settings[EPG_ALTER_LAST_UPDATE] = timestamp
+        }
+    }
+
+    suspend fun getAlterEpgLastUpdate() = dataStore.data.map { preferences ->
+        preferences[EPG_ALTER_LAST_UPDATE]
+    }.first()
+
+
     private companion object {
         val SELECTED_PLAYLIST = longPreferencesKey("SelectedPlaylist")
         val MAIN_INFO_EXIST = booleanPreferencesKey("MainInfoExist")
@@ -94,5 +139,10 @@ class PreferenceRepository(private val dataStore: DataStore<Preferences>) {
         val ALTER_INFO_EXIST = booleanPreferencesKey("MainInfoUsing")
         val ALTER_INFO_USE = booleanPreferencesKey("AlterInfoUsing")
         val CHANNELS_VIEW_TYPE = stringPreferencesKey("ChannelsViewType")
+
+        val EPG_INFO_LAST_UPDATE = longPreferencesKey("EpgInfoLastUpdate")
+        val EPG_MAIN_LAST_UPDATE = longPreferencesKey("EpgMainLastUpdate")
+        val EPG_ALTER_LAST_UPDATE = longPreferencesKey("EpgAlterLastUpdate")
+        const val PLAYLIST_LAST_UPDATE = "PlaylistLastUpdate"
     }
 }

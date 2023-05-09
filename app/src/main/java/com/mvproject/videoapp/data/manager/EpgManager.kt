@@ -7,22 +7,27 @@
 
 package com.mvproject.videoapp.data.manager
 
+import com.mvproject.videoapp.data.helpers.InfoChannelHelper
 import com.mvproject.videoapp.data.mappers.ParseMappers.asProgramEntities
 import com.mvproject.videoapp.data.mappers.ParseMappers.toEpgProgram
 import com.mvproject.videoapp.data.network.NetworkRepository
 import com.mvproject.videoapp.data.parser.EpgParser
 import com.mvproject.videoapp.data.repository.EpgInfoRepository
 import com.mvproject.videoapp.data.repository.EpgProgramRepository
+import com.mvproject.videoapp.data.repository.PreferenceRepository
 import com.mvproject.videoapp.utils.TimeUtils.actualDate
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.*
+import kotlinx.datetime.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 
 class EpgManager(
     private val networkRepository: NetworkRepository,
     private val epgProgramRepository: EpgProgramRepository,
-    private val epgInfoRepository: EpgInfoRepository
+    private val epgInfoRepository: EpgInfoRepository,
+    private val infoChannelHelper: InfoChannelHelper,
+    private val preferenceRepository: PreferenceRepository
 ) {
 
     @OptIn(ExperimentalTime::class)
@@ -58,11 +63,14 @@ class EpgManager(
             }
         }
         Napier.e("testing getMainEpgData duration sec ${duration.inWholeSeconds}, min  ${duration.inWholeMinutes}")
+        val currentTimestamp = Clock.System.now().toEpochMilliseconds()
+        preferenceRepository.setMainEpgLastUpdate(timestamp = currentTimestamp)
     }
 
 
     suspend fun prepareEpgInfo() {
         epgInfoRepository.prepareEpgInfo()
+        infoChannelHelper.checkAllPlaylistsChannelsInfo()
     }
 
     @OptIn(ExperimentalTime::class)
@@ -89,6 +97,8 @@ class EpgManager(
             }
         }
         Napier.e("testing getAlterEpg duration sec ${duration.inWholeSeconds}, min  ${duration.inWholeMinutes}")
+        val currentTimestamp = Clock.System.now().toEpochMilliseconds()
+        preferenceRepository.setAlterEpgLastUpdate(timestamp = currentTimestamp)
     }
 }
 

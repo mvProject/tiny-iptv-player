@@ -9,20 +9,16 @@ package com.mvproject.videoapp.presentation.main.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mvproject.videoapp.data.helpers.InfoChannelHelper
 import com.mvproject.videoapp.data.manager.EpgManager
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    private val epgManager: EpgManager,
-    private val infoChannelHelper: InfoChannelHelper,
-
-    ) : ViewModel() {
+    private val epgManager: EpgManager
+) : ViewModel() {
 
     fun prepareInfo() {
         viewModelScope.launch {
             epgManager.prepareEpgInfo()
-            infoChannelHelper.checkAllPlaylistsChannelsInfo()
         }
     }
 

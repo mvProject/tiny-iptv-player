@@ -12,6 +12,7 @@ import com.mvproject.videoapp.data.repository.PlaylistChannelsRepository
 import com.mvproject.videoapp.data.repository.PlaylistsRepository
 import com.mvproject.videoapp.data.repository.PreferenceRepository
 import io.github.aakira.napier.Napier
+import kotlinx.datetime.Clock
 
 class InfoChannelHelper(
     private val preferenceRepository: PreferenceRepository,
@@ -35,6 +36,9 @@ class InfoChannelHelper(
         val allPlaylists = playlistsRepository.getAllPlaylists().map { it.id }
         checkAllPlaylistMainInfo(playlistIds = allPlaylists)
         checkAllPlaylistAlterInfo(playlistIds = allPlaylists)
+
+        val currentTimestamp = Clock.System.now().toEpochMilliseconds()
+        preferenceRepository.setEpgInfoLastUpdate(timestamp = currentTimestamp)
         Napier.i("testing checkAllPlaylistsChannelsInfo complete")
     }
 
