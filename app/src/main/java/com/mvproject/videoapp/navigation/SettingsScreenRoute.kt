@@ -9,7 +9,7 @@ package com.mvproject.videoapp.navigation
 
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.androidx.AndroidScreen
-import com.mvproject.videoapp.presentation.settings.view.SettingsView
+import com.mvproject.videoapp.ui.screens.settings.view.SettingsView
 
 class SettingsScreenRoute : AndroidScreen() {
 

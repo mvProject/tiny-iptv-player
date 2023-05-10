@@ -7,12 +7,12 @@
 
 package com.mvproject.videoapp.di
 
-import com.mvproject.videoapp.presentation.PlaylistDataViewModel
-import com.mvproject.videoapp.presentation.PlaylistGroupDataViewModel
-import com.mvproject.videoapp.presentation.main.viewmodel.MainViewModel
-import com.mvproject.videoapp.presentation.player.VideoViewViewModel
-import com.mvproject.videoapp.presentation.playlist.AddPlayListViewModel
-import com.mvproject.videoapp.presentation.settings.viewmodel.SettingsPlaylistViewModel
+import com.mvproject.videoapp.ui.screens.PlaylistDataViewModel
+import com.mvproject.videoapp.ui.screens.PlaylistGroupDataViewModel
+import com.mvproject.videoapp.ui.screens.main.viewmodel.MainViewModel
+import com.mvproject.videoapp.ui.screens.player.VideoViewViewModel
+import com.mvproject.videoapp.ui.screens.playlist.AddPlayListViewModel
+import com.mvproject.videoapp.ui.screens.settings.viewmodel.SettingsPlaylistViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 

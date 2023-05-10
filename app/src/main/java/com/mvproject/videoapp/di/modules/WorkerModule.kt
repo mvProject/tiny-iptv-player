@@ -8,7 +8,9 @@
 package com.mvproject.videoapp.di.modules
 
 import com.mvproject.videoapp.data.helpers.SyncHelper
+import com.mvproject.videoapp.data.workers.AlterEpgUpdateWorker
 import com.mvproject.videoapp.data.workers.EpgInfoUpdateWorker
+import com.mvproject.videoapp.data.workers.MainEpgUpdateWorker
 import org.koin.androidx.workmanager.dsl.workerOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
@@ -16,4 +18,6 @@ import org.koin.dsl.module
 val workerModule = module {
     singleOf(::SyncHelper)
     workerOf(::EpgInfoUpdateWorker)
+    workerOf(::AlterEpgUpdateWorker)
+    workerOf(::MainEpgUpdateWorker)
 }

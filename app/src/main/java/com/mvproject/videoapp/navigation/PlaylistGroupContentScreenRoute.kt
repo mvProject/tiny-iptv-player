@@ -9,8 +9,8 @@ package com.mvproject.videoapp.navigation
 
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.androidx.AndroidScreen
-import com.mvproject.videoapp.presentation.PlaylistGroupDataMain
-import com.mvproject.videoapp.presentation.PlaylistGroupDataViewModel
+import com.mvproject.videoapp.ui.screens.PlaylistGroupDataMain
+import com.mvproject.videoapp.ui.screens.PlaylistGroupDataViewModel
 import org.koin.androidx.compose.getViewModel
 
 data class PlaylistGroupContentScreenRoute(

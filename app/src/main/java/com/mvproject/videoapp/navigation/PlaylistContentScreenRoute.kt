@@ -11,8 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.androidx.AndroidScreen
-import com.mvproject.videoapp.presentation.PlaylistDataViewModel
-import com.mvproject.videoapp.presentation.PlaylistGroupContent
+import com.mvproject.videoapp.ui.screens.PlaylistDataViewModel
+import com.mvproject.videoapp.ui.screens.PlaylistGroupContent
 import org.koin.androidx.compose.getViewModel
 
 class PlaylistContentScreenRoute : AndroidScreen() {

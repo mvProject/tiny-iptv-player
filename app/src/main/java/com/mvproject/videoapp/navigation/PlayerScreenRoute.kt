@@ -9,8 +9,8 @@ package com.mvproject.videoapp.navigation
 
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.androidx.AndroidScreen
-import com.mvproject.videoapp.presentation.player.VideoView
-import com.mvproject.videoapp.presentation.player.VideoViewViewModel
+import com.mvproject.videoapp.ui.screens.player.VideoView
+import com.mvproject.videoapp.ui.screens.player.VideoViewViewModel
 import io.github.aakira.napier.Napier
 import org.koin.androidx.compose.koinViewModel
 

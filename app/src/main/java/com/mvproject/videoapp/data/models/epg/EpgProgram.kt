@@ -7,7 +7,7 @@
 
 package com.mvproject.videoapp.data.models.epg
 
-import com.mvproject.videoapp.components.player.calculateProgramProgress
+import com.mvproject.videoapp.ui.components.player.calculateProgramProgress
 import com.mvproject.videoapp.utils.AppConstants
 
 data class EpgProgram(
