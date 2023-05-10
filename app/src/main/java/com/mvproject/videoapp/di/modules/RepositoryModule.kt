@@ -21,7 +21,4 @@ val repositoryModule = module {
     singleOf(::PlaylistChannelsRepository)
     singleOf(::EpgProgramRepository)
     singleOf(::EpgInfoRepository)
-    //single {
-    //    ChannelPagingDataSource(get(), get(), get(), get())
-    //}
 }
