@@ -11,15 +11,14 @@ import com.mvproject.videoapp.data.models.playlist.Playlist
 import com.mvproject.videoapp.data.repository.PlaylistChannelsRepository
 import com.mvproject.videoapp.data.repository.PlaylistsRepository
 import com.mvproject.videoapp.data.repository.PreferenceRepository
+import com.mvproject.videoapp.utils.TimeUtils.actualDate
 import io.github.aakira.napier.Napier
-import kotlinx.datetime.Clock
 
 class InfoChannelHelper(
     private val preferenceRepository: PreferenceRepository,
     private val playlistsRepository: PlaylistsRepository,
     private val playlistChannelsRepository: PlaylistChannelsRepository
 ) {
-    //todo perform after playlist
     suspend fun checkPlaylistChannelsInfo(playlist: Playlist) {
         Napier.i("testing isMainInfoUse:${playlist.isMainInfoUse}, isAlterInfoUse:${playlist.isAlterInfoUse}")
         if (playlist.isMainInfoUse) {
@@ -31,14 +30,12 @@ class InfoChannelHelper(
         Napier.i("testing checkPlaylistChannelsInfo complete")
     }
 
-    // todo perform after epg info add
     suspend fun checkAllPlaylistsChannelsInfo() {
         val allPlaylists = playlistsRepository.getAllPlaylists().map { it.id }
         checkAllPlaylistMainInfo(playlistIds = allPlaylists)
         checkAllPlaylistAlterInfo(playlistIds = allPlaylists)
 
-        val currentTimestamp = Clock.System.now().toEpochMilliseconds()
-        preferenceRepository.setEpgInfoLastUpdate(timestamp = currentTimestamp)
+        preferenceRepository.setEpgInfoLastUpdate(timestamp = actualDate)
         Napier.i("testing checkAllPlaylistsChannelsInfo complete")
     }
 

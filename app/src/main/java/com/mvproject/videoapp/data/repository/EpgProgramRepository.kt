@@ -11,7 +11,6 @@ import com.mvproject.videoapp.VideoAppDatabase
 import com.mvproject.videoapp.data.mappers.EntityMapper.toEpgProgram
 import com.mvproject.videoapp.data.mappers.EntityMapper.toEpgProgramEntity
 import com.mvproject.videoapp.data.models.epg.EpgProgram
-import com.mvproject.videoapp.utils.TimeUtils.actualDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -81,14 +80,13 @@ class EpgProgramRepository(private val db: VideoAppDatabase) {
     suspend fun insertEpgPrograms(programs: List<EpgProgram>) {
         withContext(Dispatchers.IO) {
             queries.transaction {
-                val forDelete = programs.map { it.channelId }
-                queries.deleteEpgProgramsByIds(ids = forDelete)
+                val deleteIds = programs.map { it.channelId }.toSet()
+                queries.deleteEpgProgramsByIds(ids = deleteIds)
+
                 programs.forEach { prg ->
-                    if (prg.start >= actualDate) {
-                        queries.insertEpgProgram(
-                            prg.toEpgProgramEntity()
-                        )
-                    }
+                    queries.insertEpgProgram(
+                        prg.toEpgProgramEntity()
+                    )
                 }
             }
         }

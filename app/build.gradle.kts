@@ -123,9 +123,13 @@ dependencies {
     implementation("androidx.compose.material:material")
     implementation("androidx.compose.material:material-icons-core")
     implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.compose.runtime:runtime-livedata")
+
+    implementation("androidx.compose.material3:material3-window-size-class:1.0.1")
 
     // DI
     implementation("io.insert-koin:koin-androidx-compose:3.4.3")
+    implementation("io.insert-koin:koin-androidx-workmanager:3.4.0")
 
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.5.3")
@@ -174,7 +178,9 @@ dependencies {
 
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.31.1-alpha")
     implementation("com.google.accompanist:accompanist-adaptive:0.31.1-alpha")
-    implementation("androidx.compose.material3:material3-window-size-class:1.0.1")
+
+
+    implementation("androidx.work:work-runtime-ktx:2.8.1")
 }
 
 sqldelight {

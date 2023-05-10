@@ -1,0 +1,13 @@
+<!--
+  ~  Created by Medvediev Viktor [mvproject] on 04.05.23, 10:59
+  ~  Copyright © 2023
+  ~  last modified : 04.05.23, 10:58
+  ~
+  -->
+
+<resources>
+    <string name="wrk_cancel">Cancel</string>
+    <string name="wrk_epg_update_title">Epg update</string>
+    <string name="wrk_msg_main_epg_update">Main epg provider</string>
+    <string name="wrk_msg_alter_epg_update">Alter epg provider</string>
+</resources>

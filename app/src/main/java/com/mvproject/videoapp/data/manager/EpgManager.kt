@@ -18,7 +18,6 @@ import com.mvproject.videoapp.data.repository.PreferenceRepository
 import com.mvproject.videoapp.utils.TimeUtils.actualDate
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.*
-import kotlinx.datetime.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 
@@ -29,7 +28,6 @@ class EpgManager(
     private val infoChannelHelper: InfoChannelHelper,
     private val preferenceRepository: PreferenceRepository
 ) {
-
     @OptIn(ExperimentalTime::class)
     suspend fun getMainEpgData() {
         val epgDataResult = networkRepository.loadEpgData()
@@ -63,8 +61,7 @@ class EpgManager(
             }
         }
         Napier.e("testing getMainEpgData duration sec ${duration.inWholeSeconds}, min  ${duration.inWholeMinutes}")
-        val currentTimestamp = Clock.System.now().toEpochMilliseconds()
-        preferenceRepository.setMainEpgLastUpdate(timestamp = currentTimestamp)
+        preferenceRepository.setMainEpgLastUpdate(timestamp = actualDate)
     }
 
 
@@ -79,26 +76,29 @@ class EpgManager(
         val alterData = epgInfoRepository.getEpgInfoByAlterIds()
         Napier.e("testing getAlterEpg alterDataCount:${alterData.count()}")
         val duration = measureTime {
-            alterData.forEach {
+            alterData.forEach { chn ->
                 val alterPrograms = try {
                     networkRepository
-                        .loadAlterChannel(it.channelId)
+                        .loadAlterChannel(chn.channelId)
                         .chPrograms
                 } catch (exc: Exception) {
                     Napier.e("error ${exc.localizedMessage}")
                     emptyList()
                 }
                 if (alterPrograms.isNotEmpty()) {
-                    val alterProgramsEntity = alterPrograms.asProgramEntities(it.channelAlterId)
+                    val alterProgramsEntities = alterPrograms.asProgramEntities(chn.channelAlterId)
+
+                    val actualAlterProgramsEntities = alterProgramsEntities
+                        .filter { it.start > actualDate }
+
                     withContext(Dispatchers.IO) {
-                        epgProgramRepository.insertEpgPrograms(alterProgramsEntity)
+                        epgProgramRepository.insertEpgPrograms(actualAlterProgramsEntities)
                     }
                 }
             }
         }
         Napier.e("testing getAlterEpg duration sec ${duration.inWholeSeconds}, min  ${duration.inWholeMinutes}")
-        val currentTimestamp = Clock.System.now().toEpochMilliseconds()
-        preferenceRepository.setAlterEpgLastUpdate(timestamp = currentTimestamp)
+        preferenceRepository.setAlterEpgLastUpdate(timestamp = actualDate)
     }
 }
 
