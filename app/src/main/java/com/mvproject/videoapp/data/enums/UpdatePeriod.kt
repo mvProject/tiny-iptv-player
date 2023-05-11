@@ -5,12 +5,12 @@
  *
  */
 
-package com.mvproject.videoapp.data.enums.playlist
+package com.mvproject.videoapp.data.enums
 
 import androidx.annotation.StringRes
 import com.mvproject.videoapp.R
 
-enum class PlaylistUpdatePeriod(val value: Int, @StringRes val title: Int) {
+enum class UpdatePeriod(val value: Int, @StringRes val title: Int) {
     NO_UPDATE(0, R.string.playlist_update_never),
     HOURS_6(1, R.string.playlist_update_6_hours),
     HOURS_12(2, R.string.playlist_update_12_hours),

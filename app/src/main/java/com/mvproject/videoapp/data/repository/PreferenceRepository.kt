@@ -11,15 +11,17 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.mvproject.videoapp.utils.AppConstants.INT_NO_VALUE
 import com.mvproject.videoapp.utils.AppConstants.LONG_NO_VALUE
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
-class PreferenceRepository(private val dataStore: DataStore<Preferences>) {
-
-
+class PreferenceRepository(
+    private val dataStore: DataStore<Preferences>
+) {
     suspend fun setCurrentPlaylistId(playlistId: Long) {
         dataStore.edit { settings ->
             settings[SELECTED_PLAYLIST] = playlistId
@@ -94,7 +96,7 @@ class PreferenceRepository(private val dataStore: DataStore<Preferences>) {
     }
 
     suspend fun getEpgInfoLastUpdate() = dataStore.data.map { preferences ->
-        preferences[EPG_INFO_LAST_UPDATE]
+        preferences[EPG_INFO_LAST_UPDATE] ?: LONG_NO_VALUE
     }.first()
 
     suspend fun setPlaylistLastUpdate(playlistId: Long, timestamp: Long) {
@@ -108,7 +110,7 @@ class PreferenceRepository(private val dataStore: DataStore<Preferences>) {
     suspend fun getPlaylistLastUpdate(playlistId: Long) = dataStore.data.map { preferences ->
         val playlistLastUpdateKey =
             longPreferencesKey(PLAYLIST_LAST_UPDATE + playlistId.toString())
-        preferences[playlistLastUpdateKey]
+        preferences[playlistLastUpdateKey] ?: LONG_NO_VALUE
     }.first()
 
     suspend fun setMainEpgLastUpdate(timestamp: Long) {
@@ -118,7 +120,7 @@ class PreferenceRepository(private val dataStore: DataStore<Preferences>) {
     }
 
     suspend fun getMainEpgLastUpdate() = dataStore.data.map { preferences ->
-        preferences[EPG_MAIN_LAST_UPDATE]
+        preferences[EPG_MAIN_LAST_UPDATE] ?: LONG_NO_VALUE
     }.first()
 
     suspend fun setAlterEpgLastUpdate(timestamp: Long) {
@@ -129,6 +131,38 @@ class PreferenceRepository(private val dataStore: DataStore<Preferences>) {
 
     suspend fun getAlterEpgLastUpdate() = dataStore.data.map { preferences ->
         preferences[EPG_ALTER_LAST_UPDATE]
+    }.first()
+
+
+    suspend fun setEpgInfoUpdatePeriod(type: Int) {
+        dataStore.edit { settings ->
+            settings[EPG_INFO_LAST_UPDATE_PERIOD] = type
+        }
+    }
+
+    suspend fun getEpgInfoUpdatePeriod() = dataStore.data.map { preferences ->
+        preferences[EPG_INFO_LAST_UPDATE_PERIOD] ?: INT_NO_VALUE
+    }.first()
+
+
+    suspend fun setMainEpgUpdatePeriod(type: Int) {
+        dataStore.edit { settings ->
+            settings[EPG_MAIN_LAST_UPDATE_PERIOD] = type
+        }
+    }
+
+    suspend fun getMainEpgUpdatePeriod() = dataStore.data.map { preferences ->
+        preferences[EPG_MAIN_LAST_UPDATE_PERIOD] ?: INT_NO_VALUE
+    }.first()
+
+    suspend fun setAlterEpgUpdatePeriod(type: Int) {
+        dataStore.edit { settings ->
+            settings[EPG_ALTER_LAST_UPDATE_PERIOD] = type
+        }
+    }
+
+    suspend fun getAlterEpgUpdatePeriod() = dataStore.data.map { preferences ->
+        preferences[EPG_ALTER_LAST_UPDATE_PERIOD] ?: INT_NO_VALUE
     }.first()
 
 
@@ -143,6 +177,11 @@ class PreferenceRepository(private val dataStore: DataStore<Preferences>) {
         val EPG_INFO_LAST_UPDATE = longPreferencesKey("EpgInfoLastUpdate")
         val EPG_MAIN_LAST_UPDATE = longPreferencesKey("EpgMainLastUpdate")
         val EPG_ALTER_LAST_UPDATE = longPreferencesKey("EpgAlterLastUpdate")
+
+        val EPG_INFO_LAST_UPDATE_PERIOD = intPreferencesKey("EpgInfoLastUpdatePeriod")
+        val EPG_MAIN_LAST_UPDATE_PERIOD = intPreferencesKey("EpgMainLastUpdatePeriod")
+        val EPG_ALTER_LAST_UPDATE_PERIOD = intPreferencesKey("EpgAlterLastUpdatePeriod")
+
         const val PLAYLIST_LAST_UPDATE = "PlaylistLastUpdate"
     }
 }

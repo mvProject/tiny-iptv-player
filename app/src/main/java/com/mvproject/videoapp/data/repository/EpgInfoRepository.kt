@@ -52,8 +52,8 @@ class EpgInfoRepository(
 
         val properList = buildList {
             filtered.forEach { chn ->
-                if (chn.channelNames.contains(" • ")) {
-                    val splitNames = chn.channelNames.split(" • ")
+                if (chn.channelNames.contains(CHANNEL_NAME_SPLIT_DELIMITER)) {
+                    val splitNames = chn.channelNames.split(CHANNEL_NAME_SPLIT_DELIMITER)
                     splitNames.forEach { spl ->
                         add(
                             AvailableChannelParseModel(
@@ -69,7 +69,6 @@ class EpgInfoRepository(
         insertChannelInfoAlterData(infoData = properList)
         preferenceRepository.setAlterInfoExist(state = true)
         Napier.i("testing updateChannelInfoAlterData complete ${properList.count()}")
-        // todo check available playlists and update (if not updated)
     }
 
     private suspend fun updateChannelInfoMainData() {
@@ -79,7 +78,6 @@ class EpgInfoRepository(
         insertChannelInfoMainData(infoData = filtered)
         preferenceRepository.setMainInfoExist(state = true)
         Napier.i("testing updateChannelInfoMainData complete ${filtered.count()}")
-        // todo check available playlists and update (if not updated)
     }
 
     private suspend fun parseChannelInfoMainData(): List<ChannelsInfoParseModel> {
@@ -121,5 +119,9 @@ class EpgInfoRepository(
                 }
             }
         }
+    }
+
+    private companion object {
+        const val CHANNEL_NAME_SPLIT_DELIMITER = " • "
     }
 }

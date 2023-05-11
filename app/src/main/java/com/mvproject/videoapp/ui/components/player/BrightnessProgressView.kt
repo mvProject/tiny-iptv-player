@@ -18,10 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.BrightnessHigh
-import androidx.compose.material.icons.rounded.BrightnessLow
-import androidx.compose.material.icons.rounded.BrightnessMedium
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
@@ -31,6 +27,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mvproject.videoapp.utils.getProperBrightnessIcon
 import io.github.aakira.napier.Napier
 
 @Composable
@@ -60,7 +57,7 @@ fun BrightnessProgressView(
         ) {
             Icon(
                 modifier = Modifier.size(48.dp),
-                imageVector = brightnessIcon(value()),
+                imageVector = getProperBrightnessIcon(value()),
                 tint = Color.LightGray,
                 contentDescription = null
             )
@@ -91,10 +88,4 @@ fun UpdateBrightnessProgressViewSecond() {
 @Composable
 fun UpdateBrightnessProgressViewThird() {
     BrightnessProgressView(value = { 28 })
-}
-
-fun brightnessIcon(value: Int) = when {
-    value < 35 -> Icons.Rounded.BrightnessLow
-    value > 65 -> Icons.Rounded.BrightnessHigh
-    else -> Icons.Rounded.BrightnessMedium
 }

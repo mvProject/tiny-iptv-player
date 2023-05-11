@@ -18,10 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.VolumeDown
-import androidx.compose.material.icons.rounded.VolumeMute
-import androidx.compose.material.icons.rounded.VolumeUp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
@@ -31,6 +27,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mvproject.videoapp.utils.getProperVolumeIcon
 import io.github.aakira.napier.Napier
 
 @Composable
@@ -60,7 +57,7 @@ fun VolumeProgressView(
         ) {
             Icon(
                 modifier = Modifier.size(48.dp),
-                imageVector = volumeIcon(value()),
+                imageVector = getProperVolumeIcon(value()),
                 tint = Color.LightGray,
                 contentDescription = null
             )
@@ -91,10 +88,4 @@ fun UpdateVolumeProgressViewSecond() {
 @Composable
 fun UpdateVolumeProgressViewThird() {
     VolumeProgressView(value = { 28 })
-}
-
-fun volumeIcon(value: Int) = when {
-    value < 35 -> Icons.Rounded.VolumeMute
-    value > 65 -> Icons.Rounded.VolumeUp
-    else -> Icons.Rounded.VolumeDown
 }

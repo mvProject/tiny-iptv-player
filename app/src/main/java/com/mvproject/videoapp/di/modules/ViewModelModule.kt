@@ -12,6 +12,7 @@ import com.mvproject.videoapp.ui.screens.PlaylistGroupDataViewModel
 import com.mvproject.videoapp.ui.screens.main.viewmodel.MainViewModel
 import com.mvproject.videoapp.ui.screens.player.VideoViewViewModel
 import com.mvproject.videoapp.ui.screens.playlist.AddPlayListViewModel
+import com.mvproject.videoapp.ui.screens.settings.viewmodel.EpgSettingsViewModel
 import com.mvproject.videoapp.ui.screens.settings.viewmodel.SettingsPlaylistViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
@@ -23,4 +24,5 @@ val viewModelModule = module {
     viewModelOf(::PlaylistGroupDataViewModel)
     viewModelOf(::PlaylistDataViewModel)
     viewModelOf(::MainViewModel)
+    viewModelOf(::EpgSettingsViewModel)
 }

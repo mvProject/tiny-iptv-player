@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -43,7 +44,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.mvproject.videoapp.R
-import com.mvproject.videoapp.data.enums.playlist.PlaylistUpdatePeriod
+import com.mvproject.videoapp.data.enums.UpdatePeriod
 import com.mvproject.videoapp.ui.components.menu.LargeDropdownMenu
 import com.mvproject.videoapp.ui.theme.VideoAppTheme
 import com.mvproject.videoapp.ui.theme.dimens
@@ -155,7 +156,7 @@ fun PlayListView(
                 }
 
                 Spacer(
-                    modifier = Modifier.padding(vertical = MaterialTheme.dimens.size8)
+                    modifier = Modifier.height(MaterialTheme.dimens.size8)
                 )
 
                 var selectedIndex by remember { mutableStateOf(INT_VALUE_ZERO) }
@@ -164,7 +165,7 @@ fun PlayListView(
                         .fillMaxWidth(),
                     enabled = !state.isLocal,
                     label = stringResource(id = R.string.pl_hint_update_period),
-                    items = PlaylistUpdatePeriod.values().map {
+                    items = UpdatePeriod.values().map {
                         stringResource(id = it.title)
                     },
                     selectedIndex = selectedIndex,
@@ -173,15 +174,8 @@ fun PlayListView(
                         onPlaylistAction(PlayListAction.ChangeUpdatePeriod(index))
                     }
                 )
-
-
-                /*                if (state.isSaving) {
-                                    CircularProgressIndicator(
-                                        //modifier = Modifier.align(Alignment.CenterHorizontally),
-                                        color = MaterialTheme.colors.onPrimary
-                                    )
-                                }*/
             }
+
             if (state.isSaving) {
                 CircularProgressIndicator(
                     color = MaterialTheme.colors.onPrimary

@@ -10,7 +10,7 @@ package com.mvproject.videoapp.ui.screens.playlist
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mvproject.videoapp.data.enums.playlist.PlaylistUpdatePeriod
+import com.mvproject.videoapp.data.enums.UpdatePeriod
 import com.mvproject.videoapp.data.manager.PlaylistManager
 import com.mvproject.videoapp.data.models.playlist.Playlist
 import com.mvproject.videoapp.utils.AppConstants.EMPTY_STRING
@@ -137,7 +137,7 @@ data class PlayListState(
     val listDisplayUri: String = EMPTY_STRING,
     val listUri: String = EMPTY_STRING,
     val isLocal: Boolean = false,
-    val updatePeriod: Int = PlaylistUpdatePeriod.NO_UPDATE.value,
+    val updatePeriod: Int = UpdatePeriod.NO_UPDATE.value,
     val lastUpdateDate: Long = LONG_VALUE_ZERO,
     val isSaving: Boolean = false,
     val isEdit: Boolean = false,

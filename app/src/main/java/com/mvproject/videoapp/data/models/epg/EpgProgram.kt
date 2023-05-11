@@ -7,8 +7,8 @@
 
 package com.mvproject.videoapp.data.models.epg
 
-import com.mvproject.videoapp.ui.components.player.calculateProgramProgress
 import com.mvproject.videoapp.utils.AppConstants
+import com.mvproject.videoapp.utils.calculateProgramProgress
 
 data class EpgProgram(
     val start: Long,

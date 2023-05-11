@@ -12,15 +12,17 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.mvproject.videoapp.R
 import com.mvproject.videoapp.navigation.SettingsScreenEpgRoute
 import com.mvproject.videoapp.navigation.SettingsScreenPlaylistRoute
 import com.mvproject.videoapp.ui.components.toolbars.AppBarWithBackNav
@@ -36,7 +38,7 @@ fun SettingsView() {
             .background(MaterialTheme.colors.background),
         topBar = {
             AppBarWithBackNav(
-                appBarTitle = "Settings",
+                appBarTitle = stringResource(id = R.string.scr_settings_title),
                 onBackClick = { navigator.pop() },
             )
         }
@@ -48,13 +50,13 @@ fun SettingsView() {
                 .padding(MaterialTheme.dimens.size8),
         ) {
             Text(
-                text = "Playlists Settings",
+                text = stringResource(id = R.string.scr_playlist_settings_title),
                 modifier = Modifier.clickable {
                     navigator.push(SettingsScreenPlaylistRoute())
                 }
             )
 
-            Spacer(modifier = Modifier.padding(vertical = 8.dp))
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.size12))
 
             Text(
                 text = "Playlists Update",
@@ -63,21 +65,12 @@ fun SettingsView() {
                 }
             )
 
-            Spacer(modifier = Modifier.padding(vertical = 8.dp))
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.size12))
 
             Text(
-                text = "Epg Settings",
+                text = stringResource(id = R.string.scr_epg_settings_title),
                 modifier = Modifier.clickable {
                     navigator.push(SettingsScreenEpgRoute())
-                }
-            )
-
-            Spacer(modifier = Modifier.padding(vertical = 8.dp))
-
-            Text(
-                text = "Epg Update",
-                modifier = Modifier.clickable {
-
                 }
             )
         }

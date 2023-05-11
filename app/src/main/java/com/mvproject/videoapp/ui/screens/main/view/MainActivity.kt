@@ -69,9 +69,11 @@ class MainActivity : ComponentActivity() {
 
             infoUpdateState?.let { states ->
                 if (states.isEmpty()) {
+                    Napier.w("testing infoUpdateState states.isEmpty")
                     viewModel.checkEpgInfoUpdate()
                 } else {
                     states.firstOrNull()?.let { info ->
+                        Napier.w("testing infoUpdateState state ${info.state}")
                         if (info.state != WorkInfo.State.RUNNING) {
                             viewModel.checkEpgInfoUpdate()
                         }
@@ -81,9 +83,11 @@ class MainActivity : ComponentActivity() {
 
             alterUpdateState?.let { states ->
                 if (states.isEmpty()) {
+                    Napier.w("testing alterUpdateState states.isEmpty")
                     viewModel.checkAlterEpgUpdate()
                 } else {
                     states.firstOrNull()?.let { info ->
+                        Napier.w("testing alterUpdateState state ${info.state}")
                         if (info.state != WorkInfo.State.RUNNING) {
                             viewModel.checkAlterEpgUpdate()
                         }
@@ -93,9 +97,11 @@ class MainActivity : ComponentActivity() {
 
             mainUpdateState?.let { states ->
                 if (states.isEmpty()) {
+                    Napier.w("testing mainUpdateState states.isEmpty")
                     viewModel.checkMainEpgUpdate()
                 } else {
                     states.firstOrNull()?.let { info ->
+                        Napier.w("testing mainUpdateState state ${info.state}")
                         if (info.state != WorkInfo.State.RUNNING) {
                             viewModel.checkMainEpgUpdate()
                         }

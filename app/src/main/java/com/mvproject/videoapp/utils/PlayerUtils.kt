@@ -12,6 +12,13 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.pm.ActivityInfo
 import android.view.View
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.BrightnessHigh
+import androidx.compose.material.icons.rounded.BrightnessLow
+import androidx.compose.material.icons.rounded.BrightnessMedium
+import androidx.compose.material.icons.rounded.VolumeDown
+import androidx.compose.material.icons.rounded.VolumeMute
+import androidx.compose.material.icons.rounded.VolumeUp
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.ui.unit.Constraints
@@ -20,10 +27,13 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.media3.common.VideoSize
 import com.mvproject.videoapp.data.enums.ResizeMode
+import com.mvproject.videoapp.data.enums.UpdatePeriod
 import io.github.aakira.napier.Napier
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toInstant
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 
 private const val MAX_ASPECT_RATIO_DIFFERENCE_FRACTION = 0.01f
@@ -226,5 +236,59 @@ fun String.isoStringToMillis(): Long {
         .toInstant(TimeUtils.timeZoneSource)
         .toEpochMilliseconds()
 }
+
+fun getProperVolumeIcon(value: Int) = when {
+    value < 35 -> Icons.Rounded.VolumeMute
+    value > 65 -> Icons.Rounded.VolumeUp
+    else -> Icons.Rounded.VolumeDown
+}
+
+fun getProperBrightnessIcon(value: Int) = when {
+    value < 35 -> Icons.Rounded.BrightnessLow
+    value > 65 -> Icons.Rounded.BrightnessHigh
+    else -> Icons.Rounded.BrightnessMedium
+}
+
+fun calculateProgramProgress(startTime: Long, endTime: Long): Float {
+    var progressValue = 0f
+    val currTime = System.currentTimeMillis()
+    if (currTime > startTime) {
+        val endValue = (endTime - startTime).toInt()
+        val spendValue = (currTime - startTime).toDouble()
+        progressValue = (spendValue / endValue).toFloat()
+    }
+    return progressValue
+}
+
+fun typeToDuration(type: Int): Long =
+    when (type) {
+        UpdatePeriod.NO_UPDATE.value -> {
+            AppConstants.LONG_NO_VALUE
+        }
+
+        UpdatePeriod.HOURS_6.value -> {
+            6.hours.inWholeMilliseconds
+        }
+
+        UpdatePeriod.HOURS_12.value -> {
+            12.hours.inWholeMilliseconds
+        }
+
+        UpdatePeriod.HOURS_24.value -> {
+            24.hours.inWholeMilliseconds
+        }
+
+        UpdatePeriod.DAYS_2.value -> {
+            2.days.inWholeMilliseconds
+        }
+
+        UpdatePeriod.WEEK_1.value -> {
+            7.days.inWholeMilliseconds
+        }
+
+        else -> {
+            AppConstants.LONG_NO_VALUE
+        }
+    }
 
 

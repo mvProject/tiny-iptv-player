@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -56,7 +57,7 @@ fun SettingsPlaylistView(
             .background(MaterialTheme.colors.background),
         topBar = {
             AppBarWithBackNav(
-                appBarTitle = stringResource(id = R.string.pl_settings_playlist),
+                appBarTitle = stringResource(id = R.string.scr_playlist_settings_title),
                 onBackClick = { navigator.pop() },
             )
         }
@@ -77,7 +78,7 @@ fun SettingsPlaylistView(
 
             Spacer(
                 modifier = Modifier
-                    .padding(vertical = MaterialTheme.dimens.size4)
+                    .height(MaterialTheme.dimens.size4)
                     .background(MaterialTheme.colors.primary)
             )
 
