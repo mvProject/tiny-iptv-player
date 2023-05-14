@@ -20,7 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.work.WorkInfo
 import cafe.adriel.voyager.navigator.Navigator
-import com.mvproject.videoapp.navigation.PlaylistContentScreenRoute
+import com.mvproject.videoapp.navigation.PlaylistDataRoute
 import com.mvproject.videoapp.ui.screens.main.viewmodel.MainViewModel
 import com.mvproject.videoapp.ui.theme.VideoAppTheme
 import com.mvproject.videoapp.utils.setOrientation
@@ -114,7 +114,7 @@ class MainActivity : ComponentActivity() {
 
             VideoAppTheme {
                 Navigator(
-                    screen = PlaylistContentScreenRoute(),
+                    screen = PlaylistDataRoute(),
                 )
             }
         }

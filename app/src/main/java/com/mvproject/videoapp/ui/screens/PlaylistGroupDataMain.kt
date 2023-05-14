@@ -43,6 +43,7 @@ import com.mvproject.videoapp.ui.components.channels.ChannelCardView
 import com.mvproject.videoapp.ui.components.channels.ChannelGridView
 import com.mvproject.videoapp.ui.components.channels.ChannelListView
 import com.mvproject.videoapp.ui.components.toolbars.AppBarWithSearch
+import com.mvproject.videoapp.ui.components.views.LoadingView
 import com.mvproject.videoapp.ui.theme.dimens
 import com.mvproject.videoapp.utils.AppConstants.INT_VALUE_1
 import io.github.aakira.napier.Napier
@@ -59,7 +60,7 @@ fun PlaylistGroupDataMain(
         Napier.e("testing PlaylistGroupDataMain SideEffect")
     }
 
-    LaunchedEffect(key1 = viewModel) {
+    LaunchedEffect(key1 = groupSelected) {
         viewModel.loadChannelsByGroups(groupSelected)
     }
 
@@ -149,6 +150,9 @@ fun PlaylistGroupDataMain(
                         }
                     }
                 )
+            }
+            if (viewState.isLoading) {
+                LoadingView()
             }
         }
     }

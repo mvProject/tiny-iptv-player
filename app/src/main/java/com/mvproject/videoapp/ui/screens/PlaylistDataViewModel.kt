@@ -13,6 +13,7 @@ import com.mvproject.videoapp.data.manager.PlaylistChannelManager
 import com.mvproject.videoapp.data.manager.PlaylistManager
 import com.mvproject.videoapp.data.models.channels.ChannelsGroup
 import com.mvproject.videoapp.data.models.playlist.Playlist
+import com.mvproject.videoapp.utils.AppConstants
 import com.mvproject.videoapp.utils.AppConstants.INT_NO_VALUE
 import com.mvproject.videoapp.utils.AppConstants.INT_VALUE_1
 import io.github.aakira.napier.Napier
@@ -41,7 +42,6 @@ class PlaylistDataViewModel(
                 currentPlaylists = playlists
 
                 val currentPlaylist = playlistManager.loadSelectedPlayList()
-                Napier.w("testing allPlaylistsFlow")
                 currentPlaylist?.let { id ->
                     val indexOfSelected = currentPlaylists.indexOf(id)
 
@@ -61,16 +61,23 @@ class PlaylistDataViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             playlistManager.currentPlaylistId.collect { id ->
                 Napier.w("testing flow currentPlaylistId $id")
-                val currentPlaylist = playlistManager.loadSelectedPlayList()
-                currentPlaylist?.let { currentId ->
-                    val indexOfSelected = currentPlaylists.indexOf(currentId)
+                if (id != AppConstants.LONG_NO_VALUE) {
+                    val currentPlaylist = playlistManager.loadSelectedPlayList()
+                    currentPlaylist?.let { currentId ->
+                        val indexOfSelected = currentPlaylists.indexOf(currentId)
 
-                    loadChannels()
+                        loadChannels()
 
-                    _playlistState.update { current ->
-                        current.copy(
-                            playlistSelectedIndex = indexOfSelected
-                        )
+                        _playlistState.update { current ->
+                            current.copy(
+                                playlistSelectedIndex = indexOfSelected
+                            )
+                        }
+                    }
+                } else {
+                    Napier.w("testing flow currentPlaylistId LONG_NO_VALUE")
+                    _playlistDataState.update { current ->
+                        current.copy(groups = emptyList(), isLoading = false)
                     }
                 }
             }
@@ -79,6 +86,9 @@ class PlaylistDataViewModel(
 
     private fun loadChannels() {
         Napier.w("testing loadChannels")
+        _playlistDataState.update { current ->
+            current.copy(isLoading = true)
+        }
         viewModelScope.launch(Dispatchers.IO) {
             val groups = playlistChannelManager.loadAllGroupsFromPlaylist()
             _playlistDataState.update { current ->
@@ -103,7 +113,10 @@ class PlaylistDataViewModel(
     data class PlaylistDataState(
         val groups: List<ChannelsGroup> = emptyList(),
         val isLoading: Boolean = false,
-    )
+    ) {
+        val dataIsEmpty
+            get() = !isLoading && groups.isEmpty()
+    }
 
     data class PlaylistState(
         val playlistSelectedIndex: Int = INT_NO_VALUE,

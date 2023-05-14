@@ -10,6 +10,7 @@ package com.mvproject.videoapp.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,7 +25,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -44,17 +44,18 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.mvproject.videoapp.R
 import com.mvproject.videoapp.data.models.channels.ChannelsGroup
+import com.mvproject.videoapp.navigation.PlaylistDetailRoute
 import com.mvproject.videoapp.navigation.PlaylistGroupContentScreenRoute
 import com.mvproject.videoapp.navigation.SettingsScreenRoute
 import com.mvproject.videoapp.ui.components.errors.NoItemsView
 import com.mvproject.videoapp.ui.components.menu.LargeDropdownMenu
 import com.mvproject.videoapp.ui.components.toolbars.AppBarWithSettings
+import com.mvproject.videoapp.ui.components.views.LoadingView
 import com.mvproject.videoapp.ui.theme.dimens
 import com.mvproject.videoapp.utils.AppConstants.INT_VALUE_ZERO
-import io.github.aakira.napier.Napier
 
 @Composable
-fun PlaylistGroupContent(
+fun PlaylistDataContentView(
     dataState: PlaylistDataViewModel.PlaylistDataState,
     playlistState: PlaylistDataViewModel.PlaylistState,
     onPlaylistChange: (Int) -> Unit
@@ -68,22 +69,20 @@ fun PlaylistGroupContent(
             AppBarWithSettings() {
                 navigator.push(SettingsScreenRoute())
             }
-        }) { paddingValues ->
-        Napier.w("testing PlaylistGroupContent isLoading: ${dataState.isLoading}")
-
-        Column(
+        }
+    ) { paddingValues ->
+        Box(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
-                .padding(MaterialTheme.dimens.size8),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
         ) {
-            if (dataState.isLoading) {
-                CircularProgressIndicator(
-                    color = MaterialTheme.colors.onPrimary
-                )
-            } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(MaterialTheme.dimens.size8),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
                 if (playlistState.isPlaylistSelectorVisible) {
                     var selectedIndex by remember {
                         mutableStateOf(playlistState.playlistSelectedIndex)
@@ -102,27 +101,33 @@ fun PlaylistGroupContent(
                     )
                 }
 
-                if (dataState.groups.isEmpty()) {
-                    NoItemsView(
-                        navigateTitle = "Press to add"
-                    )
-                } else {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .background(color = MaterialTheme.colors.background),
-                    ) {
-                        items(dataState.groups, key = { it.groupName }) { item ->
-                            PlaylistGroupItemView(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        navigator.push(PlaylistGroupContentScreenRoute(group = item.groupName))
-                                    }, group = item
-                            )
-                        }
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .background(color = MaterialTheme.colors.background),
+                ) {
+                    items(dataState.groups, key = { it.groupName }) { item ->
+                        PlaylistGroupItemView(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    navigator.push(PlaylistGroupContentScreenRoute(group = item.groupName))
+                                }, group = item
+                        )
                     }
                 }
+            }
+
+            if (dataState.isLoading) {
+                LoadingView()
+            }
+
+            if (dataState.dataIsEmpty) {
+                NoItemsView(modifier = Modifier.fillMaxSize(),
+                    navigateTitle = stringResource(id = R.string.pl_btn_add_first_playlist),
+                    onNavigateClick = {
+                        navigator.push(PlaylistDetailRoute())
+                    })
             }
         }
     }

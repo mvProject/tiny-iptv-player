@@ -48,7 +48,7 @@ class PlaylistGroupDataViewModel(
         if (viewState.value.currentGroup != group) {
             Napier.w("testing loadChannelsByGroups group:$group")
             _viewState.update {
-                it.copy(currentGroup = group)
+                it.copy(currentGroup = group, isLoading = true)
             }
             viewModelScope.launch(Dispatchers.IO) {
                 channels.addAll(playlistChannelManager.getChannelsByGroup(group)
@@ -56,6 +56,9 @@ class PlaylistGroupDataViewModel(
                         it.toPlaylistChannelWithEpg()
                     }
                 )
+                _viewState.update {
+                    it.copy(isLoading = false)
+                }
             }
         }
     }
@@ -87,16 +90,16 @@ class PlaylistGroupDataViewModel(
 
     fun toggleFavourites(item: PlaylistChannelWithEpg) {
         val channel = channels.firstOrNull { it.id == item.id }
-        channel?.let {
-            val index = channels.indexOf(it)
-            val isFavorite = it.isInFavorites
+        channel?.let { chn ->
+            val index = channels.indexOf(chn)
+            val isFavorite = chn.isInFavorites
             viewModelScope.launch {
-                channels[index] = it.copy(isInFavorites = !isFavorite)
+                channels[index] = chn.copy(isInFavorites = !isFavorite)
 
                 if (isFavorite) {
-                    playlistChannelManager.deleteChannelFromFavorites(it.id)
+                    playlistChannelManager.deleteChannelFromFavorites(chn.id)
                 } else {
-                    playlistChannelManager.addChannelToFavorites(it.id)
+                    playlistChannelManager.addChannelToFavorites(chn.id, chn.channelName)
                 }
 
                 loadFavorites()
