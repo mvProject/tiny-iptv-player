@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -32,12 +31,13 @@ import com.mvproject.videoapp.utils.AppConstants.EMPTY_STRING
 
 @Composable
 fun NoItemsView(
+    modifier: Modifier = Modifier,
     title: String = stringResource(id = R.string.msg_no_items_found),
     navigateTitle: String = EMPTY_STRING,
     onNavigateClick: () -> Unit = {}
 ) {
     Surface(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier,
         color = MaterialTheme.colors.primary
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -83,19 +83,5 @@ fun NoItemsView(
                 }
             }
         }
-    }
-}
-
-@Composable
-fun LoadingScreen() {
-    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-        CircularProgressIndicator(color = MaterialTheme.colors.onPrimary)
-    }
-}
-
-@Composable
-fun ErrorScreen(error: String) {
-    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-        Text(text = "Oops, $error!")
     }
 }

@@ -29,4 +29,6 @@ object AppConstants {
 
     const val PROGRESS_STATE_COMPLETE = 1f
     const val COUNT_ZERO_FLOAT = 0f
+
+    const val PLAYLIST_ID = "PLAYLIST_ID"
 }

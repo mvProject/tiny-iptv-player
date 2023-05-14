@@ -179,7 +179,6 @@ dependencies {
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.31.1-alpha")
     implementation("com.google.accompanist:accompanist-adaptive:0.31.1-alpha")
 
-
     implementation("androidx.work:work-runtime-ktx:2.8.1")
 }
 

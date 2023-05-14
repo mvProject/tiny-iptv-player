@@ -121,13 +121,14 @@ class PlaylistChannelManager(
         return playlistChannelsRepository.getFavouriteChannelsIds(listId = currentPlaylistId)
     }
 
-    suspend fun addChannelToFavorites(channelId: Long) {
+    suspend fun addChannelToFavorites(channelId: Long, channelName: String) {
         val id: Long = Random.nextLong()
         val currentPlaylistId = preferenceRepository.loadCurrentPlaylistId()
         Napier.w("testing addChannelToFavorites id:$id, channelId:$channelId, currentPlaylistId:$currentPlaylistId")
         playlistChannelsRepository.addChannelToFavorite(
             id = id,
             channelId = channelId,
+            channelName = channelName,
             listId = currentPlaylistId
         )
 

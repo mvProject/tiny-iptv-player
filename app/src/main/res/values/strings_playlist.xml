@@ -6,15 +6,16 @@
   -->
 
 <resources>
-    <string name="pl_btn_save">Save Playlist</string>
+    <string name="pl_msg_no_playlist">No playlists found</string>
+    <string name="pl_msg_playlist_details">Playlist details</string>
+    <string name="pl_btn_save">Save playlist</string>
     <string name="pl_btn_close">Close</string>
-    <string name="pl_btn_add_local">Add Local Playlist</string>
-    <string name="pl_btn_add_new">New Playlist</string>
-    <string name="pl_btn_delete_current">Delete Playlist</string>
+    <string name="pl_btn_add_first_playlist">Press to add playlist</string>
+    <string name="pl_btn_add_local">Add local playlist</string>
+    <string name="pl_btn_add_new">New playlist</string>
+    <string name="pl_btn_delete_current">Delete playlist</string>
     <string name="pl_hint_update_period">Update period</string>
-    <string name="pl_hint_current_playlist">Current Playlist</string>
+    <string name="pl_hint_current_playlist">Current playlist</string>
     <string name="pl_hint_name">Playlist name</string>
     <string name="pl_hint_address">Url or Uri</string>
-
-
 </resources>

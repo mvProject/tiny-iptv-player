@@ -9,6 +9,7 @@ package com.mvproject.videoapp.data.manager
 
 import com.mvproject.videoapp.data.helpers.InfoChannelHelper
 import com.mvproject.videoapp.data.helpers.PlaylistContentHelper
+import com.mvproject.videoapp.data.helpers.SyncHelper
 import com.mvproject.videoapp.data.models.playlist.Playlist
 import com.mvproject.videoapp.data.repository.PlaylistChannelsRepository
 import com.mvproject.videoapp.data.repository.PlaylistsRepository
@@ -22,6 +23,7 @@ class PlaylistManager(
     private val playlistChannelsRepository: PlaylistChannelsRepository,
     private val playlistContentHelper: PlaylistContentHelper,
     private val infoChannelHelper: InfoChannelHelper,
+    private val syncHelper: SyncHelper
 ) {
 
     val playlistCount
@@ -49,6 +51,13 @@ class PlaylistManager(
         checkPlaylistAsCurrent(playlist = playlist)
 
         infoChannelHelper.checkPlaylistChannelsInfo(playlist = playlist)
+
+        if (playlist.isRemote) {
+            syncHelper.scheduleChannelsUpdate(
+                playlistId = playlist.id,
+                updatePeriod = playlist.updatePeriod
+            )
+        }
     }
 
     suspend fun loadSelectedPlayList(): Playlist? {
@@ -63,11 +72,14 @@ class PlaylistManager(
     suspend fun deletePlaylist(playlistId: Long) {
         playlistsRepository.deletePlaylistById(id = playlistId)
         playlistChannelsRepository.deleteAllChannelByListId(listId = playlistId)
+        playlistChannelsRepository.deleteChannelFromFavoriteByList(listId = playlistId)
+        syncHelper.cancelScheduleChannelsUpdate(playlistId)
     }
 
-    private suspend fun savePlaylistData(playlist: Playlist) {
+    suspend fun savePlaylistData(playlist: Playlist) {
         val channels = playlistContentHelper.getPlaylistData(playlist)
         playlistChannelsRepository.insertChannels(channels)
+        playlistChannelsRepository.updateFavorites(channels)
         Napier.i("testing savePlaylistData inserted ${channels.count()}")
 
     }

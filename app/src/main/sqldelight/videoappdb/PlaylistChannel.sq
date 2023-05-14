@@ -11,13 +11,22 @@ CREATE TABLE PlaylistChannelEntity (
     CONSTRAINT PK_ChannelEntity PRIMARY KEY (channelName,channelUrl,parentListId)
 );
 
+CREATE INDEX PlaylistChannelEntity_parentListId ON PlaylistChannelEntity(parentListId);
+CREATE INDEX PlaylistChannelEntity_channelGroup ON PlaylistChannelEntity(channelGroup);
+CREATE INDEX PlaylistChannelEntity_id ON PlaylistChannelEntity(id);
+
 CREATE TABLE FavoriteChannelEntity (
     id INTEGER NOT NULL,
     channelId INTEGER NOT NULL,
+    channelName TEXT NOT NULL,
+    channelOrder INTEGER NOT NULL,
     parentListId INTEGER NOT NULL,
 
-    CONSTRAINT PK_FavoriteChannelEntity PRIMARY KEY (id,channelId,parentListId)
+    CONSTRAINT PK_FavoriteChannelEntity PRIMARY KEY (channelName,channelId,parentListId)
 );
+
+CREATE INDEX FavoriteChannelEntity_channelId ON FavoriteChannelEntity(channelId);
+CREATE INDEX FavoriteChannelEntity_parentListId ON FavoriteChannelEntity(parentListId);
 
 getChannelEntityById:
 SELECT *
@@ -78,9 +87,24 @@ SELECT channelId
 FROM FavoriteChannelEntity
 WHERE parentListId = :id;
 
-deleteFavoriteChannelListId:
+getFavoriteChannelsNames:
+SELECT channelName
+FROM FavoriteChannelEntity
+WHERE parentListId = :id;
+
+getFavoriteChannels:
+SELECT *
+FROM FavoriteChannelEntity
+WHERE parentListId = :id;
+
+deleteFavoriteChannelByChannelId:
 DELETE FROM FavoriteChannelEntity
 WHERE parentListId = :id AND channelId = :channelId;
+
+
+deleteFavoriteChannels:
+DELETE FROM FavoriteChannelEntity
+WHERE parentListId = :id;
 
 getChannelsWithMainInfo:
 SELECT

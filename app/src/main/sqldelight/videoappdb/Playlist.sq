@@ -9,6 +9,8 @@ CREATE TABLE PlaylistEntity (
     isRemote INTEGER NOT NULL
 );
 
+CREATE INDEX PlaylistEntity_id ON PlaylistEntity(id);
+
 getPlaylistEntityById:
 SELECT *
 FROM PlaylistEntity

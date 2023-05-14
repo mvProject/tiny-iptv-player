@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mvproject.videoapp.data.manager.PlaylistManager
 import com.mvproject.videoapp.data.models.playlist.Playlist
+import com.mvproject.videoapp.utils.AppConstants.LONG_NO_VALUE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,20 +30,21 @@ class SettingsPlaylistViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             playlistManager.allPlaylistsFlow.collect {
                 _playlistDataState.update { state ->
-                    state.copy(playlists = playlistManager.loadPlaylists())
+                    state.copy(playlists = playlistManager.loadPlaylists(), isLoading = false)
                 }
             }
         }
     }
 
-    fun deletePlaylist(playlistId: String?) {
-        playlistId?.toLongOrNull()?.let { id ->
+    fun deletePlaylist(playlistId: String) {
+        playlistId.toLongOrNull()?.let { id ->
             viewModelScope.launch {
                 val ids = playlistDataState.value.playlists.map { it.id }
                 val currentId = playlistManager.currentPlaylistId.first()
 
                 if (currentId == id) {
-                    playlistManager.setCurrentPlaylist(ids.first { it != currentId })
+                    playlistManager.setCurrentPlaylist(ids.firstOrNull { it != currentId }
+                        ?: LONG_NO_VALUE)
                 }
 
                 playlistManager.deletePlaylist(id)
@@ -53,5 +55,8 @@ class SettingsPlaylistViewModel(
     data class PlaylistSettingsState(
         val playlists: List<Playlist> = emptyList(),
         val isLoading: Boolean = true,
-    )
+    ) {
+        val dataIsEmpty
+            get() = !isLoading && playlists.isEmpty()
+    }
 }

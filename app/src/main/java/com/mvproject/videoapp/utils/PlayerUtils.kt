@@ -263,7 +263,7 @@ fun calculateProgramProgress(startTime: Long, endTime: Long): Float {
 fun typeToDuration(type: Int): Long =
     when (type) {
         UpdatePeriod.NO_UPDATE.value -> {
-            AppConstants.LONG_NO_VALUE
+            AppConstants.LONG_VALUE_ZERO
         }
 
         UpdatePeriod.HOURS_6.value -> {

@@ -9,6 +9,8 @@ CREATE TABLE EpgProgramEntity (
 );
 
 CREATE INDEX EpgProgramEntity_id ON EpgProgramEntity(channelId);
+CREATE INDEX EpgProgramEntity_end ON EpgProgramEntity(programEnd);
+CREATE INDEX EpgProgramEntity_start ON EpgProgramEntity(programStart);
 
 CREATE TABLE ChannelInfoMainEntity (
     channelInfoId INTEGER NOT NULL,
