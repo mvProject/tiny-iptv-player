@@ -18,4 +18,6 @@
     <string name="pl_hint_current_playlist">Current playlist</string>
     <string name="pl_hint_name">Playlist name</string>
     <string name="pl_hint_address">Url or Uri</string>
+    <string name="pl_chb_use_main_epg">use main epg source</string>
+    <string name="pl_chb_use_alter_epg">use alter epg source</string>
 </resources>

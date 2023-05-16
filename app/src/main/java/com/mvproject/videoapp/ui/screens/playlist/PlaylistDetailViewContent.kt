@@ -11,8 +11,10 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +25,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -200,6 +203,64 @@ fun PlaylistDetailViewContent(
                         onPlaylistAction(PlayListAction.ChangeUpdatePeriod(index))
                     }
                 )
+
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.size8))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            horizontal = MaterialTheme.dimens.size8,
+                            vertical = MaterialTheme.dimens.size2
+                        ),
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.size8),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .weight(MaterialTheme.dimens.weight1),
+                        text = stringResource(id = R.string.pl_chb_use_main_epg)
+                    )
+                    Switch(
+                        checked = state.isUsingMainEpg,
+                        onCheckedChange = { state ->
+                            onPlaylistAction(
+                                PlayListAction.ChangeMainEpgUsingState(
+                                    state
+                                )
+                            )
+                        }
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.size8))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            horizontal = MaterialTheme.dimens.size8,
+                            vertical = MaterialTheme.dimens.size2
+                        ),
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.size8),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .weight(MaterialTheme.dimens.weight1),
+                        text = stringResource(id = R.string.pl_chb_use_alter_epg)
+                    )
+                    Switch(
+                        checked = state.isUsingAlterEpg,
+                        onCheckedChange = { state ->
+                            onPlaylistAction(
+                                PlayListAction.ChangeAlterEpgUsingState(
+                                    state
+                                )
+                            )
+                        }
+                    )
+                }
             }
 
             if (state.isSaving) {

@@ -48,7 +48,9 @@ class AddPlayListViewModel(
                             isRemote = playlist.listUrl.isRemotePlaylist(),
                             listUri = playlist.listUrl,
                             lastUpdateDate = playlist.lastUpdateDate,
-                            updatePeriod = playlist.updatePeriod.toInt()
+                            updatePeriod = playlist.updatePeriod.toInt(),
+                            isUsingAlterEpg = playlist.isAlterInfoUse,
+                            isUsingMainEpg = playlist.isMainInfoUse
                         )
                     }
                 }
@@ -64,19 +66,32 @@ class AddPlayListViewModel(
 
             is PlayListAction.ChangeName -> {
                 _state.update { current ->
-                    current.copy(listName = action.newName)
+                    current.copy(isComplete = false, listName = action.newName)
                 }
             }
 
             is PlayListAction.ChangeUpdatePeriod -> {
                 _state.update { current ->
-                    current.copy(updatePeriod = action.period)
+                    current.copy(isComplete = false, updatePeriod = action.period)
+                }
+            }
+
+            is PlayListAction.ChangeMainEpgUsingState -> {
+                _state.update { current ->
+                    current.copy(isComplete = false, isUsingMainEpg = action.state)
+                }
+            }
+
+            is PlayListAction.ChangeAlterEpgUsingState -> {
+                _state.update { current ->
+                    current.copy(isComplete = false, isUsingAlterEpg = action.state)
                 }
             }
 
             is PlayListAction.ChangeUrl -> {
                 _state.update { current ->
                     current.copy(
+                        isComplete = false,
                         listUri = action.newUrl,
                         isLocal = action.newUrl.isLocalPlaylist(),
                         isRemote = action.newUrl.isRemotePlaylist()
@@ -107,7 +122,7 @@ class AddPlayListViewModel(
                     current.copy(isComplete = true, isSaving = false)
                 }
             }.onFailure {
-                Napier.e("testing savePlaylist error")
+                Napier.e("testing savePlaylist error ${it.localizedMessage}")
                 _state.update { current ->
                     current.copy(isComplete = false, isSaving = false)
                 }
@@ -127,6 +142,8 @@ data class PlayListState(
     val isSaving: Boolean = false,
     val isEdit: Boolean = false,
     val selectedId: Long = Random.nextLong(),
+    val isUsingMainEpg: Boolean = false,
+    val isUsingAlterEpg: Boolean = false,
     val isComplete: Boolean = false,
 ) {
 
@@ -140,7 +157,9 @@ data class PlayListState(
             listUrl = listUri,
             lastUpdateDate = lastUpdateDate,
             updatePeriod = updatePeriod.toLong(),
-            isRemoteSource = !isLocal
+            isRemoteSource = isRemote,
+            isMainInfoUse = isUsingMainEpg,
+            isAlterInfoUse = isUsingAlterEpg
         )
     }
 }
@@ -149,5 +168,7 @@ sealed class PlayListAction {
     data class ChangeName(val newName: String) : PlayListAction()
     data class ChangeUrl(val newUrl: String) : PlayListAction()
     data class ChangeUpdatePeriod(val period: Int) : PlayListAction()
+    data class ChangeMainEpgUsingState(val state: Boolean) : PlayListAction()
+    data class ChangeAlterEpgUsingState(val state: Boolean) : PlayListAction()
     object SavePlaylist : PlayListAction()
 }
