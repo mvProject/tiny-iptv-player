@@ -5,7 +5,7 @@
  *
  */
 
-package com.mvproject.videoapp.di
+package com.mvproject.videoapp.di.modules
 
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
@@ -36,8 +36,6 @@ val playerModule = module {
             .build()
 
         ExoPlayer.Builder(androidContext())
-            .setSeekForwardIncrementMs(10 * 1000)
-            .setSeekForwardIncrementMs(10 * 1000)
             .setRenderersFactory(renderersFactory)
             .setTrackSelector(trackSelector)
             .setAudioAttributes(audioAttributes, true)

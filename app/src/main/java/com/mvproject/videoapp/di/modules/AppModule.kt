@@ -5,7 +5,7 @@
  *
  */
 
-package com.mvproject.videoapp.di
+package com.mvproject.videoapp.di.modules
 
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory

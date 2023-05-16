@@ -5,7 +5,7 @@
  *
  */
 
-package com.mvproject.videoapp.di
+package com.mvproject.videoapp.di.modules
 
 import com.mvproject.videoapp.data.helpers.InfoChannelHelper
 import com.mvproject.videoapp.data.helpers.PlaylistContentHelper

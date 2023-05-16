@@ -14,6 +14,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.mvproject.videoapp.utils.AppConstants.INT_VALUE_5
 import com.mvproject.videoapp.utils.AppConstants.INT_VALUE_ZERO
 import com.mvproject.videoapp.utils.AppConstants.LONG_NO_VALUE
 import kotlinx.coroutines.flow.first
@@ -141,7 +142,7 @@ class PreferenceRepository(
     }
 
     suspend fun getEpgInfoUpdatePeriod() = dataStore.data.map { preferences ->
-        preferences[EPG_INFO_LAST_UPDATE_PERIOD] ?: INT_VALUE_ZERO
+        preferences[EPG_INFO_LAST_UPDATE_PERIOD] ?: INT_VALUE_5
     }.first()
 
 

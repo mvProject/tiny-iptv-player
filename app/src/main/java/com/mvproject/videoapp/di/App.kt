@@ -8,6 +8,13 @@
 package com.mvproject.videoapp.di
 
 import android.app.Application
+import com.mvproject.videoapp.di.modules.appModule
+import com.mvproject.videoapp.di.modules.helperModule
+import com.mvproject.videoapp.di.modules.managerModule
+import com.mvproject.videoapp.di.modules.networkModule
+import com.mvproject.videoapp.di.modules.playerModule
+import com.mvproject.videoapp.di.modules.repositoryModule
+import com.mvproject.videoapp.di.modules.viewModelModule
 import com.mvproject.videoapp.di.modules.workerModule
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier

@@ -5,7 +5,7 @@
  *
  */
 
-package com.mvproject.videoapp.di
+package com.mvproject.videoapp.di.modules
 
 import com.mvproject.videoapp.ui.screens.PlaylistDataViewModel
 import com.mvproject.videoapp.ui.screens.PlaylistGroupDataViewModel

@@ -15,6 +15,7 @@ object AppConstants {
     const val INT_VALUE_1 = 1
     const val INT_VALUE_2 = 2
     const val INT_VALUE_3 = 3
+    const val INT_VALUE_5 = 5
 
     const val ALPHA_50 = 0.5f
     const val WEIGHT_50 = 0.5f

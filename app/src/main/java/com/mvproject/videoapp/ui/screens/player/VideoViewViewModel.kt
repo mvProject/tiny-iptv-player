@@ -15,6 +15,7 @@ import androidx.media3.common.PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS
 import androidx.media3.common.PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED
 import androidx.media3.common.PlaybackException.ERROR_CODE_PARSING_MANIFEST_MALFORMED
 import androidx.media3.common.Player
+import androidx.media3.common.Tracks
 import androidx.media3.common.VideoSize
 import com.mvproject.videoapp.data.enums.ResizeMode
 import com.mvproject.videoapp.data.enums.player.PlayerCommands
@@ -175,40 +176,40 @@ class VideoViewViewModel(
                     }
                 }
 
-                /*                override fun onTracksChanged(tracks: Tracks) {
-                                    tracks.groups.forEachIndexed {index, group->
-                                        Napier.i("testing playerInfo group ${group.type}")
+                override fun onTracksChanged(tracks: Tracks) {
+                    tracks.groups.forEachIndexed { index, group ->
+                        Napier.i("testing playerInfo group ${group.type}")
 
-                                        if (group.type == C.TRACK_TYPE_VIDEO){
-                                            val groupInfo = group.mediaTrackGroup
-                                            for (i in 0..groupInfo.length -1 ){
-                                                val trackFormat = groupInfo.getFormat(i)
-                                                Napier.i("testing playerInfo TRACK_TYPE_VIDEO trackFormat $trackFormat")
-                                                Napier.i("testing playerInfo TRACK_TYPE_VIDEO trackFormatLabel ${trackFormat.label}")
-                                            }
-                                        }
-                                        if (group.type == C.TRACK_TYPE_METADATA){
-                                            val groupInfo = group.mediaTrackGroup
-                                            for (i in 0..groupInfo.length -1 ){
-                                                val trackFormat = groupInfo.getFormat(i)
-                                                Napier.i("testing playerInfo TRACK_TYPE_METADATA trackFormat $trackFormat")
-                                                Napier.i("testing playerInfo TRACK_TYPE_METADATA trackFormatLabel ${trackFormat.label}")
-                                            }
-                                        }
-                                        if (group.type == C.TRACK_TYPE_AUDIO){
-                                            val groupInfo = group.mediaTrackGroup
-                                            for (i in 0..groupInfo.length -1 ){
-                                                val trackFormat = groupInfo.getFormat(i)
-                                                val audioTrack = trackFormat
-                                                val audioTrackLanguage = trackFormat.language.toString()
-                                                val audioTrackLabel = trackFormat.label.toString()
-                                                Napier.i("testing playerInfo audioTrack $audioTrack")
-                                                Napier.i("testing playerInfo audioTrackLanguage $audioTrackLanguage")
-                                                Napier.i("testing playerInfo audioTrackLabel $audioTrackLabel")
-                                            }
-                                        }
-                                    }
-                                }*/
+                        /*                        if (group.type == C.TRACK_TYPE_VIDEO) {
+                                                    val groupInfo = group.mediaTrackGroup
+                                                    for (i in 0..groupInfo.length - 1) {
+                                                        val trackFormat = groupInfo.getFormat(i)
+                                                        Napier.i("testing playerInfo TRACK_TYPE_VIDEO trackFormat $trackFormat")
+                                                        Napier.i("testing playerInfo TRACK_TYPE_VIDEO trackFormatLabel ${trackFormat.label}")
+                                                    }
+                                                }
+                                                if (group.type == C.TRACK_TYPE_METADATA) {
+                                                    val groupInfo = group.mediaTrackGroup
+                                                    for (i in 0..groupInfo.length - 1) {
+                                                        val trackFormat = groupInfo.getFormat(i)
+                                                        Napier.i("testing playerInfo TRACK_TYPE_METADATA trackFormat $trackFormat")
+                                                        Napier.i("testing playerInfo TRACK_TYPE_METADATA trackFormatLabel ${trackFormat.label}")
+                                                    }
+                                                }*/
+                        /*                        if (group.type == C.TRACK_TYPE_AUDIO) {
+                                                    val groupInfo = group.mediaTrackGroup
+                                                    for (i in 0..groupInfo.length - 1) {
+                                                        val trackFormat = groupInfo.getFormat(i)
+                                                        val audioTrack = trackFormat
+                                                        val audioTrackLanguage = trackFormat.language.toString()
+                                                        val audioTrackLabel = trackFormat.label.toString()
+                                                        Napier.i("testing playerInfo audioTrack $audioTrack")
+                                                        Napier.i("testing playerInfo audioTrackLanguage $audioTrackLanguage")
+                                                        Napier.i("testing playerInfo audioTrackLabel $audioTrackLabel")
+                                                    }
+                                                }*/
+                    }
+                }
             }
         )
     }
@@ -217,10 +218,6 @@ class VideoViewViewModel(
         Napier.w("testing initPlayBack channelId $channelId, channelGroup:$channelGroup")
 
         viewModelScope.launch {
-            //hannelList = playlistChannelManager
-            //   .getGroupOfChannel(channelId.toLong())
-            //   .sortedBy { it.channelName }
-
             channelList = playlistChannelManager.getChannelsByGroup(channelGroup)
 
             Napier.w("testing initPlayBack channelList ${channelList.count()}")
@@ -232,6 +229,7 @@ class VideoViewViewModel(
                 getCurrentMediaPosition(channelId),
                 0L
             )
+
             player.repeatMode = Player.REPEAT_MODE_ALL
 
             player.playWhenReady = true
@@ -250,7 +248,6 @@ class VideoViewViewModel(
         }
         return mediaPosition
     }
-
 
 
     fun processPlayerUICommand(command: PlayerUICommands) {
