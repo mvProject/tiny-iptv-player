@@ -9,6 +9,7 @@ package com.mvproject.videoapp.ui.screens.player
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS
@@ -179,35 +180,17 @@ class VideoViewViewModel(
                 override fun onTracksChanged(tracks: Tracks) {
                     tracks.groups.forEachIndexed { index, group ->
                         Napier.i("testing playerInfo group ${group.type}")
-
-                        /*                        if (group.type == C.TRACK_TYPE_VIDEO) {
-                                                    val groupInfo = group.mediaTrackGroup
-                                                    for (i in 0..groupInfo.length - 1) {
-                                                        val trackFormat = groupInfo.getFormat(i)
-                                                        Napier.i("testing playerInfo TRACK_TYPE_VIDEO trackFormat $trackFormat")
-                                                        Napier.i("testing playerInfo TRACK_TYPE_VIDEO trackFormatLabel ${trackFormat.label}")
-                                                    }
-                                                }
-                                                if (group.type == C.TRACK_TYPE_METADATA) {
-                                                    val groupInfo = group.mediaTrackGroup
-                                                    for (i in 0..groupInfo.length - 1) {
-                                                        val trackFormat = groupInfo.getFormat(i)
-                                                        Napier.i("testing playerInfo TRACK_TYPE_METADATA trackFormat $trackFormat")
-                                                        Napier.i("testing playerInfo TRACK_TYPE_METADATA trackFormatLabel ${trackFormat.label}")
-                                                    }
-                                                }*/
-                        /*                        if (group.type == C.TRACK_TYPE_AUDIO) {
-                                                    val groupInfo = group.mediaTrackGroup
-                                                    for (i in 0..groupInfo.length - 1) {
-                                                        val trackFormat = groupInfo.getFormat(i)
-                                                        val audioTrack = trackFormat
-                                                        val audioTrackLanguage = trackFormat.language.toString()
-                                                        val audioTrackLabel = trackFormat.label.toString()
-                                                        Napier.i("testing playerInfo audioTrack $audioTrack")
-                                                        Napier.i("testing playerInfo audioTrackLanguage $audioTrackLanguage")
-                                                        Napier.i("testing playerInfo audioTrackLabel $audioTrackLabel")
-                                                    }
-                                                }*/
+                        if (group.type == C.TRACK_TYPE_AUDIO) {
+                            for (i in 0..group.length - 1) {
+                                val trackFormat = group.getTrackFormat(i)
+                                val audioTrack = trackFormat
+                                val audioTrackLanguage = trackFormat.language.toString()
+                                val audioTrackLabel = trackFormat.label.toString()
+                                Napier.i("testing group audioTrack $audioTrack")
+                                Napier.i("testing group audioTrackLanguage $audioTrackLanguage")
+                                Napier.i("testing group audioTrackLabel $audioTrackLabel")
+                            }
+                        }
                     }
                 }
             }
