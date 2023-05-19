@@ -10,35 +10,33 @@ package com.mvproject.videoapp.ui.components.channels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.mvproject.videoapp.R
 import com.mvproject.videoapp.data.PreviewTestData.testProgram
 import com.mvproject.videoapp.data.models.channels.PlaylistChannelWithEpg
 import com.mvproject.videoapp.ui.components.epg.ScheduleEpgItemView
+import com.mvproject.videoapp.ui.theme.VideoAppTheme
 import com.mvproject.videoapp.ui.theme.dimens
-import io.github.aakira.napier.Napier
 
 @Composable
 fun ChannelListView(
@@ -47,91 +45,111 @@ fun ChannelListView(
     onEpgRequest: (PlaylistChannelWithEpg) -> Unit = {},
     onFavoriteClick: (PlaylistChannelWithEpg) -> Unit = {}
 ) {
-    SideEffect {
-        Napier.e("testing PlaylistGroupDataItemView SideEffect item ${channel.channelName}")
-    }
-
     LaunchedEffect(key1 = channel.id) {
         onEpgRequest(channel)
     }
 
-    Row(
+    Surface(
         modifier = modifier
-            .padding(MaterialTheme.dimens.size8),
-        verticalAlignment = Alignment.CenterVertically
+            .clip(MaterialTheme.shapes.small),
+        color = MaterialTheme.colorScheme.surface
     ) {
-
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(channel.channelLogo)
-                .crossfade(true)
-                .placeholder(R.drawable.no_channel_logo)
-                .error(R.drawable.no_channel_logo)
-                .build(),
-            contentDescription = null,
-            modifier = Modifier
-                .size(MaterialTheme.dimens.size42)
-                .clip(RoundedCornerShape(MaterialTheme.dimens.size4))
-        )
-
-        Spacer(
-            modifier = Modifier
-                .width(MaterialTheme.dimens.size4)
-        )
-
-        Column(
-            Modifier.weight(MaterialTheme.dimens.weight5)
+        Row(
+            modifier = modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = channel.channelName,
-                fontSize = 16.sp,
-                style = MaterialTheme.typography.h4,
+
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(channel.channelLogo)
+                    .crossfade(true)
+                    .placeholder(R.drawable.no_channel_logo)
+                    .error(R.drawable.no_channel_logo)
+                    .build(),
+                contentDescription = channel.channelName,
                 modifier = Modifier
-                    .padding(start = MaterialTheme.dimens.size4),
-                color = MaterialTheme.colors.onBackground
+                    .size(MaterialTheme.dimens.size42)
+                    .clip(MaterialTheme.shapes.small)
             )
 
-            channel.channelEpg.forEach {
-                ScheduleEpgItemView(
-                    modifier = Modifier
-                        .padding(start = MaterialTheme.dimens.size4),
-                    program = it
-                )
-            }
+            Spacer(modifier = Modifier.width(MaterialTheme.dimens.size8))
 
-            if (channel.channelEpg.isEmpty()) {
+            Column(
+                Modifier.weight(MaterialTheme.dimens.weight5)
+            ) {
                 Text(
-                    text = stringResource(id = R.string.msg_no_epg_found),
-                    fontSize = 14.sp,
-                    style = MaterialTheme.typography.h5,
-                    modifier = Modifier
-                        .padding(start = MaterialTheme.dimens.size4),
-                    color = MaterialTheme.colors.onBackground
+                    text = channel.channelName,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                channel.channelEpg.forEach {
+                    ScheduleEpgItemView(
+                        modifier = Modifier
+                            .padding(start = MaterialTheme.dimens.size4),
+                        program = it
+                    )
+                }
+
+                if (channel.channelEpg.isEmpty()) {
+                    Text(
+                        text = stringResource(id = R.string.msg_no_epg_found),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.outline,
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.width(MaterialTheme.dimens.size4))
+
+            IconButton(
+                modifier = Modifier
+                    .weight(MaterialTheme.dimens.weight1)
+                    .clip(MaterialTheme.shapes.small),
+                onClick = { onFavoriteClick(channel) }
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Star,
+                    contentDescription = "Favorites",
+                    tint = if (channel.isInFavorites)
+                        MaterialTheme.colorScheme.tertiary else
+                        MaterialTheme.colorScheme.tertiaryContainer
                 )
             }
-        }
-
-        Spacer(
-            modifier = Modifier
-                .width(MaterialTheme.dimens.size4)
-        )
-
-        IconButton(
-            modifier = Modifier.weight(MaterialTheme.dimens.weight1),
-            onClick = { onFavoriteClick(channel) }
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.Favorite,
-                contentDescription = "PLAYBACK_TOGGLE",
-                tint = if (channel.isInFavorites) Color.Red else Color.DarkGray
-            )
         }
     }
-}
 
+}
 
 @Composable
 @Preview(showBackground = true)
 fun PreviewChannelListView() {
-    ChannelListView(channel = testProgram)
+    VideoAppTheme() {
+        ChannelListView(channel = testProgram)
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun PreviewChannelListViewFav() {
+    VideoAppTheme() {
+        ChannelListView(channel = testProgram.copy(isInFavorites = true))
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun DarkPreviewChannelListView() {
+    VideoAppTheme(darkTheme = true) {
+        ChannelListView(channel = testProgram)
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun DarkPreviewChannelListViewFav() {
+    VideoAppTheme(darkTheme = true) {
+        ChannelListView(channel = testProgram.copy(isInFavorites = true))
+    }
 }
