@@ -9,19 +9,19 @@ package com.mvproject.videoapp.ui.components.epg
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.LinearProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.tooling.preview.Preview
+import com.mvproject.videoapp.data.PreviewTestData
 import com.mvproject.videoapp.data.models.epg.EpgProgram
+import com.mvproject.videoapp.ui.components.views.DurationProgressView
+import com.mvproject.videoapp.ui.theme.VideoAppTheme
 import com.mvproject.videoapp.ui.theme.dimens
 import com.mvproject.videoapp.utils.AppConstants.COUNT_ZERO_FLOAT
 import com.mvproject.videoapp.utils.AppConstants.PROGRESS_STATE_COMPLETE
@@ -31,9 +31,6 @@ import com.mvproject.videoapp.utils.TimeUtils.convertTimeToReadableFormat
 fun PlayerOverlayEpgItemView(
     modifier: Modifier = Modifier,
     program: EpgProgram,
-    textColor: Color = MaterialTheme.colors.onBackground,
-    backColor: Color = MaterialTheme.colors.background,
-    fontSize: TextUnit = MaterialTheme.dimens.font12
 ) {
 
     val isProgramEnded by remember {
@@ -64,23 +61,32 @@ fun PlayerOverlayEpgItemView(
             append(" - ")
             append(program.title)
         }
+
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = text.toString(),
-            fontSize = fontSize,
-            style = MaterialTheme.typography.h5,
-            color = textColor,
-            overflow = TextOverflow.Ellipsis
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface,
         )
 
         if (isProgramProgressShow) {
-            LinearProgressIndicator(
-                progress = program.programProgress,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                color = textColor,
-                backgroundColor = backColor,
-            )
+            DurationProgressView(progress = program.programProgress)
         }
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun PreviewPlayerOverlayEpgItemView() {
+    VideoAppTheme() {
+        PlayerOverlayEpgItemView(program = PreviewTestData.testEpgProgram)
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun DarkPreviewPlayerOverlayEpgItemView() {
+    VideoAppTheme(darkTheme = true) {
+        PlayerOverlayEpgItemView(program = PreviewTestData.testEpgProgram)
     }
 }

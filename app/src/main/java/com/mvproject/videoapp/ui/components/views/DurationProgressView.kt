@@ -18,14 +18,14 @@ import com.mvproject.videoapp.ui.theme.VideoAppTheme
 
 @Composable
 fun DurationProgressView(
+    modifier: Modifier = Modifier.fillMaxWidth(),
     progress: Float,
     trackColor: Color = MaterialTheme.colorScheme.tertiaryContainer,
     backColor: Color = MaterialTheme.colorScheme.tertiary,
 ) {
     LinearProgressIndicator(
         progress = progress,
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = modifier,
         trackColor = trackColor,
         color = backColor,
     )

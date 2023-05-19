@@ -16,41 +16,37 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import com.mvproject.videoapp.R
+import com.mvproject.videoapp.data.PreviewTestData
 import com.mvproject.videoapp.data.models.epg.EpgProgram
+import com.mvproject.videoapp.ui.theme.VideoAppTheme
 import com.mvproject.videoapp.ui.theme.dimens
 
 @Composable
 fun PlayerOverlayEpgView(
     modifier: Modifier = Modifier,
     epgList: List<EpgProgram>,
-    textColor: Color = MaterialTheme.colors.onBackground,
-    backColor: Color = MaterialTheme.colors.background,
 ) {
     Box(
         modifier = modifier
             .fillMaxSize()
     ) {
         if (epgList.isEmpty()) {
-
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.Center),
                 text = stringResource(id = R.string.msg_no_epg_found),
-                fontSize = MaterialTheme.dimens.font16,
-                style = MaterialTheme.typography.h5,
-                color = textColor,
-                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center
             )
         }
@@ -73,12 +69,25 @@ fun PlayerOverlayEpgView(
                         modifier = Modifier
                             .padding(start = MaterialTheme.dimens.size4),
                         program = epg,
-                        textColor = textColor,
-                        backColor = backColor,
-                        fontSize = MaterialTheme.dimens.font14
                     )
                 }
             }
         )
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun PreviewPlayerOverlayEpgView() {
+    VideoAppTheme() {
+        PlayerOverlayEpgView(epgList = PreviewTestData.testEpgPrograms)
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun DarkPreviewPlayerOverlayEpgView() {
+    VideoAppTheme(darkTheme = true) {
+        PlayerOverlayEpgView(epgList = PreviewTestData.testEpgPrograms)
     }
 }

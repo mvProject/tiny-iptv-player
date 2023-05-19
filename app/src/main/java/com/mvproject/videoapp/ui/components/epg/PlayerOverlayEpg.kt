@@ -16,8 +16,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -25,11 +25,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import com.mvproject.videoapp.data.PreviewTestData
 import com.mvproject.videoapp.data.models.epg.EpgProgram
 import com.mvproject.videoapp.ui.screens.player.VideoViewViewModel
+import com.mvproject.videoapp.ui.theme.VideoAppTheme
 import com.mvproject.videoapp.ui.theme.dimens
 import com.mvproject.videoapp.utils.AppConstants
 
@@ -60,15 +61,15 @@ fun PlayerOverlayEpg(
                 .fillMaxHeight(MaterialTheme.dimens.fraction90)
                 .fillMaxWidth(viewWidth)
                 .background(
-                    color = MaterialTheme.colors.onPrimary,
-                    shape = RoundedCornerShape(MaterialTheme.dimens.size8)
+                    color = MaterialTheme.colorScheme.inverseOnSurface,
+                    shape = MaterialTheme.shapes.small
                 )
         ) {
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        color = Color.LightGray,
+                        color = MaterialTheme.colorScheme.tertiaryContainer,
                         shape = RoundedCornerShape(
                             topStart = MaterialTheme.dimens.size8,
                             topEnd = MaterialTheme.dimens.size8
@@ -76,24 +77,48 @@ fun PlayerOverlayEpg(
                     )
                     .padding(all = MaterialTheme.dimens.size8),
                 text = controlState.currentChannel,
-                fontSize = MaterialTheme.dimens.font18,
-                style = MaterialTheme.typography.h5,
-                color = MaterialTheme.colors.primary,
-                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onTertiaryContainer
             )
 
             PlayerOverlayEpgView(
                 modifier = Modifier.background(
-                    color = MaterialTheme.colors.onPrimary,
+                    color = MaterialTheme.colorScheme.inverseOnSurface,
                     shape = RoundedCornerShape(
                         bottomStart = MaterialTheme.dimens.size8,
                         bottomEnd = MaterialTheme.dimens.size8
                     )
                 ),
-                textColor = MaterialTheme.colors.primary,
-                backColor = MaterialTheme.colors.onPrimary,
                 epgList = epgList
             )
         }
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun PreviewPlayerOverlayEpg() {
+    VideoAppTheme() {
+        PlayerOverlayEpg(
+            controlState = VideoViewViewModel.ControlUIState(
+                brightnessValue = 1,
+                volumeValue = 1
+            ),
+            epgList = PreviewTestData.testEpgPrograms
+        )
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun DarkPreviewPlayerOverlayEpg() {
+    VideoAppTheme(darkTheme = true) {
+        PlayerOverlayEpg(
+            controlState = VideoViewViewModel.ControlUIState(
+                brightnessValue = 1,
+                volumeValue = 1
+            ),
+            epgList = PreviewTestData.testEpgPrograms
+        )
     }
 }
