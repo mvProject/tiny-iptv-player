@@ -7,7 +7,7 @@
 
 package com.mvproject.videoapp.ui.theme
 
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -44,10 +44,14 @@ data class Dimens(
     val size46: Dp = 46.dp,
     val size48: Dp = 48.dp,
     val size50: Dp = 50.dp,
+    val size56: Dp = 56.dp,
     val size60: Dp = 60.dp,
+    val size64: Dp = 64.dp,
     val size96: Dp = 96.dp,
     val size112: Dp = 112.dp,
+    val size140: Dp = 140.dp,
     val size180: Dp = 180.dp,
+    val size200: Dp = 200.dp,
     val size250: Dp = 250.dp,
 
     val font12: TextUnit = 12.sp,

@@ -7,77 +7,64 @@
 
 package com.mvproject.videoapp.ui.theme
 
-import androidx.compose.material.Colors
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ReadOnlyComposable
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
-val steelBlue = Color(0xFFAFD0E9)
-val lightBlack = Color(0xFF131414)
-val chocolate = Color(0xFFEB4F27)
-val midnightBlue = Color(0xFF032d4b)
-val midnightGreen = Color(0xFF033805)
-val white = Color(0xFFE3E9EE)
+val videoAppLightPrimary = Color(0xFF315DA8)
+val videoAppLightOnPrimary = Color(0xFFFFFFFF)
+val videoAppLightPrimaryContainer = Color(0xFFD8E2FF)
+val videoAppLightOnPrimaryContainer = Color(0xFF001A41)
+val videoAppLightSecondary = Color(0xFF4F56A9)
+val videoAppLightOnSecondary = Color(0xFFFFFFFF)
+val videoAppLightSecondaryContainer = Color(0xFFE0E0FF)
+val videoAppLightOnSecondaryContainer = Color(0xFF030865)
+val videoAppLightTertiary = Color(0xFF9B432C)
+val videoAppLightOnTertiary = Color(0xFFFFFFFF)
+val videoAppLightTertiaryContainer = Color(0xFFFFDBD2)
+val videoAppLightOnTertiaryContainer = Color(0xFF3C0800)
+val videoAppLightError = Color(0xFFBA1A1A)
+val videoAppLightErrorContainer = Color(0xFFFFDAD6)
+val videoAppLightOnError = Color(0xFFFFFFFF)
+val videoAppLightOnErrorContainer = Color(0xFF410002)
+val videoAppLightBackground = Color(0xFFFEFBFF)
+val videoAppLightOnBackground = Color(0xFF1B1B1F)
+val videoAppLightSurface = Color(0xFFFEFBFF)
+val videoAppLightOnSurface = Color(0xFF1B1B1F)
+val videoAppLightSurfaceVariant = Color(0xFFE1E2EC)
+val videoAppLightOnSurfaceVariant = Color(0xFF44474F)
+val videoAppLightOutline = Color(0xFF75777F)
+val videoAppLightInverseOnSurface = Color(0xFFF2F0F4)
+val videoAppLightInverseSurface = Color(0xFF303033)
+val videoAppLightPrimaryInverse = Color(0xFFADC6FF)
+val videoAppLightSurfaceTint = Color(0xFF315DA8)
+val videoAppLightOutlineVariant = Color(0xFFC4C6D0)
+val videoAppLightScrim = Color(0xFF000000)
 
-private val DarkColorPalette = darkColors(
-    primary = lightBlack,
-    secondary = chocolate,
-    background = lightBlack,
-    surface = lightBlack,
-    onPrimary = steelBlue,
-    onSecondary = lightBlack,
-    onBackground = white,
-    onSurface = steelBlue
-)
-
-private val LightColorPalette = lightColors(
-    primary = white,
-    secondary = chocolate,
-    background = white,
-    surface = white,
-    onPrimary = midnightBlue,
-    onSecondary = white,
-    onBackground = midnightGreen,
-    onSurface = midnightBlue
-)
-
-data class AppColors(
-    val tintPrimary: Color,
-    val tintSecondary: Color,
-    val material: Colors,
-) {
-    val primary: Color get() = material.primary
-    val primaryVariant: Color get() = material.primaryVariant
-    val secondary: Color get() = material.secondary
-    val secondaryVariant: Color get() = material.secondaryVariant
-    val background: Color get() = material.background
-    val surface: Color get() = material.surface
-    val error: Color get() = material.error
-    val onPrimary: Color get() = material.onPrimary
-    val onSecondary: Color get() = material.onSecondary
-    val onBackground: Color get() = material.onBackground
-    val onSurface: Color get() = material.onSurface
-    val onError: Color get() = material.onError
-    val isLight: Boolean get() = material.isLight
-}
-
-val LightColor = AppColors(
-    tintPrimary = midnightBlue,
-    tintSecondary = chocolate,
-    material = LightColorPalette
-)
-
-val DarkColor = AppColors(
-    tintPrimary = steelBlue,
-    tintSecondary = chocolate,
-    material = DarkColorPalette
-)
-internal val LocalColors = staticCompositionLocalOf { LightColor }
-val MaterialTheme.appColors: AppColors
-    @Composable
-    @ReadOnlyComposable
-    get() = LocalColors.current
+val videoAppDarkPrimary = Color(0xFFADC6FF)
+val videoAppDarkOnPrimary = Color(0xFF002E69)
+val videoAppDarkPrimaryContainer = Color(0xFF0F448E)
+val videoAppDarkOnPrimaryContainer = Color(0xFFD8E2FF)
+val videoAppDarkSecondary = Color(0xFFBEC2FF)
+val videoAppDarkOnSecondary = Color(0xFF1E2578)
+val videoAppDarkSecondaryContainer = Color(0xFF363E90)
+val videoAppDarkOnSecondaryContainer = Color(0xFFE0E0FF)
+val videoAppDarkTertiary = Color(0xFFFFB4A1)
+val videoAppDarkOnTertiary = Color(0xFF5E1704)
+val videoAppDarkTertiaryContainer = Color(0xFF7D2D18)
+val videoAppDarkOnTertiaryContainer = Color(0xFFFFDBD2)
+val videoAppDarkError = Color(0xFFFFB4AB)
+val videoAppDarkErrorContainer = Color(0xFF93000A)
+val videoAppDarkOnError = Color(0xFF690005)
+val videoAppDarkOnErrorContainer = Color(0xFFFFDAD6)
+val videoAppDarkBackground = Color(0xFF1B1B1F)
+val videoAppDarkOnBackground = Color(0xFFE3E2E6)
+val videoAppDarkSurface = Color(0xFF1B1B1F)
+val videoAppDarkOnSurface = Color(0xFFE3E2E6)
+val videoAppDarkSurfaceVariant = Color(0xFF44474F)
+val videoAppDarkOnSurfaceVariant = Color(0xFFC4C6D0)
+val videoAppDarkOutline = Color(0xFF8E9099)
+val videoAppDarkInverseOnSurface = Color(0xFF1B1B1F)
+val videoAppDarkInverseSurface = Color(0xFFE3E2E6)
+val videoAppDarkPrimaryInverse = Color(0xFF315DA8)
+val videoAppDarkSurfaceTint = Color(0xFFADC6FF)
+val videoAppDarkOutlineVariant = Color(0xFF44474F)
+val videoAppDarkScrim = Color(0xFF000000)

@@ -14,10 +14,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.work.WorkInfo
 import cafe.adriel.voyager.navigator.Navigator
 import com.mvproject.videoapp.navigation.PlaylistDataRoute
@@ -29,7 +32,6 @@ import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 class MainActivity : ComponentActivity() {
-
     private val launcher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
@@ -41,6 +43,7 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
 
         setContent {
@@ -111,6 +114,9 @@ class MainActivity : ComponentActivity() {
 
             val windowSizeClass = calculateWindowSizeClass(this)
             setOrientation(windowSizeClass)
+
+            WindowInsetsControllerCompat(window, window.decorView)
+                .isAppearanceLightStatusBars = !isSystemInDarkTheme()
 
             VideoAppTheme {
                 Navigator(

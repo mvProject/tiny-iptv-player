@@ -102,6 +102,7 @@ dependencies {
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
+    // DateTime
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 
     //Logging
@@ -115,24 +116,25 @@ dependencies {
     implementation("androidx.paging:paging-compose:1.0.0-alpha18")
 
     // Compose Bom
-    val composeBom = platform("androidx.compose:compose-bom:2023.01.00")
+    val composeBom = platform("androidx.compose:compose-bom:2023.05.00")
     implementation(composeBom)
     androidTestImplementation(composeBom)
     // Compose UI
     implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.material:material")
     implementation("androidx.compose.material:material-icons-core")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.compose.runtime:runtime-livedata")
-
-    implementation("androidx.compose.material3:material3-window-size-class:1.0.1")
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material3:material3-window-size-class")
 
     // DI
     implementation("io.insert-koin:koin-androidx-compose:3.4.3")
     implementation("io.insert-koin:koin-androidx-workmanager:3.4.0")
 
+    // WorkManager
+    implementation("androidx.work:work-runtime-ktx:2.8.1")
+
     // Navigation
-    implementation("androidx.navigation:navigation-compose:2.5.3")
     implementation("cafe.adriel.voyager:voyager-androidx:1.0.0-rc04")
     implementation("cafe.adriel.voyager:voyager-koin:1.0.0-rc04")
     implementation("cafe.adriel.voyager:voyager-navigator:1.0.0-rc04")
@@ -158,10 +160,10 @@ dependencies {
     implementation("com.squareup.sqldelight:coroutines-extensions-jvm:1.5.5")
 
     // Misc
-    implementation("com.google.accompanist:accompanist-permissions:0.28.0")
-    //  implementation("com.github.skydoves:landscapist-glide:2.1.5")
-    implementation("com.airbnb.android:lottie-compose:6.0.0")
     implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
+    implementation("com.google.accompanist:accompanist-permissions:0.28.0")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.31.1-alpha")
+    implementation("com.google.accompanist:accompanist-adaptive:0.31.1-alpha")
 
     // Tests
     testImplementation("junit:junit:4.13.2")
@@ -175,11 +177,6 @@ dependencies {
     // Android Studio Preview support
     debugImplementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.compose.ui:ui-tooling-preview")
-
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.31.1-alpha")
-    implementation("com.google.accompanist:accompanist-adaptive:0.31.1-alpha")
-
-    implementation("androidx.work:work-runtime-ktx:2.8.1")
 }
 
 sqldelight {

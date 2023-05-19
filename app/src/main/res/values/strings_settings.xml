@@ -12,4 +12,11 @@
     <string name="option_epg_info_update">Epg Info update</string>
     <string name="option_epg_main_update">Main Epg Source</string>
     <string name="option_epg_alter_update">Alter Epg Source</string>
+
+    <string name="scr_btn_playlists_update">playlists update</string>
+
+    <string name="menu_view_type_list">List</string>
+    <string name="menu_view_type_grid">Grid</string>
+    <string name="menu_view_type_card">Card</string>
+
 </resources>
