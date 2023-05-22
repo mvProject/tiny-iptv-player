@@ -15,7 +15,6 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.mvproject.videoapp.utils.AppConstants.INT_VALUE_5
-import com.mvproject.videoapp.utils.AppConstants.INT_VALUE_ZERO
 import com.mvproject.videoapp.utils.AppConstants.LONG_NO_VALUE
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -153,7 +152,7 @@ class PreferenceRepository(
     }
 
     suspend fun getMainEpgUpdatePeriod() = dataStore.data.map { preferences ->
-        preferences[EPG_MAIN_LAST_UPDATE_PERIOD] ?: INT_VALUE_ZERO
+        preferences[EPG_MAIN_LAST_UPDATE_PERIOD] ?: INT_VALUE_5
     }.first()
 
     suspend fun setAlterEpgUpdatePeriod(type: Int) {
@@ -163,7 +162,7 @@ class PreferenceRepository(
     }
 
     suspend fun getAlterEpgUpdatePeriod() = dataStore.data.map { preferences ->
-        preferences[EPG_ALTER_LAST_UPDATE_PERIOD] ?: INT_VALUE_ZERO
+        preferences[EPG_ALTER_LAST_UPDATE_PERIOD] ?: INT_VALUE_5
     }.first()
 
 

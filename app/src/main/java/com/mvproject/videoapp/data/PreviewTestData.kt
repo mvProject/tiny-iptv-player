@@ -9,6 +9,7 @@ package com.mvproject.videoapp.data
 
 import com.mvproject.videoapp.data.models.channels.PlaylistChannelWithEpg
 import com.mvproject.videoapp.data.models.epg.EpgProgram
+import com.mvproject.videoapp.data.models.playlist.Playlist
 import com.mvproject.videoapp.utils.TimeUtils.actualDate
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.minutes
@@ -32,6 +33,15 @@ object PreviewTestData {
             description = "test description"
         )
 
+    val testPlaylist =
+        Playlist(
+            id = Random.nextLong(),
+            listName = "listName",
+            listUrl = "listUrl",
+            lastUpdateDate = Random.nextLong(),
+            updatePeriod = 3
+        )
+
     val testEpgPrograms = buildList {
         repeat(10) {
             add(
@@ -41,6 +51,19 @@ object PreviewTestData {
                     stop = actualDate + (it + 1) * 30.minutes.inWholeMilliseconds,
                     title = "title $it",
                     description = "description $it"
+                )
+            )
+        }
+    }
+    val testPlaylists = buildList {
+        repeat(2) {
+            add(
+                Playlist(
+                    id = Random.nextLong(),
+                    listName = "listName $it",
+                    listUrl = "listUrl $it",
+                    lastUpdateDate = Random.nextLong(),
+                    updatePeriod = 3
                 )
             )
         }

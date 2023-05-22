@@ -8,6 +8,7 @@
 package com.mvproject.videoapp.ui.components.toolbars
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.NavigateBefore
@@ -94,9 +95,10 @@ fun AppBarWithActions(
             }
 
             DropdownMenu(
-                modifier = Modifier.background(
-                    color = MaterialTheme.colorScheme.inverseOnSurface
-                ),
+                modifier = Modifier
+                    .background(
+                        color = MaterialTheme.colorScheme.inverseOnSurface
+                    ),
                 expanded = isMenuOpen,
                 onDismissRequest = { isMenuOpen = false }
             ) {
@@ -115,7 +117,12 @@ fun AppBarWithActions(
                         textColor = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 )
-                Divider()
+                Divider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = MaterialTheme.dimens.size8),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
                 DropdownMenuItem(
                     text = {
                         Text(
@@ -131,7 +138,12 @@ fun AppBarWithActions(
                         textColor = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 )
-                Divider()
+                Divider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = MaterialTheme.dimens.size8),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
                 DropdownMenuItem(
                     text = {
                         Text(

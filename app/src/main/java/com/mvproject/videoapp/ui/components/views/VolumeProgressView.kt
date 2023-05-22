@@ -38,7 +38,7 @@ fun VolumeProgressView(
                 .width(MaterialTheme.dimens.size78)
                 .height(MaterialTheme.dimens.size78)
                 .background(
-                    MaterialTheme.colorScheme.outlineVariant,
+                    MaterialTheme.colorScheme.surfaceVariant,
                     shape = MaterialTheme.shapes.small
                 )
                 .align(Alignment.Center),
@@ -48,14 +48,14 @@ fun VolumeProgressView(
             Icon(
                 modifier = Modifier.size(MaterialTheme.dimens.size48),
                 imageVector = getProperVolumeIcon(value()),
-                tint = MaterialTheme.colorScheme.surfaceTint,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 contentDescription = null
             )
 
             Text(
                 text = "${value()} %",
                 style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.surfaceTint
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
