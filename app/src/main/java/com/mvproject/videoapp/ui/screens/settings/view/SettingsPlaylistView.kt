@@ -7,82 +7,70 @@
 
 package com.mvproject.videoapp.ui.screens.settings.view
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import com.mvproject.videoapp.R
-import com.mvproject.videoapp.data.models.playlist.Playlist
-import com.mvproject.videoapp.navigation.PlaylistDetailRoute
-import com.mvproject.videoapp.ui.components.errors.NoItemsView
+import com.mvproject.videoapp.data.PreviewTestData.testPlaylists
+import com.mvproject.videoapp.ui.components.playlist.PlaylistItemView
 import com.mvproject.videoapp.ui.components.toolbars.AppBarWithBackNav
+import com.mvproject.videoapp.ui.components.views.NoItemsView
+import com.mvproject.videoapp.ui.screens.settings.actions.SettingsPlaylistAction
 import com.mvproject.videoapp.ui.screens.settings.viewmodel.SettingsPlaylistViewModel
+import com.mvproject.videoapp.ui.theme.VideoAppTheme
 import com.mvproject.videoapp.ui.theme.dimens
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsPlaylistView(
     dataState: SettingsPlaylistViewModel.PlaylistSettingsState,
-    onDeleteItem: (String) -> Unit = {}
+    onPlaylistAction: (SettingsPlaylistAction) -> Unit = {}
 ) {
-    val navigator = LocalNavigator.currentOrThrow
-
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background),
+            .navigationBarsPadding(),
+        containerColor = MaterialTheme.colorScheme.inverseOnSurface,
         topBar = {
             AppBarWithBackNav(
                 appBarTitle = stringResource(id = R.string.scr_playlist_settings_title),
-                onBackClick = { navigator.pop() },
+                onBackClick = { onPlaylistAction(SettingsPlaylistAction.NavigateBack) },
             )
         },
 
         bottomBar = {
-            Button(
-                onClick = {
-                    navigator.push(PlaylistDetailRoute())
-                },
+            ElevatedButton(
+                onClick = { onPlaylistAction(SettingsPlaylistAction.NewPlaylist) },
                 modifier = Modifier
                     .padding(MaterialTheme.dimens.size8)
                     .fillMaxWidth(),
-                border = BorderStroke(
-                    MaterialTheme.dimens.size1,
-                    MaterialTheme.colors.onPrimary
-                ),
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.primary,
-                    contentColor = MaterialTheme.colors.onPrimary
+                    containerColor = MaterialTheme.colorScheme.tertiaryContainer
                 ),
-                shape = RoundedCornerShape(MaterialTheme.dimens.size8)
+                shape = MaterialTheme.shapes.small
             ) {
-                Text(text = stringResource(id = R.string.pl_btn_add_new))
+                Text(
+                    text = stringResource(id = R.string.pl_btn_add_new),
+                    color = MaterialTheme.colorScheme.onTertiaryContainer,
+                    style = MaterialTheme.typography.titleMedium
+                )
             }
         }
     ) { paddingValues ->
@@ -91,25 +79,28 @@ fun SettingsPlaylistView(
                 .padding(paddingValues)
                 .fillMaxSize()
         ) {
-            Column(
+            LazyColumn(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(MaterialTheme.dimens.size8),
+                    .fillMaxSize(),
+                state = rememberLazyListState(),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.size4),
+                contentPadding = PaddingValues(MaterialTheme.dimens.size8)
             ) {
-                PlaylistsView(
-                    modifier = Modifier
-                        .weight(1f),
-                    list = dataState.playlists,
-                    onPlaylistDelete = onDeleteItem
-                )
-
-                Spacer(modifier = Modifier.height(MaterialTheme.dimens.size4))
+                items(
+                    dataState.playlists,
+                    key = { it.id }
+                ) { item ->
+                    PlaylistItemView(
+                        modifier = Modifier.fillMaxSize(),
+                        item = item,
+                        onPlaylistAction = onPlaylistAction
+                    )
+                }
             }
 
             if (dataState.dataIsEmpty) {
                 NoItemsView(
-                    modifier = Modifier
-                        .fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                     navigateTitle = stringResource(id = R.string.pl_msg_no_playlist)
                 )
             }
@@ -117,87 +108,26 @@ fun SettingsPlaylistView(
     }
 }
 
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun PlaylistsView(
-    modifier: Modifier = Modifier,
-    list: List<Playlist>,
-    onPlaylistDelete: (String) -> Unit = {}
-) {
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .background(
-                color = MaterialTheme.colors.background
+fun PreviewSettingsPlaylistView() {
+    VideoAppTheme() {
+        SettingsPlaylistView(
+            SettingsPlaylistViewModel.PlaylistSettingsState(
+                playlists = testPlaylists
             )
-    ) {
-        items(list, key = { it.id }) { item ->
-            PlaylistsItemView(
-                item = item,
-                onPlaylistDelete = onPlaylistDelete
-            )
-        }
-    }
-}
-
-@Composable
-fun PlaylistsItemView(
-    item: Playlist,
-    onPlaylistDelete: (String) -> Unit = {}
-) {
-    val navigator = LocalNavigator.currentOrThrow
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(MaterialTheme.dimens.size8),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column(
-            Modifier
-                .weight(MaterialTheme.dimens.weight1)
-                .clickable {
-                    navigator.push(PlaylistDetailRoute(id = item.id.toString()))
-                }
-        ) {
-            Text(
-                text = item.listName,
-                fontSize = 16.sp,
-                style = MaterialTheme.typography.h4,
-                modifier = Modifier
-                    .padding(start = MaterialTheme.dimens.size4),
-                color = MaterialTheme.colors.onBackground
-            )
-
-            Spacer(modifier = Modifier.width(MaterialTheme.dimens.size8))
-
-            Text(
-                text = item.listUrl,
-                fontSize = 12.sp,
-                style = MaterialTheme.typography.h4,
-                modifier = Modifier
-                    .padding(start = MaterialTheme.dimens.size4),
-                color = MaterialTheme.colors.onBackground
-            )
-        }
-
-        Spacer(modifier = Modifier.width(MaterialTheme.dimens.size8))
-
-        Icon(
-            modifier = Modifier.clickable {
-                onPlaylistDelete(item.id.toString())
-            },
-            imageVector = Icons.Outlined.Delete,
-            tint = MaterialTheme.colors.onPrimary,
-            contentDescription = null
         )
     }
-
 }
 
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
-@Preview(showBackground = true)
-private fun SettingsPlaylistViewPre() {
-    SettingsPlaylistView(
-        SettingsPlaylistViewModel.PlaylistSettingsState()
-    )
+fun PreviewDarkSettingsPlaylistView() {
+    VideoAppTheme(darkTheme = true) {
+        SettingsPlaylistView(
+            SettingsPlaylistViewModel.PlaylistSettingsState(
+                playlists = testPlaylists
+            )
+        )
+    }
 }
