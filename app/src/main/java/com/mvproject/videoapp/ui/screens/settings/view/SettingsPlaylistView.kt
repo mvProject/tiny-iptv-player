@@ -62,13 +62,13 @@ fun SettingsPlaylistView(
                     .padding(MaterialTheme.dimens.size8)
                     .fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.tertiaryContainer
+                    containerColor = MaterialTheme.colorScheme.tertiary
                 ),
                 shape = MaterialTheme.shapes.small
             ) {
                 Text(
                     text = stringResource(id = R.string.pl_btn_add_new),
-                    color = MaterialTheme.colorScheme.onTertiaryContainer,
+                    color = MaterialTheme.colorScheme.onTertiary,
                     style = MaterialTheme.typography.titleMedium
                 )
             }

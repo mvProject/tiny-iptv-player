@@ -1,17 +1,18 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 10.05.23, 20:21
+ *  last modified : 23.05.23, 12:54
  *
  */
 
-package com.mvproject.videoapp.ui.screens.playlist
+package com.mvproject.videoapp.ui.screens.playlist.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mvproject.videoapp.data.enums.UpdatePeriod
 import com.mvproject.videoapp.data.manager.PlaylistManager
 import com.mvproject.videoapp.data.models.playlist.Playlist
+import com.mvproject.videoapp.ui.screens.playlist.actions.PlaylistDetailAction
 import com.mvproject.videoapp.utils.AppConstants.EMPTY_STRING
 import com.mvproject.videoapp.utils.AppConstants.LONG_VALUE_ZERO
 import com.mvproject.videoapp.utils.AppConstants.PLAYLIST_LOCAL_TYPE
@@ -33,7 +34,6 @@ class AddPlayListViewModel(
     val state = _state.asStateFlow()
 
     fun setPlaylistMode(id: String) {
-        Napier.e("testing setPlaylistMode id:$id")
         id.toLongOrNull()?.let { selectedId ->
             viewModelScope.launch(Dispatchers.IO) {
                 val currentPlaylist = playlistManager.loadPlaylistById(playlistId = selectedId)
@@ -58,37 +58,37 @@ class AddPlayListViewModel(
         }
     }
 
-    fun processAction(action: PlayListAction) {
+    fun processAction(action: PlaylistDetailAction) {
         when (action) {
-            PlayListAction.SavePlaylist -> {
+            PlaylistDetailAction.SavePlaylist -> {
                 savePlayList()
             }
 
-            is PlayListAction.ChangeName -> {
+            is PlaylistDetailAction.ChangeName -> {
                 _state.update { current ->
                     current.copy(isComplete = false, listName = action.newName)
                 }
             }
 
-            is PlayListAction.ChangeUpdatePeriod -> {
+            is PlaylistDetailAction.ChangeUpdatePeriod -> {
                 _state.update { current ->
                     current.copy(isComplete = false, updatePeriod = action.period)
                 }
             }
 
-            is PlayListAction.ChangeMainEpgUsingState -> {
+            is PlaylistDetailAction.ChangeMainEpgUsingState -> {
                 _state.update { current ->
                     current.copy(isComplete = false, isUsingMainEpg = action.state)
                 }
             }
 
-            is PlayListAction.ChangeAlterEpgUsingState -> {
+            is PlaylistDetailAction.ChangeAlterEpgUsingState -> {
                 _state.update { current ->
                     current.copy(isComplete = false, isUsingAlterEpg = action.state)
                 }
             }
 
-            is PlayListAction.ChangeUrl -> {
+            is PlaylistDetailAction.ChangeUrl -> {
                 _state.update { current ->
                     current.copy(
                         isComplete = false,
@@ -98,6 +98,8 @@ class AddPlayListViewModel(
                     )
                 }
             }
+
+            else -> {}
         }
     }
 
@@ -142,7 +144,7 @@ data class PlayListState(
     val isSaving: Boolean = false,
     val isEdit: Boolean = false,
     val selectedId: Long = Random.nextLong(),
-    val isUsingMainEpg: Boolean = false,
+    val isUsingMainEpg: Boolean = true,
     val isUsingAlterEpg: Boolean = false,
     val isComplete: Boolean = false,
 ) {
@@ -162,13 +164,4 @@ data class PlayListState(
             isAlterInfoUse = isUsingAlterEpg
         )
     }
-}
-
-sealed class PlayListAction {
-    data class ChangeName(val newName: String) : PlayListAction()
-    data class ChangeUrl(val newUrl: String) : PlayListAction()
-    data class ChangeUpdatePeriod(val period: Int) : PlayListAction()
-    data class ChangeMainEpgUsingState(val state: Boolean) : PlayListAction()
-    data class ChangeAlterEpgUsingState(val state: Boolean) : PlayListAction()
-    object SavePlaylist : PlayListAction()
 }

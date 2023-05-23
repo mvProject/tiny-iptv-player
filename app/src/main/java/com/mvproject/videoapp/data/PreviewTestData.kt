@@ -7,6 +7,7 @@
 
 package com.mvproject.videoapp.data
 
+import com.mvproject.videoapp.data.models.channels.ChannelsGroup
 import com.mvproject.videoapp.data.models.channels.PlaylistChannelWithEpg
 import com.mvproject.videoapp.data.models.epg.EpgProgram
 import com.mvproject.videoapp.data.models.playlist.Playlist
@@ -64,6 +65,17 @@ object PreviewTestData {
                     listUrl = "listUrl $it",
                     lastUpdateDate = Random.nextLong(),
                     updatePeriod = 3
+                )
+            )
+        }
+    }
+
+    val testChannelsGroups = buildList {
+        repeat(10) {
+            add(
+                ChannelsGroup(
+                    groupName = "listName $it",
+                    groupContentCount = it * (it + 1)
                 )
             )
         }

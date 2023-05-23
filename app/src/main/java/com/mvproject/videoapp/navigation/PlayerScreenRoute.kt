@@ -11,15 +11,17 @@ import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.androidx.AndroidScreen
 import com.mvproject.videoapp.ui.screens.player.VideoView
 import com.mvproject.videoapp.ui.screens.player.VideoViewViewModel
-import io.github.aakira.napier.Napier
 import org.koin.androidx.compose.koinViewModel
 
-data class PlayerScreenRoute(val mediaId: String, val mediaGroup: String) : AndroidScreen() {
+data class PlayerScreenRoute(
+    val mediaId: String,
+    val mediaGroup: String
+) : AndroidScreen() {
 
     @Composable
     override fun Content() {
         val videoViewViewModel: VideoViewViewModel = koinViewModel()
-        Napier.i("testing1 PlayerScreenRoute Content")
+
         VideoView(
             viewModel = videoViewViewModel,
             channelId = mediaId,

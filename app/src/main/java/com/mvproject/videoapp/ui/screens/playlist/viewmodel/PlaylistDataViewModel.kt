@@ -1,11 +1,11 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 10.05.23, 20:21
+ *  last modified : 23.05.23, 11:28
  *
  */
 
-package com.mvproject.videoapp.ui.screens
+package com.mvproject.videoapp.ui.screens.playlist.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -31,9 +31,6 @@ class PlaylistDataViewModel(
     private val _playlistDataState = MutableStateFlow(PlaylistDataState())
     val playlistDataState = _playlistDataState.asStateFlow()
 
-    private val _playlistState = MutableStateFlow(PlaylistState())
-    val playlistState = _playlistState.asStateFlow()
-
     private var currentPlaylists: List<Playlist> = emptyList()
 
     init {
@@ -47,7 +44,7 @@ class PlaylistDataViewModel(
 
                     //  loadChannels()
 
-                    _playlistState.update { current ->
+                    _playlistDataState.update { current ->
                         current.copy(
                             isPlaylistSelectorVisible = currentPlaylists.count() > INT_VALUE_1,
                             playlists = currentPlaylists.map { it.listName },
@@ -68,7 +65,7 @@ class PlaylistDataViewModel(
 
                         loadChannels()
 
-                        _playlistState.update { current ->
+                        _playlistDataState.update { current ->
                             current.copy(
                                 playlistSelectedIndex = indexOfSelected
                             )
@@ -98,7 +95,7 @@ class PlaylistDataViewModel(
     }
 
     fun changePlaylist(playlistIndex: Int) {
-        val current = playlistState.value.playlistSelectedIndex
+        val current = playlistDataState.value.playlistSelectedIndex
         if (current != playlistIndex) {
             _playlistDataState.update {
                 it.copy(isLoading = true)
@@ -112,17 +109,12 @@ class PlaylistDataViewModel(
 
     data class PlaylistDataState(
         val groups: List<ChannelsGroup> = emptyList(),
+        val playlists: List<String> = emptyList(),
         val isLoading: Boolean = false,
+        val playlistSelectedIndex: Int = INT_NO_VALUE,
+        val isPlaylistSelectorVisible: Boolean = false
     ) {
         val dataIsEmpty
             get() = !isLoading && groups.isEmpty()
     }
-
-    data class PlaylistState(
-        val playlistSelectedIndex: Int = INT_NO_VALUE,
-        val isPlaylistSelectorVisible: Boolean = false,
-        val playlists: List<String> = emptyList(),
-    )
-
-
 }

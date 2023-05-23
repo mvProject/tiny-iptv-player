@@ -16,13 +16,13 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.mvproject.videoapp.ui.screens.settings.actions.SettingsPlaylistAction
 import com.mvproject.videoapp.ui.screens.settings.view.SettingsPlaylistView
 import com.mvproject.videoapp.ui.screens.settings.viewmodel.SettingsPlaylistViewModel
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 class SettingsPlaylistRoute : AndroidScreen() {
 
     @Composable
     override fun Content() {
-        val settingsPlaylistViewModel: SettingsPlaylistViewModel = getViewModel()
+        val settingsPlaylistViewModel: SettingsPlaylistViewModel = koinViewModel()
         val playlistDataState by settingsPlaylistViewModel.playlistDataState.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
 

@@ -1,11 +1,11 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 10.05.23, 20:21
+ *  last modified : 22.05.23, 15:54
  *
  */
 
-package com.mvproject.videoapp.ui.screens
+package com.mvproject.videoapp.ui.screens.playlist.viewmodel
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class PlaylistGroupDataViewModel(
+class PlaylistGroupViewModel(
     private val playlistChannelManager: PlaylistChannelManager
 ) : ViewModel() {
     private val _viewState = MutableStateFlow(GroupChannelsState())
