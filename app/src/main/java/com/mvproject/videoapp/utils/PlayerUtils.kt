@@ -10,8 +10,6 @@ package com.mvproject.videoapp.utils
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
-import android.content.pm.ActivityInfo
-import android.view.View
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.BrightnessHigh
 import androidx.compose.material.icons.rounded.BrightnessLow
@@ -19,16 +17,10 @@ import androidx.compose.material.icons.rounded.BrightnessMedium
 import androidx.compose.material.icons.rounded.VolumeDown
 import androidx.compose.material.icons.rounded.VolumeMute
 import androidx.compose.material.icons.rounded.VolumeUp
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.ui.unit.Constraints
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.media3.common.VideoSize
 import com.mvproject.videoapp.data.enums.ResizeMode
 import com.mvproject.videoapp.data.enums.UpdatePeriod
-import io.github.aakira.napier.Napier
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toInstant
 import kotlin.time.Duration
@@ -157,18 +149,28 @@ fun Activity.setBrightness(value: Float) {
     lp.screenBrightness = value
     this.window.attributes = lp
 }
-
+/*
 fun Activity.setOrientation(windowSizeClass: WindowSizeClass, isFullScreen: Boolean = false) {
-    requestedOrientation = if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded) {
-        Napier.e("testing setOrientation is expanded: LANDSCAPE")
-        ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-    } else {
-        if (isFullScreen) {
-            Napier.e("testing setOrientation isFullScreen:$isFullScreen: LANDSCAPE")
-            ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-        } else {
-            Napier.e("testing setOrientation isFullScreen:$isFullScreen: PORTRAIT")
-            ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+    Napier.e("testing setOrientation isFullScreen:$isFullScreen")
+    requestedOrientation = when (windowSizeClass.widthSizeClass) {
+        WindowWidthSizeClass.Expanded -> {
+            Napier.e("testing setOrientation is Expanded")
+            ActivityInfo.SCREEN_ORIENTATION_SENSOR
+        }
+
+        WindowWidthSizeClass.Medium -> {
+            Napier.e("testing setOrientation is Medium")
+            ActivityInfo.SCREEN_ORIENTATION_SENSOR
+        }
+
+        WindowWidthSizeClass.Compact -> {
+            Napier.e("testing setOrientation is Compact")
+            ActivityInfo.SCREEN_ORIENTATION_SENSOR
+        }
+
+        else -> {
+            Napier.e("testing setOrientation is else")
+            ActivityInfo.SCREEN_ORIENTATION_SENSOR
         }
     }
 }
@@ -188,7 +190,7 @@ fun Activity.showSystemBars(view: View) {
     val windowInsetsController = WindowCompat.getInsetsController(this.window, view)
     // Show both the status bar and the navigation bar
     windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
-}
+}*/
 
 fun Int.calculateBrightnessProgress(totalValue: Double = 30.0): Int {
     //  val progress = (this.toDouble() / 30).toFloat() * 100

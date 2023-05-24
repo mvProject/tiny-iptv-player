@@ -7,30 +7,34 @@
 
 package com.mvproject.videoapp.ui.components.player
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Subtitles
-import androidx.compose.material.icons.outlined.SubtitlesOff
 import androidx.compose.material.icons.rounded.Crop
 import androidx.compose.material.icons.rounded.Fullscreen
 import androidx.compose.material.icons.rounded.FullscreenExit
-import androidx.compose.material.icons.rounded.MusicNote
-import androidx.compose.material.icons.rounded.MusicOff
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.tooling.preview.Preview
 import com.mvproject.videoapp.data.enums.player.PlayerCommands
 import com.mvproject.videoapp.data.enums.player.PlayerUICommands
 import com.mvproject.videoapp.ui.screens.player.VideoViewViewModel
+import com.mvproject.videoapp.ui.theme.VideoAppTheme
+import com.mvproject.videoapp.ui.theme.dimens
 
 @Composable
-fun PlayerControls(
+fun PlayerControlView(
     modifier: Modifier = Modifier,
     playerState: VideoViewViewModel.ControlUIState,
     onPlayerCommand: (command: PlayerCommands) -> Unit = {},
@@ -42,12 +46,15 @@ fun PlayerControls(
         horizontalArrangement = Arrangement.Start
     ) {
         IconButton(
-            onClick = { onPlayerCommand(PlayerCommands.PLAYBACK_TOGGLE) }
+            onClick = { onPlayerCommand(PlayerCommands.PLAYBACK_TOGGLE) },
+            modifier = Modifier
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.onSurfaceVariant)
         ) {
             Icon(
                 imageVector = if (playerState.isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow,
                 contentDescription = "PLAYBACK_TOGGLE",
-                tint = Color.LightGray
+                tint = MaterialTheme.colorScheme.surfaceVariant
             )
         }
 
@@ -57,44 +64,52 @@ fun PlayerControls(
             horizontalArrangement = Arrangement.End
         ) {
             IconButton(
-                onClick = { onPlayerUICommand(PlayerUICommands.TOGGLE_RESIZE_MODE) }
+                onClick = { onPlayerUICommand(PlayerUICommands.TOGGLE_RESIZE_MODE) },
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.onSurfaceVariant)
             ) {
                 Icon(
                     imageVector = Icons.Rounded.Crop,
                     contentDescription = "TOGGLE_RESIZE_MODE",
-                    tint = Color.LightGray
+                    tint = MaterialTheme.colorScheme.surfaceVariant
                 )
             }
 
-            IconButton(
-                onClick = { }
-            ) {
-                Icon(
-                    imageVector = if (playerState.isUseSubtitle) Icons.Outlined.Subtitles else Icons.Outlined.SubtitlesOff,
-                    contentDescription = "Subtitle toggle",
-                    tint = Color.LightGray
-                )
-            }
+            Spacer(modifier = Modifier.width(MaterialTheme.dimens.size8))
 
             IconButton(
-                onClick = { }
-            ) {
-                Icon(
-                    imageVector = if (playerState.isTracksAvailable) Icons.Rounded.MusicNote else Icons.Rounded.MusicOff,
-                    contentDescription = "Audio track toggle",
-                    tint = Color.LightGray
-                )
-            }
-
-            IconButton(
-                onClick = { onPlayerUICommand(PlayerUICommands.TOGGLE_FULL_SCREEN) }
+                onClick = { onPlayerUICommand(PlayerUICommands.TOGGLE_FULL_SCREEN) },
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.onSurfaceVariant)
             ) {
                 Icon(
                     imageVector = if (playerState.isFullscreen) Icons.Rounded.FullscreenExit else Icons.Rounded.Fullscreen,
                     contentDescription = "TOGGLE_FULL_SCREEN",
-                    tint = Color.LightGray
+                    tint = MaterialTheme.colorScheme.surfaceVariant
                 )
             }
         }
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun PreviewPlayerControls() {
+    VideoAppTheme() {
+        PlayerControlView(
+            playerState = VideoViewViewModel.ControlUIState(50, 15)
+        )
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun DarkPreviewPlayerControls() {
+    VideoAppTheme(darkTheme = true) {
+        PlayerControlView(
+            playerState = VideoViewViewModel.ControlUIState(50, 15)
+        )
     }
 }

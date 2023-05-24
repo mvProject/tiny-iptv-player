@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
@@ -30,7 +29,6 @@ import com.mvproject.videoapp.ui.components.modifiers.defaultPlayerHorizontalGes
 import com.mvproject.videoapp.ui.components.modifiers.defaultPlayerTapGestures
 import com.mvproject.videoapp.ui.components.modifiers.defaultPlayerVerticalGestures
 import com.mvproject.videoapp.ui.screens.player.VideoViewViewModel
-import io.github.aakira.napier.Napier
 
 @Composable
 fun PlayerView(
@@ -42,10 +40,6 @@ fun PlayerView(
     onPlayerCommand: (command: PlayerCommands) -> Unit = {},
     onPlayerUICommand: (command: PlayerUICommands) -> Unit = {},
 ) {
-
-    SideEffect {
-        Napier.w("testing PlayerView SideEffect")
-    }
 
     val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
 
@@ -71,12 +65,12 @@ fun PlayerView(
                     keepScreenOn = true
                 }.also { view ->
                     player.setVideoSurfaceView(view)
-                    player
-                        .trackSelectionParameters
-                        .buildUpon()
-                        .setMaxVideoSizeSd()
-                        .build()
-                }
+                    // player
+                    //     .trackSelectionParameters
+                    //     .buildUpon()
+                    //     .setMaxVideoSizeSd()
+                    //     .build()
+                }//
             }
         )
 
