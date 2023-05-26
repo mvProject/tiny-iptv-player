@@ -97,7 +97,7 @@ class VideoViewViewModel(
                     }
 
                     restartPlayingIfNeeded()
-                    getCurrentMediaEpg(data)
+                    getCurrentMediaEpg()
                 }
 
                 override fun onVideoSizeChanged(videoSize: VideoSize) {
@@ -178,7 +178,7 @@ class VideoViewViewModel(
                 }
 
                 override fun onTracksChanged(tracks: Tracks) {
-                    tracks.groups.forEachIndexed { index, group ->
+                    tracks.groups.forEachIndexed { _, group ->
                         Napier.i("testing playerInfo group ${group.type}")
                         if (group.type == C.TRACK_TYPE_AUDIO) {
                             for (i in 0..group.length - 1) {
@@ -345,15 +345,12 @@ class VideoViewViewModel(
         }
     }
 
-    private fun getCurrentMediaEpg(channelName: String) {
-        //    val currentMedia2 = channelList.firstOrNull { it.channelName == channelName }
-        val currentMedia2 =
+    private fun getCurrentMediaEpg() {
+        val currentMedia =
             channelList.firstOrNull { it.channelName == playerUIState.value.currentChannel }
 
-        currentMedia2?.let { channel ->
+        currentMedia?.let { channel ->
             val id = listOf(channel.epgId, channel.epgAlterId).firstNotNullOfOrNull { it }
-            Napier.e("testing getCurrentMediaEpg channel ${channel.channelName}, ids:$id")
-            // val programs = id?.let { playlistChannelManager.getEpgForChannel(it) } ?: emptyList()
             val programs =
                 id?.let { playlistChannelManager.getEpgListForChannel(it) } ?: emptyList()
             _currentEpg.value = programs
@@ -362,11 +359,10 @@ class VideoViewViewModel(
     }
 
     fun toggleEpgVisibility() {
-        val currentMedia2 =
+        val currentMedia =
             channelList.firstOrNull { it.channelName == playerUIState.value.currentChannel }
-        currentMedia2?.let { channel ->
+        currentMedia?.let { channel ->
             val id = listOf(channel.epgId, channel.epgAlterId).firstNotNullOfOrNull { it }
-            Napier.e("testing toggleEpgVisibility channel ${channel.channelName}, ids:$id")
             val programs =
                 id?.let { playlistChannelManager.getEpgListForChannel(it) } ?: emptyList()
             channelsEpgs = programs
@@ -379,20 +375,20 @@ class VideoViewViewModel(
         }
     }
 
-    private fun refreshEpg() {
-        val currentMedia =
-            channelList.firstOrNull { it.channelName == playerUIState.value.currentChannel }
+    /*    private fun refreshEpg() {
+            val currentMedia =
+                channelList.firstOrNull { it.channelName == playerUIState.value.currentChannel }
 
-        currentMedia?.let { channel ->
-            val id = listOf(channel.epgId, channel.epgAlterId).firstNotNullOfOrNull { it }
-            Napier.e("testing getCurrentMediaEpg channel ${channel.channelName}, ids:$id")
-            // val programs = id?.let { playlistChannelManager.getEpgForChannel(it) } ?: emptyList()
-            val programs =
-                id?.let { playlistChannelManager.getEpgListForChannel(it) } ?: emptyList()
-            _currentEpg.value = programs
-            Napier.w("testing getCurrentMediaEpg programs $programs")
-        }
-    }
+            currentMedia?.let { channel ->
+                val id = listOf(channel.epgId, channel.epgAlterId).firstNotNullOfOrNull { it }
+                Napier.e("testing getCurrentMediaEpg channel ${channel.channelName}, ids:$id")
+                // val programs = id?.let { playlistChannelManager.getEpgForChannel(it) } ?: emptyList()
+                val programs =
+                    id?.let { playlistChannelManager.getEpgListForChannel(it) } ?: emptyList()
+                _currentEpg.value = programs
+                Napier.w("testing getCurrentMediaEpg programs $programs")
+            }
+        }*/
 
 
     private fun toggleFullScreenMode() {

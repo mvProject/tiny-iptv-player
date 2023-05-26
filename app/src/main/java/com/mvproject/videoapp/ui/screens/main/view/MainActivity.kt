@@ -15,8 +15,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.core.view.WindowCompat
@@ -26,19 +24,15 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.mvproject.videoapp.navigation.PlaylistDataRoute
 import com.mvproject.videoapp.ui.screens.main.viewmodel.MainViewModel
 import com.mvproject.videoapp.ui.theme.VideoAppTheme
-import com.mvproject.videoapp.utils.setOrientation
 import io.github.aakira.napier.Napier
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 class MainActivity : ComponentActivity() {
     private val launcher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
-        if (isGranted) {
-            Napier.w("testing permission POST_NOTIFICATIONS granted")
-        } else {
-            Napier.e("testing permission POST_NOTIFICATIONS permission denied or forever denied")
+        if (!isGranted) {
+            Napier.e("POST_NOTIFICATIONS permission denied or forever denied")
         }
     }
 
@@ -47,14 +41,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val viewModel: MainViewModel = getViewModel()
+            val viewModel: MainViewModel = koinViewModel()
 
             val infoUpdateState by viewModel.infoUpdateState.observeAsState()
             val alterUpdateState by viewModel.alterUpdateState.observeAsState()
             val mainUpdateState by viewModel.mainUpdateState.observeAsState()
 
-            if (
-                checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+            if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) ==
+                PackageManager.PERMISSION_GRANTED
             ) {
                 Napier.w("testing permission POST_NOTIFICATIONS granted")
             } else {
@@ -112,15 +106,12 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            val windowSizeClass = calculateWindowSizeClass(this)
-            setOrientation(windowSizeClass)
-
             WindowInsetsControllerCompat(window, window.decorView)
                 .isAppearanceLightStatusBars = !isSystemInDarkTheme()
 
             VideoAppTheme {
                 Navigator(
-                    screen = PlaylistDataRoute(),
+                    screen = PlaylistDataRoute()
                 )
             }
         }

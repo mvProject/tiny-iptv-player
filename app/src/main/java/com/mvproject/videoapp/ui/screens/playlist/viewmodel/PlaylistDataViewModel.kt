@@ -42,8 +42,6 @@ class PlaylistDataViewModel(
                 currentPlaylist?.let { id ->
                     val indexOfSelected = currentPlaylists.indexOf(id)
 
-                    //  loadChannels()
-
                     _playlistDataState.update { current ->
                         current.copy(
                             isPlaylistSelectorVisible = currentPlaylists.count() > INT_VALUE_1,
@@ -57,22 +55,21 @@ class PlaylistDataViewModel(
 
         viewModelScope.launch(Dispatchers.IO) {
             playlistManager.currentPlaylistId.collect { id ->
-                Napier.w("testing flow currentPlaylistId $id")
                 if (id != AppConstants.LONG_NO_VALUE) {
                     val currentPlaylist = playlistManager.loadSelectedPlayList()
                     currentPlaylist?.let { currentId ->
                         val indexOfSelected = currentPlaylists.indexOf(currentId)
-
-                        loadChannels()
-
                         _playlistDataState.update { current ->
                             current.copy(
-                                playlistSelectedIndex = indexOfSelected
+                                playlistSelectedIndex = indexOfSelected,
+                                isLoading = true
                             )
                         }
+
+                        loadChannels()
                     }
                 } else {
-                    Napier.w("testing flow currentPlaylistId LONG_NO_VALUE")
+                    Napier.e("currentPlaylistId LONG_NO_VALUE")
                     _playlistDataState.update { current ->
                         current.copy(groups = emptyList(), isLoading = false)
                     }
@@ -82,14 +79,10 @@ class PlaylistDataViewModel(
     }
 
     private fun loadChannels() {
-        Napier.w("testing loadChannels")
-        _playlistDataState.update { current ->
-            current.copy(isLoading = true)
-        }
         viewModelScope.launch(Dispatchers.IO) {
             val groups = playlistChannelManager.loadAllGroupsFromPlaylist()
             _playlistDataState.update { current ->
-                current.copy(groups = groups, isLoading = false)
+                current.copy(groups = groups, isLoading = false, isDataLoaded = true)
             }
         }
     }
@@ -97,9 +90,6 @@ class PlaylistDataViewModel(
     fun changePlaylist(playlistIndex: Int) {
         val current = playlistDataState.value.playlistSelectedIndex
         if (current != playlistIndex) {
-            _playlistDataState.update {
-                it.copy(isLoading = true)
-            }
             viewModelScope.launch(Dispatchers.IO) {
                 val selected = currentPlaylists[playlistIndex]
                 playlistManager.setCurrentPlaylist(playlistId = selected.id)
@@ -111,10 +101,11 @@ class PlaylistDataViewModel(
         val groups: List<ChannelsGroup> = emptyList(),
         val playlists: List<String> = emptyList(),
         val isLoading: Boolean = false,
+        val isDataLoaded: Boolean = false,
         val playlistSelectedIndex: Int = INT_NO_VALUE,
         val isPlaylistSelectorVisible: Boolean = false
     ) {
         val dataIsEmpty
-            get() = !isLoading && groups.isEmpty()
+            get() = isDataLoaded && groups.isEmpty()
     }
 }

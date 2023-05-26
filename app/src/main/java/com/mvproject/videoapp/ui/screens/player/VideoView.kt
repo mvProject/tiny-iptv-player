@@ -10,20 +10,19 @@ package com.mvproject.videoapp.ui.screens.player
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Companion.Compact
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Companion.Medium
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.adaptive.HorizontalTwoPaneStrategy
 import com.google.accompanist.adaptive.TwoPane
@@ -37,8 +36,6 @@ import com.mvproject.videoapp.ui.theme.dimens
 import com.mvproject.videoapp.utils.calculateProperBrightnessValue
 import com.mvproject.videoapp.utils.findActivity
 import com.mvproject.videoapp.utils.setBrightness
-import com.mvproject.videoapp.utils.setOrientation
-import io.github.aakira.napier.Napier
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
@@ -53,10 +50,6 @@ fun VideoView(
     val epgState by viewModel.currentEpg.collectAsState()
     val systemUIController = rememberSystemUiController()
 
-    SideEffect {
-        Napier.e("VideoView SideEffect")
-    }
-
     val windowSizeClass = calculateWindowSizeClass(activity)
     val displayFeatures = calculateDisplayFeatures(activity)
 
@@ -65,25 +58,21 @@ fun VideoView(
             calculateProperBrightnessValue(controlState.brightnessValue)
         }
     }
-    val currentBrightness = calculateProperBrightnessValue(controlState.brightnessValue)
 
-    activity.setOrientation(windowSizeClass, isFullScreen = controlState.isFullscreen)
     activity.setBrightness(targetBrightness)
 
     systemUIController.isNavigationBarVisible = !controlState.isFullscreen
     systemUIController.isStatusBarVisible = !controlState.isFullscreen
 
-    Napier.w("testing currentBrightness:$currentBrightness, targetBrightness:$targetBrightness")
-
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(MaterialTheme.colorScheme.scrim)
+            .systemBarsPadding()
     ) {
         if (controlState.isFullscreen) {
             PlayerView(
-                modifier = Modifier
-                    .background(Color.Black),
+                modifier = Modifier,
                 playerState = controlState,
                 player = viewModel.player,
                 programs = epgState,
@@ -95,8 +84,7 @@ fun VideoView(
             TwoPane(
                 first = {
                     PlayerView(
-                        modifier = Modifier
-                            .background(Color.Black),
+                        modifier = Modifier,
                         playerState = controlState,
                         player = viewModel.player,
                         programs = epgState,
@@ -108,11 +96,7 @@ fun VideoView(
                 second = {
                     PlayerOverlayEpgView(
                         modifier = Modifier
-                            .background(
-                                color = MaterialTheme.colors.onPrimary
-                            ),
-                        textColor = MaterialTheme.colors.primary,
-                        backColor = MaterialTheme.colors.onPrimary,
+                            .background(color = MaterialTheme.colorScheme.surface),
                         epgList = epgState
                     )
                 },
@@ -135,14 +119,12 @@ fun VideoView(
     }
 
     DisposableEffect(viewModel) {
-        Napier.e("testing1 VideoView DisposableEffect")
         viewModel.initPlayBack(
             channelId = channelId,
             channelGroup = channelGroup
         )
         onDispose {
             viewModel.cleanPlayback()
-            Napier.e("testing1 VideoView onDispose")
         }
     }
 }
