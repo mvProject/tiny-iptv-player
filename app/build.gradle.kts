@@ -17,7 +17,7 @@ plugins {
 }
 
 android {
-    namespace = "com.mvproject.videoapp"
+    namespace = "com.mvproject.tinyiptv"
     compileSdk = 33
 
     defaultConfig {
@@ -75,7 +75,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.2"
+        kotlinCompilerExtensionVersion = "1.4.3"
     }
     packagingOptions {
         resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
@@ -96,72 +96,72 @@ fun readProperties(propertiesFile: File) = Properties().apply {
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.aar"))))
 
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.0")
+    implementation("androidx.core:core-ktx:1.10.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
 
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
+    // DateTime
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 
     //Logging
     implementation("io.github.aakira:napier:2.6.1")
 
     // Integration with activity and viewmodels
-    implementation("androidx.activity:activity-compose:1.6.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0")
-
-    implementation("androidx.paging:paging-runtime:3.1.1")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha18")
+    implementation("androidx.activity:activity-compose:1.7.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
 
     // Compose Bom
-    val composeBom = platform("androidx.compose:compose-bom:2023.01.00")
+    val composeBom = platform("androidx.compose:compose-bom:2023.05.01")
     implementation(composeBom)
     androidTestImplementation(composeBom)
     // Compose UI
     implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.material:material")
     implementation("androidx.compose.material:material-icons-core")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.compose.runtime:runtime-livedata")
-
-    implementation("androidx.compose.material3:material3-window-size-class:1.0.1")
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material3:material3-window-size-class")
+    implementation("androidx.compose.animation:animation")
 
     // DI
-    implementation("io.insert-koin:koin-androidx-compose:3.4.3")
+    implementation("io.insert-koin:koin-androidx-compose:3.4.4")
     implementation("io.insert-koin:koin-androidx-workmanager:3.4.0")
 
+    // WorkManager
+    implementation("androidx.work:work-runtime-ktx:2.8.1")
+
     // Navigation
-    implementation("androidx.navigation:navigation-compose:2.5.3")
-    implementation("cafe.adriel.voyager:voyager-androidx:1.0.0-rc04")
-    implementation("cafe.adriel.voyager:voyager-koin:1.0.0-rc04")
-    implementation("cafe.adriel.voyager:voyager-navigator:1.0.0-rc04")
-    implementation("cafe.adriel.voyager:voyager-transitions:1.0.0-rc04")
+    implementation("cafe.adriel.voyager:voyager-androidx:1.0.0-rc06")
+    implementation("cafe.adriel.voyager:voyager-koin:1.0.0-rc06")
+    implementation("cafe.adriel.voyager:voyager-navigator:1.0.0-rc06")
+    implementation("cafe.adriel.voyager:voyager-transitions:1.0.0-rc06")
 
     // Image processing
-    implementation("io.coil-kt:coil:2.2.2")
-    implementation("io.coil-kt:coil-compose:2.2.2")
+    implementation("io.coil-kt:coil:2.4.0")
+    implementation("io.coil-kt:coil-compose:2.4.0")
 
     // Exoplayer
-    implementation("androidx.media3:media3-exoplayer:1.0.1")
-    implementation("androidx.media3:media3-ui:1.0.1")
-    implementation("androidx.media3:media3-exoplayer-hls:1.0.1")
+    implementation("androidx.media3:media3-exoplayer:1.0.2")
+    implementation("androidx.media3:media3-ui:1.0.2")
+    implementation("androidx.media3:media3-exoplayer-hls:1.0.2")
 
     // Ktor
-    implementation("io.ktor:ktor-client-android:2.2.2")
-    implementation("io.ktor:ktor-client-logging-jvm:2.2.2")
-    implementation("io.ktor:ktor-client-content-negotiation:2.2.2")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.2.2")
+    implementation("io.ktor:ktor-client-android:2.3.0")
+    implementation("io.ktor:ktor-client-logging-jvm:2.3.0")
+    implementation("io.ktor:ktor-client-content-negotiation:2.3.0")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.0")
 
     // SQL Delight
     implementation("com.squareup.sqldelight:android-driver:1.5.5")
     implementation("com.squareup.sqldelight:coroutines-extensions-jvm:1.5.5")
 
     // Misc
-    implementation("com.google.accompanist:accompanist-permissions:0.28.0")
-    //  implementation("com.github.skydoves:landscapist-glide:2.1.5")
-    implementation("com.airbnb.android:lottie-compose:6.0.0")
     implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
+    implementation("com.google.accompanist:accompanist-permissions:0.28.0")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.31.2-alpha")
+    implementation("com.google.accompanist:accompanist-adaptive:0.31.2-alpha")
 
     // Tests
     testImplementation("junit:junit:4.13.2")
@@ -175,15 +175,10 @@ dependencies {
     // Android Studio Preview support
     debugImplementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.compose.ui:ui-tooling-preview")
-
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.31.1-alpha")
-    implementation("com.google.accompanist:accompanist-adaptive:0.31.1-alpha")
-
-    implementation("androidx.work:work-runtime-ktx:2.8.1")
 }
 
 sqldelight {
     database("VideoAppDatabase") {
-        packageName = "com.mvproject.videoapp"
+        packageName = "com.mvproject.tinyiptv"
     }
 }

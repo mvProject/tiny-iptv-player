@@ -6,7 +6,7 @@
   -->
 
 <resources>
-    <string name="app_name">Video App</string>
+    <string name="app_name">Tiny Iptv Player</string>
     <string name="storage_access">Storage Access</string>
     <string name="storage_access_permission_text">Access for video files is required</string>
     <string name="grant_access">Request for access</string>
