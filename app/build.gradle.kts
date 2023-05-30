@@ -143,9 +143,9 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.4.0")
 
     // Exoplayer
-    implementation("androidx.media3:media3-exoplayer:1.0.2")
-    implementation("androidx.media3:media3-ui:1.0.2")
-    implementation("androidx.media3:media3-exoplayer-hls:1.0.2")
+    implementation("androidx.media3:media3-exoplayer:1.1.0-alpha01")
+    implementation("androidx.media3:media3-ui:1.1.0-alpha01")
+    implementation("androidx.media3:media3-exoplayer-hls:1.1.0-alpha01")
 
     // Ktor
     implementation("io.ktor:ktor-client-android:2.3.0")

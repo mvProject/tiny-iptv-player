@@ -115,14 +115,12 @@ fun SettingsView(
 
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.size12))
 
-            // todo set enabled and route update after implementation
             TextButton(
                 onClick = { onSettingsAction(SettingsAction.NavigatePlayerSettings) },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.inverseOnSurface
-                ),
-                enabled = false
+                )
             ) {
                 Text(
                     text = stringResource(id = R.string.scr_player_settings_title),

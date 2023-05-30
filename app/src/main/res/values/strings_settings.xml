@@ -14,6 +14,8 @@
     <string name="option_epg_info_update">Update epg info period</string>
     <string name="option_epg_main_update">Update main epg source period</string>
     <string name="option_epg_alter_update">Update alter epg source period</string>
+    <string name="option_default_resize_mode">Default resize mode</string>
+    <string name="option_default_fullscreen_mode">Use fullscreen by default</string>
 
     <string name="scr_btn_playlists_update">playlists update</string>
 

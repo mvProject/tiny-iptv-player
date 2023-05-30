@@ -7,15 +7,17 @@
 
 package com.mvproject.tinyiptv.data.enums
 
-@JvmInline
-value class ResizeMode private constructor(val value: Int) {
-    companion object {
-        val Fit = ResizeMode(0)
-        val FixedWidth = ResizeMode(1)
-        val FixedHeight = ResizeMode(2)
-        val Fill = ResizeMode(3)
-        val Zoom = ResizeMode(4)
+import androidx.annotation.StringRes
+import com.mvproject.tinyiptv.R
 
+enum class ResizeMode(val value: Int, @StringRes val title: Int) {
+    Fit(0, R.string.video_resize_mode_fit),
+    FixedWidth(1, R.string.video_resize_mode_fixed_width),
+    FixedHeight(2, R.string.video_resize_mode_fixed_height),
+    Fill(3, R.string.video_resize_mode_fill),
+    Zoom(4, R.string.video_resize_mode_zoom);
+
+    companion object {
         fun toggleResizeMode(current: ResizeMode) =
             when (current) {
                 Fit -> {
@@ -35,10 +37,6 @@ value class ResizeMode private constructor(val value: Int) {
                 }
 
                 FixedWidth -> {
-                    Fit
-                }
-
-                else -> {
                     Fit
                 }
             }

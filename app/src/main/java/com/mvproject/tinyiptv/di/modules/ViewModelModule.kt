@@ -13,6 +13,7 @@ import com.mvproject.tinyiptv.ui.screens.playlist.viewmodel.AddPlayListViewModel
 import com.mvproject.tinyiptv.ui.screens.playlist.viewmodel.PlaylistDataViewModel
 import com.mvproject.tinyiptv.ui.screens.playlist.viewmodel.PlaylistGroupViewModel
 import com.mvproject.tinyiptv.ui.screens.settings.viewmodel.SettingsEpgViewModel
+import com.mvproject.tinyiptv.ui.screens.settings.viewmodel.SettingsPlayerViewModel
 import com.mvproject.tinyiptv.ui.screens.settings.viewmodel.SettingsPlaylistViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
@@ -25,4 +26,5 @@ val viewModelModule = module {
     viewModelOf(::PlaylistDataViewModel)
     viewModelOf(::MainViewModel)
     viewModelOf(::SettingsEpgViewModel)
+    viewModelOf(::SettingsPlayerViewModel)
 }

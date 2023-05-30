@@ -15,6 +15,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.mvproject.tinyiptv.utils.AppConstants.INT_VALUE_5
+import com.mvproject.tinyiptv.utils.AppConstants.INT_VALUE_ZERO
 import com.mvproject.tinyiptv.utils.AppConstants.LONG_NO_VALUE
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -165,6 +166,26 @@ class PreferenceRepository(
         preferences[EPG_ALTER_LAST_UPDATE_PERIOD] ?: INT_VALUE_5
     }.first()
 
+    suspend fun setDefaultResizeMode(mode: Int) {
+        dataStore.edit { settings ->
+            settings[DEFAULT_RESIZE_MODE] = mode
+        }
+    }
+
+    suspend fun getDefaultResizeMode() = dataStore.data.map { preferences ->
+        preferences[DEFAULT_RESIZE_MODE] ?: INT_VALUE_ZERO
+    }.first()
+
+
+    suspend fun setDefaultFullscreenMode(state: Boolean) {
+        dataStore.edit { settings ->
+            settings[DEFAULT_FULLSCREEN_MODE] = state
+        }
+    }
+
+    suspend fun getDefaultFullscreenMode() = dataStore.data.map { preferences ->
+        preferences[DEFAULT_FULLSCREEN_MODE] ?: false
+    }.first()
 
     private companion object {
         val SELECTED_PLAYLIST = longPreferencesKey("SelectedPlaylist")
@@ -181,6 +202,10 @@ class PreferenceRepository(
         val EPG_INFO_LAST_UPDATE_PERIOD = intPreferencesKey("EpgInfoLastUpdatePeriod")
         val EPG_MAIN_LAST_UPDATE_PERIOD = intPreferencesKey("EpgMainLastUpdatePeriod")
         val EPG_ALTER_LAST_UPDATE_PERIOD = intPreferencesKey("EpgAlterLastUpdatePeriod")
+
+        val DEFAULT_RESIZE_MODE = intPreferencesKey("DefaultResizeMode")
+        val DEFAULT_FULLSCREEN_MODE = booleanPreferencesKey("DefaultFullscreenMode")
+
 
         const val PLAYLIST_LAST_UPDATE = "PlaylistLastUpdate"
     }

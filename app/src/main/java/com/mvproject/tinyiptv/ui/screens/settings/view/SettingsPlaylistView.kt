@@ -19,7 +19,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -37,7 +36,6 @@ import com.mvproject.tinyiptv.ui.screens.settings.viewmodel.SettingsPlaylistView
 import com.mvproject.tinyiptv.ui.theme.VideoAppTheme
 import com.mvproject.tinyiptv.ui.theme.dimens
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsPlaylistView(
     dataState: SettingsPlaylistViewModel.PlaylistSettingsState,

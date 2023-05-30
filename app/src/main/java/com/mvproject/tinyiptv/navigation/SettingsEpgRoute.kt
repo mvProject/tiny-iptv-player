@@ -17,7 +17,7 @@ import com.mvproject.tinyiptv.ui.screens.settings.view.SettingsEpgView
 import com.mvproject.tinyiptv.ui.screens.settings.viewmodel.SettingsEpgViewModel
 import org.koin.androidx.compose.koinViewModel
 
-class SettingsEpgRoute : AndroidScreen() {
+object SettingsEpgRoute : AndroidScreen() {
 
     @Composable
     override fun Content() {

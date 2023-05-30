@@ -25,14 +25,17 @@ class SettingsRoute : AndroidScreen() {
                 when (action) {
                     is SettingsAction.NavigateBack -> navigator.pop()
                     is SettingsAction.NavigatePlaylistSettings -> navigator.push(
-                        SettingsPlaylistRoute()
+                        SettingsPlaylistRoute
                     )
 
                     is SettingsAction.NavigateEpgSettings -> navigator.push(
-                        SettingsEpgRoute()
+                        SettingsEpgRoute
                     )
 
-                    is SettingsAction.NavigatePlayerSettings -> {}
+                    is SettingsAction.NavigatePlayerSettings -> navigator.push(
+                        SettingsPlayerRoute
+                    )
+
                     is SettingsAction.NavigateAppSettings -> {}
                 }
             }

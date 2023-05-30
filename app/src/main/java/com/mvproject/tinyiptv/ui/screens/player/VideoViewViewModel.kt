@@ -28,6 +28,7 @@ import com.mvproject.tinyiptv.data.mappers.ListMappers.createMediaItems
 import com.mvproject.tinyiptv.data.models.channels.PlaylistChannel
 import com.mvproject.tinyiptv.data.models.epg.EpgProgram
 import com.mvproject.tinyiptv.data.network.NetworkConnectivityObserver
+import com.mvproject.tinyiptv.data.repository.PreferenceRepository
 import com.mvproject.tinyiptv.utils.aspectRatio
 import com.mvproject.tinyiptv.utils.calculateProperBrightnessRange
 import io.github.aakira.napier.Napier
@@ -41,6 +42,7 @@ import kotlinx.coroutines.launch
 class VideoViewViewModel(
     val player: Player,
     private val viewSettingsHelper: ViewSettingsHelper,
+    private val preferenceRepository: PreferenceRepository,
     private val playlistChannelManager: PlaylistChannelManager,
     private val networkConnectivityObserver: NetworkConnectivityObserver
 ) : ViewModel() {
@@ -64,6 +66,14 @@ class VideoViewViewModel(
 
     init {
         Napier.i("testing VideoViewViewModel init")
+        viewModelScope.launch {
+            _playerUIState.update {
+                it.copy(
+                    isFullscreen = preferenceRepository.getDefaultFullscreenMode(),
+                    videoResizeMode = ResizeMode.values()[preferenceRepository.getDefaultResizeMode()]
+                )
+            }
+        }
         viewModelScope.launch {
             networkConnectivityObserver.observe()
                 .collect { status ->
@@ -302,7 +312,6 @@ class VideoViewViewModel(
 
     private fun toggleVideoResizeMode() {
         val currentMode = playerUIState.value.videoResizeMode
-
         val targetMode = ResizeMode.toggleResizeMode(current = currentMode)
         _playerUIState.update { state ->
             state.copy(videoResizeMode = targetMode)

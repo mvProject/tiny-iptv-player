@@ -18,7 +18,7 @@ import com.mvproject.tinyiptv.ui.screens.settings.view.SettingsPlaylistView
 import com.mvproject.tinyiptv.ui.screens.settings.viewmodel.SettingsPlaylistViewModel
 import org.koin.androidx.compose.koinViewModel
 
-class SettingsPlaylistRoute : AndroidScreen() {
+object SettingsPlaylistRoute : AndroidScreen() {
 
     @Composable
     override fun Content() {

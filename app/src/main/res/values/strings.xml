@@ -18,4 +18,11 @@
     <string name="playlist_update_2_days">2 Days</string>
     <string name="playlist_update_1_week">1 Week</string>
     <string name="playlist_update_never">Never</string>
+
+    <string name="video_resize_mode_fill">Fill</string>
+    <string name="video_resize_mode_fixed_width">FixedWidth</string>
+    <string name="video_resize_mode_fixed_height">FixedHeight</string>
+    <string name="video_resize_mode_fit">Fit</string>
+    <string name="video_resize_mode_zoom">Zoom</string>
+
 </resources>
