@@ -47,11 +47,7 @@ class MainActivity : ComponentActivity() {
             val alterUpdateState by viewModel.alterUpdateState.observeAsState()
             val mainUpdateState by viewModel.mainUpdateState.observeAsState()
 
-            if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) ==
-                PackageManager.PERMISSION_GRANTED
-            ) {
-                Napier.w("testing permission POST_NOTIFICATIONS granted")
-            } else {
+            if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                 if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
                     // show rationale and then launch launcher to request permission
                     Napier.w("testing permission POST_NOTIFICATIONS shouldShowRequestPermissionRationale")
@@ -66,7 +62,6 @@ class MainActivity : ComponentActivity() {
 
             infoUpdateState?.let { states ->
                 if (states.isEmpty()) {
-                    Napier.w("testing infoUpdateState states.isEmpty")
                     viewModel.checkEpgInfoUpdate()
                 } else {
                     states.firstOrNull()?.let { info ->
@@ -80,7 +75,6 @@ class MainActivity : ComponentActivity() {
 
             alterUpdateState?.let { states ->
                 if (states.isEmpty()) {
-                    Napier.w("testing alterUpdateState states.isEmpty")
                     viewModel.checkAlterEpgUpdate()
                 } else {
                     states.firstOrNull()?.let { info ->
@@ -94,7 +88,6 @@ class MainActivity : ComponentActivity() {
 
             mainUpdateState?.let { states ->
                 if (states.isEmpty()) {
-                    Napier.w("testing mainUpdateState states.isEmpty")
                     viewModel.checkMainEpgUpdate()
                 } else {
                     states.firstOrNull()?.let { info ->

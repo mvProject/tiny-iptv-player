@@ -116,12 +116,11 @@ class PlaylistGroupViewModel(
 
     private fun loadFavoritesAndEpgInfo(channel: PlaylistChannelWithEpg) {
         val index = channels.indexOf(channel)
-        Napier.w("testing loadFavoritesInfo channel:${channel.channelName}, index:$index, from ${channels.count()}")
         val isInFavorites = channel.id in favoriteIds
-        val programs =
-            channel.epgId?.let { playlistChannelManager.getEpgForChannel(it) } ?: emptyList()
+        val programs = channel.epgId?.let {
+            playlistChannelManager.getEpgForChannel(it)
+        } ?: emptyList()
         val isShouldUpdate = channel.isInFavorites != isInFavorites || programs.isNotEmpty()
-        Napier.w("testing loadFavoritesInfo isShouldUpdate:$isShouldUpdate")
         if (isShouldUpdate) {
             channels[index] = channel.copy(
                 isInFavorites = isInFavorites,
@@ -141,9 +140,4 @@ class PlaylistGroupViewModel(
         val searchString: String = EMPTY_STRING,
         val viewType: ChannelsViewType = ChannelsViewType.LIST
     )
-
-    override fun onCleared() {
-        super.onCleared()
-        Napier.e("testing onCleared")
-    }
 }

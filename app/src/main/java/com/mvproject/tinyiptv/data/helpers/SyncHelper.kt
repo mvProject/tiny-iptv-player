@@ -81,36 +81,37 @@ class SyncHelper(
         val updateElapsedPeriod = typeToDuration(
             preferenceRepository.getEpgInfoUpdatePeriod()
         )
+
         if (updateElapsedPeriod in INT_VALUE_1 until updateElapsedTime) {
             launchEpgInfoUpdate()
         } else {
-            Napier.e("testing checkEpgInfoUpdate not needed")
+            Napier.w("checkEpgInfoUpdate not needed")
         }
     }
 
     suspend fun checkAlterEpgUpdate() {
-        val lastEpgInfoUpdate = preferenceRepository.getAlterEpgLastUpdate() ?: LONG_VALUE_ZERO
-        val updateElapsedTime = actualDate - lastEpgInfoUpdate
+        val lastEpgUpdate = preferenceRepository.getAlterEpgLastUpdate() ?: LONG_VALUE_ZERO
+        val updateElapsedTime = actualDate - lastEpgUpdate
         val updateElapsedPeriod = typeToDuration(
             preferenceRepository.getAlterEpgUpdatePeriod()
         )
         if (updateElapsedPeriod in INT_VALUE_1 until updateElapsedTime) {
             launchAlterEpgUpdate()
         } else {
-            Napier.e("testing checkAlterEpgUpdate not needed")
+            Napier.w("checkAlterEpgUpdate not needed")
         }
     }
 
     suspend fun checkMainEpgUpdate() {
-        val lastEpgInfoUpdate = preferenceRepository.getMainEpgLastUpdate()
-        val updateElapsedTime = actualDate - lastEpgInfoUpdate
+        val lastEpgUpdate = preferenceRepository.getMainEpgLastUpdate()
+        val updateElapsedTime = actualDate - lastEpgUpdate
         val updateElapsedPeriod = typeToDuration(
             preferenceRepository.getMainEpgUpdatePeriod()
         )
         if (updateElapsedPeriod in INT_VALUE_1 until updateElapsedTime) {
             launchMainEpgUpdate()
         } else {
-            Napier.e("testing checkMainEpgUpdate not needed")
+            Napier.w("checkMainEpgUpdate not needed")
         }
     }
 
@@ -139,7 +140,7 @@ class SyncHelper(
     }
 
     private fun launchMainEpgUpdate() {
-        Napier.w("testing launchAlterEpgUpdate")
+        Napier.w("testing launchMainEpgUpdate")
         val channelRequest = OneTimeWorkRequestBuilder<MainEpgUpdateWorker>()
             .setConstraints(constraints)
             .build()

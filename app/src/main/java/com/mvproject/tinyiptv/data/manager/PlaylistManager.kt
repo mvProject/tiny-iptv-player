@@ -26,7 +26,7 @@ class PlaylistManager(
     private val syncHelper: SyncHelper
 ) {
 
-    val playlistCount
+    private val playlistCount
         get() = playlistsRepository.playlistCount
 
     val currentPlaylistId
@@ -49,8 +49,6 @@ class PlaylistManager(
         savePlaylistData(playlist = playlist)
 
         checkPlaylistAsCurrent(playlist = playlist)
-
-        infoChannelHelper.checkPlaylistChannelsInfo(playlist = playlist)
 
         if (playlist.isRemote) {
             syncHelper.scheduleChannelsUpdate(
@@ -79,9 +77,10 @@ class PlaylistManager(
     suspend fun savePlaylistData(playlist: Playlist) {
         val channels = playlistContentHelper.getPlaylistData(playlist)
         playlistChannelsRepository.insertChannels(channels)
-        playlistChannelsRepository.updateFavorites(channels)
+        infoChannelHelper.checkPlaylistChannelsInfo(playlist = playlist)
+        val channelsUpdated = playlistChannelsRepository.getAllChannelsByListId(playlist.id)
+        playlistChannelsRepository.updateFavorites(channelsUpdated)
         Napier.i("testing savePlaylistData inserted ${channels.count()}")
-
     }
 
     private suspend fun checkPlaylistAsCurrent(playlist: Playlist) {
