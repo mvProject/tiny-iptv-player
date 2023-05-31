@@ -17,7 +17,7 @@ enabled (it can handle even special formats like AC3, EAC3, DTS, DTS HD, TrueHD 
 
 ## UI
 
-#### Jetpack Compose(https://developer.android.com/jetpack/compose)
+#### [Jetpack Compose](https://developer.android.com/jetpack/compose)
 
 Tiny Iptv Player is fully written with Compose, using AndroidView in some cases
 
