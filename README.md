@@ -1,6 +1,8 @@
 # Tiny Iptv Player
 
-Android video player based on [Media3](https://github.com/androidx/media)
+The Android Iptv video player, supporting m3u/m3u8 playlists, providing epg info for available iptv
+channels, support gestures for switching volume/channels, scheduling updates period
+based on [Media3](https://github.com/androidx/media)
 
 It uses ExoPlayer's ``ffmpeg`` extension
 with [all its audio formats](https://exoplayer.dev/supported-formats.html#ffmpeg-extension)
