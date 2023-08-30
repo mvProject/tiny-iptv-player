@@ -18,11 +18,11 @@ plugins {
 
 android {
     namespace = "com.mvproject.tinyiptv"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 26
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -75,11 +75,14 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.0"
     }
-    packagingOptions {
-        resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
     }
+
     testOptions {
         unitTests.all {
             it.useJUnitPlatform()
@@ -109,11 +112,11 @@ dependencies {
     implementation("io.github.aakira:napier:2.6.1")
 
     // Integration with activity and viewmodels
-    implementation("androidx.activity:activity-compose:1.7.1")
+    implementation("androidx.activity:activity-compose:1.7.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
 
     // Compose Bom
-    val composeBom = platform("androidx.compose:compose-bom:2023.05.01")
+    val composeBom = platform("androidx.compose:compose-bom:2023.08.00")
     implementation(composeBom)
     androidTestImplementation(composeBom)
     // Compose UI
@@ -143,9 +146,9 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.4.0")
 
     // Exoplayer
-    implementation("androidx.media3:media3-exoplayer:1.1.0-alpha01")
-    implementation("androidx.media3:media3-ui:1.1.0-alpha01")
-    implementation("androidx.media3:media3-exoplayer-hls:1.1.0-alpha01")
+    implementation("androidx.media3:media3-exoplayer:1.2.0-alpha01")
+    implementation("androidx.media3:media3-ui:1.2.0-alpha01")
+    implementation("androidx.media3:media3-exoplayer-hls:1.2.0-alpha01")
 
     // Ktor
     implementation("io.ktor:ktor-client-android:2.3.0")
@@ -175,6 +178,9 @@ dependencies {
     // Android Studio Preview support
     debugImplementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.compose.ui:ui-tooling-preview")
+
+    implementation("androidx.tv:tv-foundation:1.0.0-alpha08")
+    implementation("androidx.tv:tv-material:1.0.0-alpha08")
 }
 
 sqldelight {
