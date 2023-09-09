@@ -7,21 +7,6 @@
 
 package com.mvproject.tinyiptv.data.parser
 
-import com.mvproject.tinyiptv.data.models.parse.EpgProgramParseModel
-import com.mvproject.tinyiptv.utils.AppConstants.EMPTY_STRING
-import io.ktor.utils.io.ByteReadChannel
-import io.ktor.utils.io.jvm.javaio.toInputStream
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import org.xml.sax.Attributes
-import org.xml.sax.InputSource
-import org.xml.sax.helpers.DefaultHandler
-import org.xmlpull.v1.XmlPullParser
-import org.xmlpull.v1.XmlPullParserFactory
-import java.io.InputStreamReader
-import java.util.zip.GZIPInputStream
-import javax.xml.parsers.SAXParserFactory
-
 object EpgParser {
     private const val TYPE_PROGRAM = "programme"
 
@@ -34,7 +19,7 @@ object EpgParser {
     //  private const val BUFFER_SIZE = 16384
     private const val BUFFER_SIZE = 65536
 
-    suspend fun parseTarGzEpg(
+    /*suspend fun parseTarGzEpg(
         data: ByteReadChannel,
         onProgramParsed: suspend (EpgProgramParseModel) -> Unit
     ) = withContext(Dispatchers.IO) {
@@ -89,65 +74,65 @@ object EpgParser {
             eventType = parser.next()
         }
     }
+*/
+    /* suspend fun parseTarGzEpg2(
+         data: ByteReadChannel,
+         onProgramParsed: (EpgProgramParseModel) -> Unit
+     ) = withContext(Dispatchers.IO) {
 
-    suspend fun parseTarGzEpg2(
-        data: ByteReadChannel,
-        onProgramParsed: (EpgProgramParseModel) -> Unit
-    ) = withContext(Dispatchers.IO) {
+         val inputStream = GZIPInputStream(data.toInputStream(), BUFFER_SIZE)
+         val inputStreamReader = InputStreamReader(inputStream, Charsets.UTF_8)
 
-        val inputStream = GZIPInputStream(data.toInputStream(), BUFFER_SIZE)
-        val inputStreamReader = InputStreamReader(inputStream, Charsets.UTF_8)
+         val factory = SAXParserFactory.newInstance()
+         val saxParser = factory.newSAXParser()
 
-        val factory = SAXParserFactory.newInstance()
-        val saxParser = factory.newSAXParser()
+         val handler = object : DefaultHandler() {
+             var currentProgram: EpgProgramParseModel? = null
+             var currentValue: String? = null
 
-        val handler = object : DefaultHandler() {
-            var currentProgram: EpgProgramParseModel? = null
-            var currentValue: String? = null
+             override fun startElement(
+                 uri: String?,
+                 localName: String?,
+                 qName: String?,
+                 attributes: Attributes?
+             ) {
+                 when (qName) {
+                     TYPE_PROGRAM -> {
+                         currentProgram = EpgProgramParseModel(
+                             start = attributes?.getValue(FIELD_START) ?: EMPTY_STRING,
+                             stop = attributes?.getValue(FIELD_STOP) ?: EMPTY_STRING,
+                             channelId = attributes?.getValue(FIELD_CHANNEL) ?: EMPTY_STRING
+                         )
+                     }
 
-            override fun startElement(
-                uri: String?,
-                localName: String?,
-                qName: String?,
-                attributes: Attributes?
-            ) {
-                when (qName) {
-                    TYPE_PROGRAM -> {
-                        currentProgram = EpgProgramParseModel(
-                            start = attributes?.getValue(FIELD_START) ?: EMPTY_STRING,
-                            stop = attributes?.getValue(FIELD_STOP) ?: EMPTY_STRING,
-                            channelId = attributes?.getValue(FIELD_CHANNEL) ?: EMPTY_STRING
-                        )
-                    }
+                     FIELD_TITLE, FIELD_DESCRIPTION -> {
+                         currentValue = EMPTY_STRING
+                     }
+                 }
+             }
 
-                    FIELD_TITLE, FIELD_DESCRIPTION -> {
-                        currentValue = EMPTY_STRING
-                    }
-                }
-            }
+             override fun characters(ch: CharArray?, start: Int, length: Int) {
+                 currentValue += String(ch!!, start, length)
+             }
 
-            override fun characters(ch: CharArray?, start: Int, length: Int) {
-                currentValue += String(ch!!, start, length)
-            }
+             override fun endElement(uri: String?, localName: String?, qName: String?) {
+                 when (qName) {
+                     FIELD_TITLE -> {
+                         currentProgram?.title = currentValue ?: EMPTY_STRING
+                     }
 
-            override fun endElement(uri: String?, localName: String?, qName: String?) {
-                when (qName) {
-                    FIELD_TITLE -> {
-                        currentProgram?.title = currentValue ?: EMPTY_STRING
-                    }
+                     FIELD_DESCRIPTION -> {
+                         currentProgram?.description = currentValue ?: EMPTY_STRING
+                     }
 
-                    FIELD_DESCRIPTION -> {
-                        currentProgram?.description = currentValue ?: EMPTY_STRING
-                    }
+                     TYPE_PROGRAM -> {
+                         currentProgram?.let { onProgramParsed(it) }
+                         currentProgram = null
+                     }
+                 }
+             }
+         }
 
-                    TYPE_PROGRAM -> {
-                        currentProgram?.let { onProgramParsed(it) }
-                        currentProgram = null
-                    }
-                }
-            }
-        }
-
-        saxParser.parse(InputSource(inputStreamReader), handler)
-    }
+         saxParser.parse(InputSource(inputStreamReader), handler)
+     }*/
 }

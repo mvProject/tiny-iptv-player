@@ -7,10 +7,9 @@
 
 package com.mvproject.tinyiptv.data.models.response
 
-import com.mvproject.tinyiptv.data.models.parse.AvailableChannelParseModel
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AllAvailableChannelsResponse(
-    val channels: List<AvailableChannelParseModel>
+data class ChannelsEpgInfoResponse(
+    val channels: List<EpgInfoResponse>
 )

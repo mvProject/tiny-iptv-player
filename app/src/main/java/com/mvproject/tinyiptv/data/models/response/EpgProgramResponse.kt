@@ -5,13 +5,13 @@
  *
  */
 
-package com.mvproject.tinyiptv.data.models.parse
+package com.mvproject.tinyiptv.data.models.response
 
 import com.mvproject.tinyiptv.utils.AppConstants.EMPTY_STRING
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AlterEpgProgramParseModel(
+data class EpgProgramResponse(
     val start: String = EMPTY_STRING,
     val title: String = EMPTY_STRING,
     val description: String = EMPTY_STRING,

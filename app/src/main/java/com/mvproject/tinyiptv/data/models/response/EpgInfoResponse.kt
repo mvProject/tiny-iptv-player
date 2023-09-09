@@ -1,17 +1,17 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 04.05.23, 10:59
+ *  last modified : 31.05.23, 17:08
  *
  */
 
-package com.mvproject.tinyiptv.data.models.parse
+package com.mvproject.tinyiptv.data.models.response
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AvailableChannelParseModel(
+data class EpgInfoResponse(
     @SerialName("chan_id")
     val channelId: String,
     @SerialName("chan_names")

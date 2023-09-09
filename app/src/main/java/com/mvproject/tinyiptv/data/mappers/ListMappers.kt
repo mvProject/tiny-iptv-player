@@ -9,10 +9,10 @@ package com.mvproject.tinyiptv.data.mappers
 
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import com.mvproject.tinyiptv.data.models.channels.PlaylistChannel
+import com.mvproject.tinyiptv.data.models.channels.TvPlaylistChannel
 
 object ListMappers {
-    fun List<PlaylistChannel>.createMediaItems(): List<MediaItem> {
+    fun List<TvPlaylistChannel>.createMediaItems(): List<MediaItem> {
         return buildList {
             this@createMediaItems.forEach { video ->
                 add(

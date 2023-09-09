@@ -7,12 +7,11 @@
 
 package com.mvproject.tinyiptv.data.models.response
 
-import com.mvproject.tinyiptv.data.models.parse.AlterEpgProgramParseModel
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ProgramListResponse(
+data class EpgProgramsResponse(
     @SerialName("ch_programme")
-    val chPrograms: List<AlterEpgProgramParseModel>
+    val chPrograms: List<EpgProgramResponse>
 )

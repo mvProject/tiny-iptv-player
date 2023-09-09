@@ -12,7 +12,8 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     //id("com.google.devtools.ksp")
-    id("com.squareup.sqldelight")
+    //   id("com.squareup.sqldelight")
+    id("app.cash.sqldelight")
     id("kotlinx-serialization")
 }
 
@@ -157,8 +158,10 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.0")
 
     // SQL Delight
-    implementation("com.squareup.sqldelight:android-driver:1.5.5")
-    implementation("com.squareup.sqldelight:coroutines-extensions-jvm:1.5.5")
+    //  implementation("com.squareup.sqldelight:android-driver:1.5.5")
+    implementation("app.cash.sqldelight:android-driver:2.0.0")
+    //   implementation("com.squareup.sqldelight:coroutines-extensions-jvm:1.5.5")
+    implementation("app.cash.sqldelight:coroutines-extensions:2.0.0")
 
     // Misc
     implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
@@ -183,8 +186,15 @@ dependencies {
     implementation("androidx.tv:tv-material:1.0.0-alpha08")
 }
 
-sqldelight {
+/*sqldelight {
     database("VideoAppDatabase") {
         packageName = "com.mvproject.tinyiptv"
+    }
+}*/
+sqldelight {
+    databases {
+        create("VideoAppDatabase") {
+            packageName.set("com.mvproject.tinyiptv")
+        }
     }
 }

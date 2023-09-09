@@ -10,6 +10,7 @@ package com.mvproject.tinyiptv.utils
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.net.Uri
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.BrightnessHigh
 import androidx.compose.material.icons.rounded.BrightnessLow
@@ -18,9 +19,12 @@ import androidx.compose.material.icons.rounded.VolumeDown
 import androidx.compose.material.icons.rounded.VolumeMute
 import androidx.compose.material.icons.rounded.VolumeUp
 import androidx.compose.ui.unit.Constraints
+import androidx.media3.common.PlaybackException
 import androidx.media3.common.VideoSize
 import com.mvproject.tinyiptv.data.enums.ResizeMode
 import com.mvproject.tinyiptv.data.enums.UpdatePeriod
+import com.mvproject.tinyiptv.utils.AppConstants.EMPTY_STRING
+import io.github.aakira.napier.Napier
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toInstant
 import kotlin.time.Duration
@@ -293,4 +297,16 @@ fun typeToDuration(type: Int): Long =
         }
     }
 
+fun isMediaPlayable(errorCode: Int?): Boolean {
+    val isMediaPlayable = when (errorCode) {
+        PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED -> false
+        PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS -> false
+        PlaybackException.ERROR_CODE_PARSING_MANIFEST_MALFORMED -> false
+        else -> true
+    }
+    Napier.e("testing errorCode:$errorCode, isMediaPlayable:$isMediaPlayable")
+    return isMediaPlayable
+}
 
+fun String.getNameFromStringUri() =
+    Uri.parse(this).path?.split("/")?.last() ?: EMPTY_STRING

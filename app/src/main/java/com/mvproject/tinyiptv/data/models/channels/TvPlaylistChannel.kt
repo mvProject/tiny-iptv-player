@@ -8,21 +8,19 @@
 package com.mvproject.tinyiptv.data.models.channels
 
 import com.mvproject.tinyiptv.data.models.epg.EpgProgram
+import com.mvproject.tinyiptv.utils.AppConstants.EMPTY_STRING
 
-data class PlaylistChannelWithEpg(
-    val id: Long,
+data class TvPlaylistChannel(
     val channelName: String,
     val channelUrl: String,
     val channelLogo: String,
-    val epgId: Long? = null,
+    val epgId: String = EMPTY_STRING,
     val isInFavorites: Boolean = false,
+    val isEpgUsing: Boolean = false,
     val channelEpg: List<EpgProgram> = emptyList()
 ) {
     override fun toString() =
         StringBuilder()
-            .append("\n")
-            .append("id: $id")
-            .append("\n")
             .append("channelName: $channelName")
             .append("\n")
             .append("channelUrl: $channelUrl")
