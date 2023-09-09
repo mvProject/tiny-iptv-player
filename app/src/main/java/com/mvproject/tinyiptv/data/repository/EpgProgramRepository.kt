@@ -16,32 +16,32 @@ import kotlinx.coroutines.withContext
 
 class EpgProgramRepository(private val db: VideoAppDatabase) {
 
-    private val queries = db.epgProgramQueries
+    private val epgProgramQueries = db.epgProgramEntityQueries
 
-    fun getEpgProgramsById(channelId: Long, time: Long): List<EpgProgram> {
-        return queries.getEpgProgramsById(
-            id = channelId,
-            time = time
-        ).executeAsList().map {
-            it.toEpgProgram()
-        }
+    fun getEpgProgramsById(channelId: String, time: Long): List<EpgProgram> {
+        return epgProgramQueries.getEpgProgramsById(id = channelId, time = time)
+            .executeAsList()
+            .map { entity ->
+                entity.toEpgProgram()
+            }
     }
 
-    fun getEpgProgramsByIdWithLimit(channelId: Long, limit: Long, time: Long): List<EpgProgram> {
-        return queries.getEpgProgramsByIdWithLimit(
+    fun getEpgProgramsByIdWithLimit(channelId: String, limit: Long, time: Long): List<EpgProgram> {
+        return epgProgramQueries.getEpgProgramsByIdWithLimit(
             id = channelId,
             time = time,
             limit = limit
-        ).executeAsList().map {
-            it.toEpgProgram()
-        }
+        ).executeAsList()
+            .map { entity ->
+                entity.toEpgProgram()
+            }
     }
 
-    fun getEpgProgramsByIds(channelIds: List<Long>, time: Long): List<EpgProgram> {
-        return queries.getEpgProgramsByIds(channelIds, time)
+    fun getEpgProgramsByIds(channelIds: List<String>, time: Long): List<EpgProgram> {
+        return epgProgramQueries.getEpgProgramsByIds(ids = channelIds, time = time)
             .executeAsList()
-            .map {
-                it.toEpgProgram()
+            .map { entity ->
+                entity.toEpgProgram()
             }
     }
 
@@ -52,26 +52,29 @@ class EpgProgramRepository(private val db: VideoAppDatabase) {
     // }
 
 
-    suspend fun deleteEpgProgramsByIdTime(id: Long, time: Long) {
+    suspend fun deleteEpgProgramsByIdTime(id: String, time: Long) {
         withContext(Dispatchers.IO) {
-            queries.transaction {
-                queries.deleteEpgProgramsByIdTime(id, time)
+            epgProgramQueries.transaction {
+                epgProgramQueries.deleteEpgProgramsByIdTime(
+                    id = id,
+                    time = time
+                )
             }
         }
     }
 
     suspend fun insertEpgProgram(channel: EpgProgram) {
         withContext(Dispatchers.IO) {
-            queries.insertEpgProgram(
+            epgProgramQueries.insertEpgProgram(
                 channel.toEpgProgramEntity()
             )
         }
     }
 
     fun insertEpgProgram2(channel: EpgProgram) {
-        queries.transaction {
-            queries.deleteEpgProgramsById(id = channel.channelId)
-            queries.insertEpgProgram(
+        epgProgramQueries.transaction {
+            epgProgramQueries.deleteEpgProgramsById(id = channel.channelId)
+            epgProgramQueries.insertEpgProgram(
                 channel.toEpgProgramEntity()
             )
         }
@@ -79,12 +82,12 @@ class EpgProgramRepository(private val db: VideoAppDatabase) {
 
     suspend fun insertEpgPrograms(programs: List<EpgProgram>) {
         withContext(Dispatchers.IO) {
-            queries.transaction {
+            epgProgramQueries.transaction {
                 val deleteIds = programs.map { it.channelId }.toSet()
-                queries.deleteEpgProgramsByIds(ids = deleteIds)
+                epgProgramQueries.deleteEpgProgramsByIds(ids = deleteIds)
 
                 programs.forEach { prg ->
-                    queries.insertEpgProgram(
+                    epgProgramQueries.insertEpgProgram(
                         prg.toEpgProgramEntity()
                     )
                 }
