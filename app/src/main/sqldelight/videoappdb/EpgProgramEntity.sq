@@ -37,11 +37,11 @@ INSERT OR REPLACE
 INTO EpgProgramEntity
 VALUES ?;
 
-deleteEpgProgramsByIds:
+deleteEpgProgramsForChannels:
 DELETE FROM EpgProgramEntity
 WHERE channelId IN :ids;
 
-deleteEpgProgramsById:
+deleteEpgProgramsForChannel:
 DELETE FROM EpgProgramEntity
 WHERE channelId = :id;
 

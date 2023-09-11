@@ -1,11 +1,11 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 23.05.23, 13:16
+ *  last modified : 04.09.23, 12:25
  *
  */
 
-package com.mvproject.tinyiptv.ui.screens.playlist.view
+package com.mvproject.tinyiptv.ui.screens.playlist
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,16 +20,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,26 +39,34 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.mvproject.tinyiptv.R
 import com.mvproject.tinyiptv.data.enums.UpdatePeriod
-import com.mvproject.tinyiptv.ui.components.menu.LargeDropdownMenu
+import com.mvproject.tinyiptv.ui.components.OptionSelector
+import com.mvproject.tinyiptv.ui.components.dialogs.OptionsDialog
 import com.mvproject.tinyiptv.ui.components.toolbars.AppBarWithBackNav
 import com.mvproject.tinyiptv.ui.components.views.LoadingView
-import com.mvproject.tinyiptv.ui.screens.playlist.actions.PlaylistDetailAction
-import com.mvproject.tinyiptv.ui.screens.playlist.viewmodel.PlayListState
+import com.mvproject.tinyiptv.ui.screens.playlist.action.PlaylistAction
+import com.mvproject.tinyiptv.ui.screens.playlist.state.PlaylistState
 import com.mvproject.tinyiptv.ui.theme.VideoAppTheme
 import com.mvproject.tinyiptv.ui.theme.dimens
 import com.mvproject.tinyiptv.utils.AppConstants.PLAYLIST_MIME_TYPE
+import io.github.aakira.napier.Napier
 
 @Composable
-fun PlaylistDetailView(
-    state: PlayListState,
-    onPlaylistAction: (PlaylistDetailAction) -> Unit = {}
+fun PlaylistView(
+    state: PlaylistState,
+    onNavigateBack: () -> Unit = {},
+    onPlaylistAction: (PlaylistAction) -> Unit = {}
 ) {
     val fileSelectLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument(),
         onResult = { uri ->
-            onPlaylistAction(PlaylistDetailAction.ChangeUrl(uri.toString()))
+            onPlaylistAction(PlaylistAction.SetLocalUri(uri.toString()))
         }
     )
+    LaunchedEffect(state.isComplete) {
+        if (state.isComplete) {
+            onNavigateBack()
+        }
+    }
 
     Scaffold(
         modifier = Modifier
@@ -65,17 +75,17 @@ fun PlaylistDetailView(
         topBar = {
             AppBarWithBackNav(
                 appBarTitle = stringResource(id = R.string.pl_msg_playlist_details),
-                onBackClick = { onPlaylistAction(PlaylistDetailAction.NavigateBack) },
+                onBackClick = onNavigateBack,
             )
         },
         bottomBar = {
             ElevatedButton(
                 enabled = state.isReadyToSave,
                 onClick = {
-                    if (state.isComplete) {
-                        onPlaylistAction(PlaylistDetailAction.NavigateBack)
+                    if (state.isEdit) {
+                        onPlaylistAction(PlaylistAction.UpdatePlaylist)
                     } else {
-                        onPlaylistAction(PlaylistDetailAction.SavePlaylist)
+                        onPlaylistAction(PlaylistAction.SavePlaylist)
                     }
                 },
                 modifier = Modifier
@@ -86,8 +96,8 @@ fun PlaylistDetailView(
                 ),
                 shape = MaterialTheme.shapes.small
             ) {
-                val text = if (state.isComplete) {
-                    stringResource(R.string.pl_btn_close)
+                val text = if (state.isEdit) {
+                    stringResource(R.string.pl_btn_update)
                 } else {
                     stringResource(R.string.pl_btn_save)
                 }
@@ -105,6 +115,8 @@ fun PlaylistDetailView(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
+            val isUpdateOptionOpen = remember { mutableStateOf(false) }
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -112,11 +124,10 @@ fun PlaylistDetailView(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 TextField(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     value = state.listName,
                     onValueChange = {
-                        onPlaylistAction(PlaylistDetailAction.ChangeName(it))
+                        onPlaylistAction(PlaylistAction.SetTitle(it))
                     },
                     placeholder = {
                         Text(
@@ -137,12 +148,13 @@ fun PlaylistDetailView(
 
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.size8))
 
+
                 TextField(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    value = state.listUri,
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = !state.isLocal,
+                    value = if (state.isLocal) state.localName else state.url,
                     onValueChange = {
-                        onPlaylistAction(PlaylistDetailAction.ChangeUrl(it))
+                        onPlaylistAction(PlaylistAction.SetRemoteUrl(it))
                     },
                     placeholder = {
                         Text(
@@ -163,10 +175,50 @@ fun PlaylistDetailView(
 
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.size8))
 
+                OptionSelector(
+                    modifier = Modifier.fillMaxWidth(),
+                    title = stringResource(id = R.string.pl_hint_update_period),
+                    enabled = !state.isLocal,
+                    selectedItem = stringResource(
+                        id = UpdatePeriod.entries[state.updatePeriod].title
+                    ),
+                    isExpanded = isUpdateOptionOpen.value,
+                    onClick = {
+                        isUpdateOptionOpen.value = true
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.size16))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(
+                        space = MaterialTheme.dimens.size8
+                    ),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Divider(
+                        modifier = Modifier.weight(1f),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    Text(
+                        text = "or",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    Divider(
+                        modifier = Modifier.weight(1f),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.size16))
+
                 OutlinedButton(
                     onClick = { fileSelectLauncher.launch(arrayOf(PLAYLIST_MIME_TYPE)) },
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.surface
                     ),
@@ -178,89 +230,27 @@ fun PlaylistDetailView(
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }
-
-                Spacer(modifier = Modifier.height(MaterialTheme.dimens.size8))
-
-                LargeDropdownMenu(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    enabled = state.isRemote,
-                    label = stringResource(id = R.string.pl_hint_update_period),
-                    items = UpdatePeriod.values().map {
-                        stringResource(id = it.title)
-                    },
-                    selectedIndex = state.updatePeriod,
-                    onItemSelected = { index, _ ->
-                        onPlaylistAction(PlaylistDetailAction.ChangeUpdatePeriod(index))
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(MaterialTheme.dimens.size8))
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.pl_chb_use_main_epg),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Switch(
-                        checked = state.isUsingMainEpg,
-                        colors = SwitchDefaults.colors(
-                            checkedThumbColor = MaterialTheme.colorScheme.tertiaryContainer,
-                            checkedTrackColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                            uncheckedThumbColor = MaterialTheme.colorScheme.tertiary,
-                            uncheckedTrackColor = MaterialTheme.colorScheme.onTertiary
-                        ),
-                        onCheckedChange = { state ->
-                            onPlaylistAction(
-                                PlaylistDetailAction.ChangeMainEpgUsingState(
-                                    state
-                                )
-                            )
-                        }
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(MaterialTheme.dimens.size8))
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.pl_chb_use_alter_epg),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Switch(
-                        checked = state.isUsingAlterEpg,
-                        colors = SwitchDefaults.colors(
-                            checkedThumbColor = MaterialTheme.colorScheme.tertiaryContainer,
-                            checkedTrackColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                            uncheckedThumbColor = MaterialTheme.colorScheme.tertiary,
-                            uncheckedTrackColor = MaterialTheme.colorScheme.onTertiary
-                        ),
-                        onCheckedChange = { state ->
-                            onPlaylistAction(
-                                PlaylistDetailAction.ChangeAlterEpgUsingState(
-                                    state
-                                )
-                            )
-                        }
-                    )
-                }
             }
 
             if (state.isSaving) {
                 LoadingView()
             }
+
+            OptionsDialog(
+                isDialogOpen = isUpdateOptionOpen,
+                title = stringResource(id = R.string.pl_hint_update_period),
+                selectedIndex = state.updatePeriod,
+                items = UpdatePeriod.entries.map {
+                    stringResource(id = it.title)
+                },
+                onItemSelected = { index ->
+                    val sel = UpdatePeriod.entries[index]
+                    Napier.w("testing selected $index")
+                    Napier.w("testing selected $sel")
+                    onPlaylistAction(PlaylistAction.SetUpdatePeriod(index))
+                    isUpdateOptionOpen.value = false
+                }
+            )
         }
     }
 }
@@ -269,8 +259,8 @@ fun PlaylistDetailView(
 @Composable
 fun PreviewPlaylistDetailViewContent() {
     VideoAppTheme {
-        PlaylistDetailView(
-            state = PlayListState()
+        PlaylistView(
+            state = PlaylistState()
         )
     }
 }
@@ -279,8 +269,8 @@ fun PreviewPlaylistDetailViewContent() {
 @Composable
 fun PreviewDarkPlaylistDetailViewContent() {
     VideoAppTheme(darkTheme = true) {
-        PlaylistDetailView(
-            state = PlayListState()
+        PlaylistView(
+            state = PlaylistState()
         )
     }
 }
