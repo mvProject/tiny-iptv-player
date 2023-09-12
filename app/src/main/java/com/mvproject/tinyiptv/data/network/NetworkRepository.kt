@@ -7,8 +7,8 @@
 
 package com.mvproject.tinyiptv.data.network
 
-import com.mvproject.tinyiptv.data.models.response.AllAvailableChannelsResponse
-import com.mvproject.tinyiptv.data.models.response.ProgramListResponse
+import com.mvproject.tinyiptv.data.models.response.ChannelsEpgInfoResponse
+import com.mvproject.tinyiptv.data.models.response.EpgProgramsResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.request
@@ -34,12 +34,12 @@ class NetworkRepository(private val service: HttpClient) {
         method = HttpMethod.Get
     }.bodyAsChannel()
 
-    suspend fun loadAlterInfo(): AllAvailableChannelsResponse =
+    suspend fun loadEpgInfo(): ChannelsEpgInfoResponse =
         service.request(EPG_IPTVX_INFO_URL) {
             method = HttpMethod.Get
         }.body()
 
-    suspend fun loadAlterChannel(channelId: String): ProgramListResponse =
+    suspend fun getEpgProgramsForChannel(channelId: String): EpgProgramsResponse =
         service.request(
             EPG_IPTVX_CHANNEL_URL + channelId + EPG_IPTVX_CHANNEL_SUFF
         ) {

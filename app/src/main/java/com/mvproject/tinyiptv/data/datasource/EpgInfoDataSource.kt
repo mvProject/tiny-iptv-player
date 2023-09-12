@@ -14,7 +14,7 @@ class EpgInfoDataSource(
     private val networkRepository: NetworkRepository
 ) {
     suspend fun getEpgInfo(): List<EpgInfoResponse> {
-        val infoResult = networkRepository.loadAlterInfo().channels
+        val infoResult = networkRepository.loadEpgInfo().channels
 
         val filtered =
             infoResult.filter { it.channelId.isNotEmpty() && it.channelIcon.isNotEmpty() }
