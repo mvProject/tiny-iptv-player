@@ -1,11 +1,11 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 10.05.23, 20:25
+ *  last modified : 08.09.23, 18:07
  *
  */
 
-package com.mvproject.tinyiptv.ui.screens.settings.view
+package com.mvproject.tinyiptv.ui.screens.settings.playlist
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,14 +31,17 @@ import com.mvproject.tinyiptv.data.PreviewTestData.testPlaylists
 import com.mvproject.tinyiptv.ui.components.playlist.PlaylistItemView
 import com.mvproject.tinyiptv.ui.components.toolbars.AppBarWithBackNav
 import com.mvproject.tinyiptv.ui.components.views.NoItemsView
-import com.mvproject.tinyiptv.ui.screens.settings.actions.SettingsPlaylistAction
-import com.mvproject.tinyiptv.ui.screens.settings.viewmodel.SettingsPlaylistViewModel
+import com.mvproject.tinyiptv.ui.screens.settings.playlist.action.SettingsPlaylistAction
+import com.mvproject.tinyiptv.ui.screens.settings.playlist.state.SettingsPlaylistState
 import com.mvproject.tinyiptv.ui.theme.VideoAppTheme
 import com.mvproject.tinyiptv.ui.theme.dimens
+import com.mvproject.tinyiptv.utils.AppConstants
 
 @Composable
 fun SettingsPlaylistView(
-    dataState: SettingsPlaylistViewModel.PlaylistSettingsState,
+    dataState: SettingsPlaylistState,
+    onNavigateBack: () -> Unit = {},
+    onNavigatePlaylist: (String) -> Unit = {},
     onPlaylistAction: (SettingsPlaylistAction) -> Unit = {}
 ) {
     Scaffold(
@@ -49,13 +52,15 @@ fun SettingsPlaylistView(
         topBar = {
             AppBarWithBackNav(
                 appBarTitle = stringResource(id = R.string.scr_playlist_settings_title),
-                onBackClick = { onPlaylistAction(SettingsPlaylistAction.NavigateBack) },
+                onBackClick = onNavigateBack,
             )
         },
 
         bottomBar = {
             ElevatedButton(
-                onClick = { onPlaylistAction(SettingsPlaylistAction.NewPlaylist) },
+                onClick = {
+                    onNavigatePlaylist(AppConstants.EMPTY_STRING)
+                },
                 modifier = Modifier
                     .padding(MaterialTheme.dimens.size8)
                     .fillMaxWidth(),
@@ -91,6 +96,9 @@ fun SettingsPlaylistView(
                     PlaylistItemView(
                         modifier = Modifier.fillMaxSize(),
                         item = item,
+                        onSelect = {
+                            onNavigatePlaylist(item.id.toString())
+                        },
                         onPlaylistAction = onPlaylistAction
                     )
                 }
@@ -111,7 +119,7 @@ fun SettingsPlaylistView(
 fun PreviewSettingsPlaylistView() {
     VideoAppTheme() {
         SettingsPlaylistView(
-            SettingsPlaylistViewModel.PlaylistSettingsState(
+            SettingsPlaylistState(
                 playlists = testPlaylists
             )
         )
@@ -123,7 +131,7 @@ fun PreviewSettingsPlaylistView() {
 fun PreviewDarkSettingsPlaylistView() {
     VideoAppTheme(darkTheme = true) {
         SettingsPlaylistView(
-            SettingsPlaylistViewModel.PlaylistSettingsState(
+            SettingsPlaylistState(
                 playlists = testPlaylists
             )
         )

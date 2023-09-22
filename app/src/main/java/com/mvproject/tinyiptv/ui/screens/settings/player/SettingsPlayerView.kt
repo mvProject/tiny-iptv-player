@@ -1,11 +1,11 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 23.05.23, 13:16
+ *  last modified : 08.09.23, 18:08
  *
  */
 
-package com.mvproject.tinyiptv.ui.screens.settings.view
+package com.mvproject.tinyiptv.ui.screens.settings.player
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,22 +22,26 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.mvproject.tinyiptv.R
 import com.mvproject.tinyiptv.data.enums.ResizeMode
-import com.mvproject.tinyiptv.ui.components.menu.LargeDropdownMenu
+import com.mvproject.tinyiptv.ui.components.OptionSelector
+import com.mvproject.tinyiptv.ui.components.dialogs.OptionsDialog
 import com.mvproject.tinyiptv.ui.components.toolbars.AppBarWithBackNav
-import com.mvproject.tinyiptv.ui.screens.settings.actions.SettingsPlayerAction
-import com.mvproject.tinyiptv.ui.screens.settings.viewmodel.SettingsPlayerViewModel
+import com.mvproject.tinyiptv.ui.screens.settings.player.action.SettingsPlayerAction
+import com.mvproject.tinyiptv.ui.screens.settings.player.state.SettingsPlayerState
 import com.mvproject.tinyiptv.ui.theme.VideoAppTheme
 import com.mvproject.tinyiptv.ui.theme.dimens
 
 @Composable
 fun SettingsPlayerView(
-    state: SettingsPlayerViewModel.PlayerSettingsState,
+    state: SettingsPlayerState,
+    onNavigateBack: () -> Unit = {},
     onSettingsPlayerAction: (SettingsPlayerAction) -> Unit = {}
 ) {
     Scaffold(
@@ -47,10 +51,13 @@ fun SettingsPlayerView(
         topBar = {
             AppBarWithBackNav(
                 appBarTitle = stringResource(id = R.string.scr_player_settings_title),
-                onBackClick = { onSettingsPlayerAction(SettingsPlayerAction.NavigateBack) },
+                onBackClick = onNavigateBack,
             )
         }
     ) { paddingValues ->
+
+        val isSelectResizeModeOpen = remember { mutableStateOf(false) }
+
         Column(
             modifier = Modifier
                 .padding(paddingValues)
@@ -78,7 +85,7 @@ fun SettingsPlayerView(
                     ),
                     onCheckedChange = { state ->
                         onSettingsPlayerAction(
-                            SettingsPlayerAction.ChangeFullScreenMode(
+                            SettingsPlayerAction.SetFullScreenMode(
                                 state
                             )
                         )
@@ -86,32 +93,34 @@ fun SettingsPlayerView(
                 )
             }
 
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.size8))
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.size12))
 
-            Text(
-                text = stringResource(id = R.string.option_default_resize_mode),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-
-            Spacer(
-                modifier = Modifier.height(MaterialTheme.dimens.size8)
-            )
-
-            LargeDropdownMenu(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                items = ResizeMode.values().map {
-                    stringResource(id = it.title)
-                },
-                selectedIndex = state.resizeMode,
-                onItemSelected = { index, _ ->
-                    onSettingsPlayerAction(SettingsPlayerAction.ChangeResizeModePeriod(index))
+            OptionSelector(
+                modifier = Modifier.fillMaxWidth(),
+                title = stringResource(id = R.string.option_default_resize_mode),
+                selectedItem = stringResource(
+                    id = ResizeMode.entries[state.resizeMode].title
+                ),
+                isExpanded = isSelectResizeModeOpen.value,
+                onClick = {
+                    isSelectResizeModeOpen.value = true
                 }
             )
 
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.size8))
         }
+
+        OptionsDialog(
+            isDialogOpen = isSelectResizeModeOpen,
+            title = stringResource(id = R.string.option_default_resize_mode),
+            selectedIndex = state.resizeMode,
+            items = ResizeMode.values().map {
+                stringResource(id = it.title)
+            },
+            onItemSelected = { index ->
+                onSettingsPlayerAction(SettingsPlayerAction.SetResizeMode(index))
+                isSelectResizeModeOpen.value = false
+            }
+        )
     }
 }
 
@@ -120,7 +129,7 @@ fun SettingsPlayerView(
 fun PreviewSettingsPlayerView() {
     VideoAppTheme {
         SettingsPlayerView(
-            state = SettingsPlayerViewModel.PlayerSettingsState()
+            state = SettingsPlayerState()
         )
     }
 }
@@ -130,7 +139,7 @@ fun PreviewSettingsPlayerView() {
 fun PreviewDarkSettingsPlayerView() {
     VideoAppTheme(darkTheme = true) {
         SettingsPlayerView(
-            state = SettingsPlayerViewModel.PlayerSettingsState()
+            state = SettingsPlayerState()
         )
     }
 }
