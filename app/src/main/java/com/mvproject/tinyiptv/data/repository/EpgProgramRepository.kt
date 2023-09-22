@@ -73,20 +73,22 @@ class EpgProgramRepository(private val db: VideoAppDatabase) {
 
     fun insertEpgProgram2(channel: EpgProgram) {
         epgProgramQueries.transaction {
-            epgProgramQueries.deleteEpgProgramsById(id = channel.channelId)
+            epgProgramQueries.deleteEpgProgramsForChannel(id = channel.channelId)
             epgProgramQueries.insertEpgProgram(
                 channel.toEpgProgramEntity()
             )
         }
     }
 
-    suspend fun insertEpgPrograms(programs: List<EpgProgram>) {
+    suspend fun insertEpgPrograms(
+        channelId: String,
+        channelEpgPrograms: List<EpgProgram>
+    ) {
         withContext(Dispatchers.IO) {
             epgProgramQueries.transaction {
-                val deleteIds = programs.map { it.channelId }.toSet()
-                epgProgramQueries.deleteEpgProgramsByIds(ids = deleteIds)
+                epgProgramQueries.deleteEpgProgramsForChannel(id = channelId)
 
-                programs.forEach { prg ->
+                channelEpgPrograms.forEach { prg ->
                     epgProgramQueries.insertEpgProgram(
                         prg.toEpgProgramEntity()
                     )

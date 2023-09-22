@@ -9,32 +9,63 @@ package com.mvproject.tinyiptv.ui.screens.main.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mvproject.tinyiptv.data.helpers.SyncHelper
+import com.mvproject.tinyiptv.data.repository.PreferenceRepository
+import com.mvproject.tinyiptv.data.usecases.EpgInfoUpdateUseCase
+import com.mvproject.tinyiptv.data.usecases.GetRemotePlaylistsUseCase
+import com.mvproject.tinyiptv.data.usecases.UpdateChannelsEpgInfoUseCase
+import com.mvproject.tinyiptv.data.usecases.UpdateEpgUseCase
+import com.mvproject.tinyiptv.data.usecases.UpdateRemotePlaylistChannelsUseCase
+import com.mvproject.tinyiptv.utils.TimeUtils.actualDate
+import com.mvproject.tinyiptv.utils.typeToDuration
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    private val syncHelper: SyncHelper
+    private val preferenceRepository: PreferenceRepository,
+    private val getRemotePlaylistsUseCase: GetRemotePlaylistsUseCase,
+    private val updateChannelsEpgInfoUseCase: UpdateChannelsEpgInfoUseCase,
+    private val epgInfoUpdateUseCase: EpgInfoUpdateUseCase,
+    private val updateEpgUseCase: UpdateEpgUseCase,
+    private val updateRemotePlaylistChannelsUseCase: UpdateRemotePlaylistChannelsUseCase
+
 ) : ViewModel() {
 
-    val infoUpdateState = syncHelper.infoUpdateState
-    val alterUpdateState = syncHelper.alterUpdateState
-    val mainUpdateState = syncHelper.mainUpdateState
-
-    fun checkEpgInfoUpdate() {
+    fun checkUpdates() {
         viewModelScope.launch {
-            syncHelper.checkEpgInfoUpdate()
+            preferenceRepository.isChannelsEpgInfoUpdateRequired()
+                .collect { isRequired ->
+                    Napier.w("testing isChannelsEpgInfoUpdateRequired $isRequired")
+                    if (isRequired) {
+                        updateChannelsEpgInfoUseCase()
+                    }
+                }
         }
-    }
 
-    fun checkAlterEpgUpdate() {
         viewModelScope.launch {
-            syncHelper.checkAlterEpgUpdate()
+            preferenceRepository.isEpgUpdateRequired()
+                .collect { isRequired ->
+                    Napier.w("testing isEpgUpdateRequired $isRequired")
+                    if (isRequired) {
+                        updateEpgUseCase()
+                    }
+                }
         }
-    }
 
-    fun checkMainEpgUpdate() {
         viewModelScope.launch {
-            syncHelper.checkMainEpgUpdate()
+            epgInfoUpdateUseCase()
+        }
+
+        viewModelScope.launch {
+            val remotePlaylists = getRemotePlaylistsUseCase()
+
+            remotePlaylists.forEach { playlist ->
+                val updateDuration = typeToDuration(playlist.updatePeriod.toInt())
+                val isRequiredUpdate = actualDate - playlist.lastUpdateDate > updateDuration
+                Napier.w("testing remotePlaylists ${playlist.playlistTitle} isRequiredUpdate $isRequiredUpdate")
+                if (isRequiredUpdate) {
+                    updateRemotePlaylistChannelsUseCase(playlist = playlist)
+                }
+            }
         }
     }
 }
