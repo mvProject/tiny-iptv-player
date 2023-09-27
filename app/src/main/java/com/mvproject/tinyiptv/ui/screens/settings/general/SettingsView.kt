@@ -42,6 +42,7 @@ import com.mvproject.tinyiptv.ui.screens.settings.general.action.SettingsAction
 import com.mvproject.tinyiptv.ui.screens.settings.general.state.SettingsState
 import com.mvproject.tinyiptv.ui.theme.VideoAppTheme
 import com.mvproject.tinyiptv.ui.theme.dimens
+import com.mvproject.tinyiptv.utils.AppConstants.WEIGHT_1
 
 @Composable
 fun SettingsView(
@@ -86,7 +87,7 @@ fun SettingsView(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.titleMedium
                 )
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.weight(WEIGHT_1))
 
                 FilledIconButton(
                     onClick = onNavigatePlaylistSettings,
@@ -122,7 +123,7 @@ fun SettingsView(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.titleMedium
                 )
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.weight(WEIGHT_1))
 
                 FilledIconButton(
                     onClick = onNavigatePlayerSettings,
@@ -157,7 +158,7 @@ fun SettingsView(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Divider(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(WEIGHT_1),
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
@@ -168,7 +169,7 @@ fun SettingsView(
                 )
 
                 Divider(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(WEIGHT_1),
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }

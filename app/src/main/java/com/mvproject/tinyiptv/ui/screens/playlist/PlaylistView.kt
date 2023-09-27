@@ -48,6 +48,7 @@ import com.mvproject.tinyiptv.ui.screens.playlist.state.PlaylistState
 import com.mvproject.tinyiptv.ui.theme.VideoAppTheme
 import com.mvproject.tinyiptv.ui.theme.dimens
 import com.mvproject.tinyiptv.utils.AppConstants.PLAYLIST_MIME_TYPE
+import com.mvproject.tinyiptv.utils.AppConstants.WEIGHT_1
 import io.github.aakira.napier.Napier
 
 @Composable
@@ -198,18 +199,18 @@ fun PlaylistView(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Divider(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(WEIGHT_1),
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
 
                     Text(
-                        text = "or",
+                        text = stringResource(id = R.string.pl_title_or),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
 
                     Divider(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(WEIGHT_1),
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
