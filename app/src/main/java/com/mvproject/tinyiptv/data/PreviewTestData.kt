@@ -8,7 +8,7 @@
 package com.mvproject.tinyiptv.data
 
 import com.mvproject.tinyiptv.data.models.channels.ChannelsGroup
-import com.mvproject.tinyiptv.data.models.channels.PlaylistChannelWithEpg
+import com.mvproject.tinyiptv.data.models.channels.TvPlaylistChannel
 import com.mvproject.tinyiptv.data.models.epg.EpgProgram
 import com.mvproject.tinyiptv.data.models.playlist.Playlist
 import com.mvproject.tinyiptv.utils.TimeUtils.actualDate
@@ -17,8 +17,7 @@ import kotlin.time.Duration.Companion.minutes
 
 object PreviewTestData {
     val testProgram =
-        PlaylistChannelWithEpg(
-            id = Random.nextLong(),
+        TvPlaylistChannel(
             channelName = "channelName",
             channelLogo = "",
             channelUrl = "",
@@ -27,7 +26,7 @@ object PreviewTestData {
 
     val testEpgProgram =
         EpgProgram(
-            channelId = Random.nextLong(),
+            channelId = Random.nextLong().toString(),
             start = actualDate - 30.minutes.inWholeMilliseconds,
             stop = actualDate + 90.minutes.inWholeMilliseconds,
             title = "test title",
@@ -37,8 +36,9 @@ object PreviewTestData {
     val testPlaylist =
         Playlist(
             id = Random.nextLong(),
-            listName = "listName",
-            listUrl = "listUrl",
+            playlistTitle = "playlistTitle",
+            playlistUrl = "playlistUrl",
+            playlistLocalName = "playlistLocalName",
             lastUpdateDate = Random.nextLong(),
             updatePeriod = 3
         )
@@ -47,7 +47,7 @@ object PreviewTestData {
         repeat(10) {
             add(
                 EpgProgram(
-                    channelId = Random.nextLong(),
+                    channelId = Random.nextLong().toString(),
                     start = actualDate + it * 30.minutes.inWholeMilliseconds,
                     stop = actualDate + (it + 1) * 30.minutes.inWholeMilliseconds,
                     title = "title $it",
@@ -61,9 +61,10 @@ object PreviewTestData {
             add(
                 Playlist(
                     id = Random.nextLong(),
-                    listName = "listName $it",
-                    listUrl = "listUrl $it",
+                    playlistTitle = "listName $it",
+                    playlistUrl = "listUrl $it",
                     lastUpdateDate = Random.nextLong(),
+                    playlistLocalName = "playlistLocalName",
                     updatePeriod = 3
                 )
             )

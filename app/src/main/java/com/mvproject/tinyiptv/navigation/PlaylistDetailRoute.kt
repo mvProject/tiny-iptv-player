@@ -14,9 +14,8 @@ import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.mvproject.tinyiptv.ui.screens.playlist.actions.PlaylistDetailAction
-import com.mvproject.tinyiptv.ui.screens.playlist.view.PlaylistDetailView
-import com.mvproject.tinyiptv.ui.screens.playlist.viewmodel.AddPlayListViewModel
+import com.mvproject.tinyiptv.ui.screens.playlist.PlaylistView
+import com.mvproject.tinyiptv.ui.screens.playlist.PlaylistViewModel
 import com.mvproject.tinyiptv.utils.AppConstants
 import io.github.aakira.napier.Napier
 import org.koin.androidx.compose.koinViewModel
@@ -27,27 +26,21 @@ data class PlaylistDetailRoute(
 
     @Composable
     override fun Content() {
-        val addPlayListViewModel: AddPlayListViewModel = koinViewModel()
+        val playlistViewModel: PlaylistViewModel = koinViewModel()
         val navigator = LocalNavigator.currentOrThrow
 
         LaunchedEffect(key1 = id) {
             Napier.w("testing PlaylistDetailRoute playlistId:$id")
-            addPlayListViewModel.setPlaylistMode(id)
+            playlistViewModel.setPlaylistMode(id)
         }
 
-        val state by addPlayListViewModel.state.collectAsState()
+        val state by playlistViewModel.state.collectAsState()
 
-        PlaylistDetailView(
+        PlaylistView(
             state = state,
-            onPlaylistAction = { action ->
-                when (action) {
-                    is PlaylistDetailAction.NavigateBack -> {
-                        navigator.pop()
-                    }
-
-                    else -> addPlayListViewModel.processAction(action)
-
-                }
+            onPlaylistAction = playlistViewModel::processAction,
+            onNavigateBack = {
+                navigator.pop()
             }
         )
     }

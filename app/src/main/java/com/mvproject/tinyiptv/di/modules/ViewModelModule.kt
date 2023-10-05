@@ -7,24 +7,24 @@
 
 package com.mvproject.tinyiptv.di.modules
 
+import com.mvproject.tinyiptv.ui.screens.channels.TvPlaylistChannelsViewModel
+import com.mvproject.tinyiptv.ui.screens.groups.GroupViewModel
 import com.mvproject.tinyiptv.ui.screens.main.viewmodel.MainViewModel
 import com.mvproject.tinyiptv.ui.screens.player.VideoViewViewModel
-import com.mvproject.tinyiptv.ui.screens.playlist.viewmodel.AddPlayListViewModel
-import com.mvproject.tinyiptv.ui.screens.playlist.viewmodel.PlaylistDataViewModel
-import com.mvproject.tinyiptv.ui.screens.playlist.viewmodel.PlaylistGroupViewModel
-import com.mvproject.tinyiptv.ui.screens.settings.viewmodel.SettingsEpgViewModel
-import com.mvproject.tinyiptv.ui.screens.settings.viewmodel.SettingsPlayerViewModel
-import com.mvproject.tinyiptv.ui.screens.settings.viewmodel.SettingsPlaylistViewModel
+import com.mvproject.tinyiptv.ui.screens.playlist.PlaylistViewModel
+import com.mvproject.tinyiptv.ui.screens.settings.general.SettingsViewModel
+import com.mvproject.tinyiptv.ui.screens.settings.player.SettingsPlayerViewModel
+import com.mvproject.tinyiptv.ui.screens.settings.playlist.SettingsPlaylistViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModelOf(::VideoViewViewModel)
-    viewModelOf(::AddPlayListViewModel)
+    viewModelOf(::PlaylistViewModel)
     viewModelOf(::SettingsPlaylistViewModel)
-    viewModelOf(::PlaylistGroupViewModel)
-    viewModelOf(::PlaylistDataViewModel)
+    viewModelOf(::TvPlaylistChannelsViewModel)
+    viewModelOf(::GroupViewModel)
     viewModelOf(::MainViewModel)
-    viewModelOf(::SettingsEpgViewModel)
     viewModelOf(::SettingsPlayerViewModel)
+    viewModelOf(::SettingsViewModel)
 }
