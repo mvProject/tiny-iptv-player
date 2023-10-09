@@ -12,7 +12,6 @@ import com.mvproject.tinyiptv.di.modules.appModule
 import com.mvproject.tinyiptv.di.modules.dataSourceModule
 import com.mvproject.tinyiptv.di.modules.helperModule
 import com.mvproject.tinyiptv.di.modules.networkModule
-import com.mvproject.tinyiptv.di.modules.playerModule
 import com.mvproject.tinyiptv.di.modules.repositoryModule
 import com.mvproject.tinyiptv.di.modules.useCaseModule
 import com.mvproject.tinyiptv.di.modules.viewModelModule
@@ -35,7 +34,7 @@ class App : Application() {
             workManagerFactory()
             modules(
                 appModule,
-                playerModule,
+              //  playerModule,
                 networkModule,
                 repositoryModule,
                 helperModule,

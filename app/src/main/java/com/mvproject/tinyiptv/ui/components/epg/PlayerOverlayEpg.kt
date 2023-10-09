@@ -101,8 +101,7 @@ fun PreviewPlayerOverlayEpg() {
     VideoAppTheme() {
         PlayerOverlayEpg(
             controlState = VideoViewViewModel.ControlUIState(
-                brightnessValue = 1,
-                volumeValue = 1
+
             ),
             epgList = PreviewTestData.testEpgPrograms
         )
@@ -115,8 +114,7 @@ fun DarkPreviewPlayerOverlayEpg() {
     VideoAppTheme(darkTheme = true) {
         PlayerOverlayEpg(
             controlState = VideoViewViewModel.ControlUIState(
-                brightnessValue = 1,
-                volumeValue = 1
+
             ),
             epgList = PreviewTestData.testEpgPrograms
         )

@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 10.05.23, 20:28
+ *  last modified : 31.08.23, 15:00
  *
  */
 
@@ -24,26 +24,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import com.mvproject.tinyiptv.data.PreviewTestData.testEpgPrograms
-import com.mvproject.tinyiptv.data.enums.player.PlayerCommands
-import com.mvproject.tinyiptv.data.enums.player.PlayerUICommands
 import com.mvproject.tinyiptv.data.models.epg.EpgProgram
 import com.mvproject.tinyiptv.ui.components.epg.PlayerEpgItemView
-import com.mvproject.tinyiptv.ui.screens.player.VideoViewViewModel
-import com.mvproject.tinyiptv.ui.theme.VideoAppTheme
+import com.mvproject.tinyiptv.ui.screens.player.VideoPlayerState
+import com.mvproject.tinyiptv.ui.screens.player.action.PlaybackActions
 import com.mvproject.tinyiptv.ui.theme.dimens
-import com.mvproject.tinyiptv.utils.AppConstants.INT_VALUE_1
+import com.mvproject.tinyiptv.utils.AppConstants
 
 @Composable
 fun PlayerChannelView(
     modifier: Modifier = Modifier,
     channelName: String,
     epgPrograms: List<EpgProgram>,
-    programCount: Int = INT_VALUE_1,
-    playerState: VideoViewViewModel.ControlUIState,
-    onPlayerCommand: (command: PlayerCommands) -> Unit = {},
-    onPlayerUICommand: (command: PlayerUICommands) -> Unit = {}
+    programCount: Int = AppConstants.INT_VALUE_1,
+    playerState: VideoPlayerState,
+    onPlaybackAction: (PlaybackActions) -> Unit = {}
 ) {
     Box(
         modifier = modifier
@@ -85,34 +80,18 @@ fun PlayerChannelView(
                 modifier = Modifier
                     .fillMaxWidth()
                     .alpha(MaterialTheme.dimens.alpha70),
-                playerState = playerState,
-                onPlayerCommand = onPlayerCommand,
-                onPlayerUICommand = onPlayerUICommand
+                isPlaying = playerState.isPlaying.value,
+                isFullScreen = playerState.isFullscreen.value,
+                onPlaybackToggle = {
+                    onPlaybackAction(PlaybackActions.OnPlaybackToggle)
+                },
+                onFullScreenToggle = {
+                    onPlaybackAction(PlaybackActions.OnFullScreenToggle)
+                },
+                onVideoResizeToggle = {
+                    onPlaybackAction(PlaybackActions.OnVideoResizeToggle)
+                }
             )
         }
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun PreviewPlayerChannelView() {
-    VideoAppTheme() {
-        PlayerChannelView(
-            epgPrograms = testEpgPrograms,
-            channelName = "Current Channel",
-            playerState = VideoViewViewModel.ControlUIState(50, 15)
-        )
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun DarkPreviewPlayerChannelView() {
-    VideoAppTheme(darkTheme = true) {
-        PlayerChannelView(
-            epgPrograms = testEpgPrograms,
-            channelName = "Current Channel",
-            playerState = VideoViewViewModel.ControlUIState(50, 15)
-        )
     }
 }

@@ -8,13 +8,11 @@
 package com.mvproject.tinyiptv.di.modules
 
 import com.mvproject.tinyiptv.data.helpers.PlaylistHelper
-import com.mvproject.tinyiptv.data.helpers.ViewSettingsHelper
 import com.mvproject.tinyiptv.data.helpers.ViewTypeHelper
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val helperModule = module {
-    singleOf(::ViewSettingsHelper)
     singleOf(::ViewTypeHelper)
     singleOf(::PlaylistHelper)
 }

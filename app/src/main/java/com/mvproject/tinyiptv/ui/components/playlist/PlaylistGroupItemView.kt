@@ -35,37 +35,34 @@ fun PlaylistGroupItemView(
     group: ChannelsGroup
 ) {
     Row(
-        modifier = modifier
-            .wrapContentSize(),
+        modifier = modifier.wrapContentSize(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            imageVector = Icons.Filled.Folder,
-            contentDescription = group.groupName,
             modifier = Modifier
                 .size(MaterialTheme.dimens.size42)
                 .clip(MaterialTheme.shapes.small),
+            imageVector = Icons.Filled.Folder,
+            contentDescription = group.groupName,
             tint = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Spacer(modifier = Modifier.width(MaterialTheme.dimens.size8))
 
         Text(
+            modifier = Modifier.weight(MaterialTheme.dimens.weight5),
             text = group.groupName,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier
-                .weight(MaterialTheme.dimens.weight5)
         )
 
         if (group.groupContentCount > AppConstants.INT_VALUE_ZERO) {
             Text(
+                modifier = Modifier.weight(MaterialTheme.dimens.weight1),
                 text = group.groupContentCount.toString(),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier
-                    .weight(MaterialTheme.dimens.weight1),
                 textAlign = TextAlign.Center
             )
         }

@@ -30,7 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.mvproject.tinyiptv.data.PreviewTestData
 import com.mvproject.tinyiptv.data.models.playlist.Playlist
-import com.mvproject.tinyiptv.ui.screens.settings.actions.SettingsPlaylistAction
+import com.mvproject.tinyiptv.ui.screens.settings.playlist.action.SettingsPlaylistAction
 import com.mvproject.tinyiptv.ui.theme.VideoAppTheme
 import com.mvproject.tinyiptv.ui.theme.dimens
 
@@ -38,6 +38,7 @@ import com.mvproject.tinyiptv.ui.theme.dimens
 fun PlaylistItemView(
     modifier: Modifier = Modifier,
     item: Playlist,
+    onSelect: () -> Unit = {},
     onPlaylistAction: (SettingsPlaylistAction) -> Unit = {}
 ) {
     Card(
@@ -57,11 +58,11 @@ fun PlaylistItemView(
                 modifier = Modifier
                     .weight(MaterialTheme.dimens.weight1)
                     .clickable {
-                        onPlaylistAction(SettingsPlaylistAction.SelectPlaylist(item.id.toString()))
+                        onSelect()
                     }
             ) {
                 Text(
-                    text = item.listName,
+                    text = item.playlistTitle,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -69,7 +70,7 @@ fun PlaylistItemView(
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.size4))
 
                 Text(
-                    text = item.listUrl,
+                    text = item.playlistUrl,
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.outline,
                 )
@@ -79,7 +80,7 @@ fun PlaylistItemView(
 
             FilledIconButton(
                 onClick = {
-                    onPlaylistAction(SettingsPlaylistAction.DeletePlaylist(item.id.toString()))
+                    onPlaylistAction(SettingsPlaylistAction.DeletePlaylist(item))
                 },
                 modifier = Modifier.padding(MaterialTheme.dimens.size8),
                 colors = IconButtonDefaults.filledIconButtonColors(

@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 10.05.23, 20:27
+ *  last modified : 05.10.23, 18:32
  *
  */
 
@@ -9,6 +9,9 @@ package com.mvproject.tinyiptv.ui.components.player
 
 import android.view.SurfaceView
 import android.view.ViewGroup
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -19,26 +22,23 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.media3.common.Player
-import com.mvproject.tinyiptv.data.enums.player.PlayerCommands
-import com.mvproject.tinyiptv.data.enums.player.PlayerUICommands
 import com.mvproject.tinyiptv.data.enums.player.ViewSettingsRequest
 import com.mvproject.tinyiptv.data.models.epg.EpgProgram
 import com.mvproject.tinyiptv.ui.components.modifiers.adaptiveLayout
 import com.mvproject.tinyiptv.ui.components.modifiers.defaultPlayerHorizontalGestures
-import com.mvproject.tinyiptv.ui.components.modifiers.defaultPlayerTapGestures
+import com.mvproject.tinyiptv.ui.components.modifiers.defaultPlayerTapGesturesState
 import com.mvproject.tinyiptv.ui.components.modifiers.defaultPlayerVerticalGestures
-import com.mvproject.tinyiptv.ui.screens.player.VideoViewViewModel
+import com.mvproject.tinyiptv.ui.screens.player.VideoPlayerState
+import com.mvproject.tinyiptv.ui.screens.player.action.PlaybackActions
 
 @Composable
 fun PlayerView(
     modifier: Modifier = Modifier,
-    playerState: VideoViewViewModel.ControlUIState,
+    playerState: VideoPlayerState,
     programs: List<EpgProgram>,
-    player: Player,
     onViewSettingsAction: (action: ViewSettingsRequest) -> Unit = {},
-    onPlayerCommand: (command: PlayerCommands) -> Unit = {},
-    onPlayerUICommand: (command: PlayerUICommands) -> Unit = {},
+    channelName: String,
+    onPlaybackAction: (PlaybackActions) -> Unit = {}
 ) {
 
     val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
@@ -46,15 +46,15 @@ fun PlayerView(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .defaultPlayerHorizontalGestures(onPlayerCommand = onPlayerCommand)
-            .defaultPlayerVerticalGestures(onAction = onViewSettingsAction)
-            .defaultPlayerTapGestures(onPlayerUICommand = onPlayerUICommand),
+            .defaultPlayerHorizontalGestures(onAction = onPlaybackAction)
+            .defaultPlayerVerticalGestures(onAction = onPlaybackAction)
+            .defaultPlayerTapGesturesState(onAction = onPlaybackAction),
     ) {
         AndroidView(
             modifier = Modifier
                 .adaptiveLayout(
-                    aspectRatio = playerState.videoSizeRatio,
-                    resizeMode = playerState.videoResizeMode
+                    aspectRatio = playerState.videoSize.value,
+                    resizeMode = playerState.videoResizeMode.value
                 ),
             factory = { context ->
                 SurfaceView(context).apply {
@@ -64,33 +64,34 @@ fun PlayerView(
                     )
                     keepScreenOn = true
                 }.also { view ->
-                    player.setVideoSurfaceView(view)
-                    // player
-                    //     .trackSelectionParameters
-                    //     .buildUpon()
-                    //     .setMaxVideoSizeSd()
-                    //     .build()
-                }//
+                    playerState.player.setVideoSurfaceView(view)
+                }
             }
         )
 
-        PlayerControlsContainer(
-            modifier = Modifier.fillMaxSize(),
-            playerState = playerState,
-            programs = programs,
-            onPlayerCommand = onPlayerCommand,
-            onPlayerUICommand = onPlayerUICommand
-        )
+        AnimatedVisibility(
+            visible = playerState.isControlUiVisible.value,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            PlayerChannelView(
+                modifier = Modifier.fillMaxSize(),
+                channelName = channelName,
+                epgPrograms = programs,
+                playerState = playerState,
+                onPlaybackAction = onPlaybackAction
+            )
+        }
     }
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_START -> {
-                    onPlayerUICommand(PlayerUICommands.CONTROL_UI_ON)
+                    onPlaybackAction(PlaybackActions.OnPlayerUiToggle)
                 }
 
-                Lifecycle.Event.ON_STOP -> player.pause()
+                Lifecycle.Event.ON_STOP -> playerState.player.pause()
                 else -> Unit
             }
         }
