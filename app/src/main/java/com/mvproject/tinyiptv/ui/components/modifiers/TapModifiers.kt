@@ -10,20 +10,20 @@ package com.mvproject.tinyiptv.ui.components.modifiers
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
-import com.mvproject.tinyiptv.data.enums.player.PlayerUICommands
+import com.mvproject.tinyiptv.ui.screens.player.action.PlaybackActions
 
-fun Modifier.defaultPlayerTapGestures(
-    onPlayerUICommand: (command: PlayerUICommands) -> Unit = {}
+fun Modifier.defaultPlayerTapGesturesState(
+    onAction: (PlaybackActions) -> Unit
 ) = pointerInput(Unit) {
     detectTapGestures(
         onDoubleTap = {
-            onPlayerUICommand(PlayerUICommands.TOGGLE_FULL_SCREEN)
+            onAction(PlaybackActions.OnFullScreenToggle)
         },
         onTap = {
-            onPlayerUICommand(PlayerUICommands.TOGGLE_UI_VISIBILITY)
+            onAction(PlaybackActions.OnPlayerUiToggle)
         },
         onLongPress = {
-            onPlayerUICommand(PlayerUICommands.TOGGLE_EPG_VISIBILITY)
+            onAction(PlaybackActions.OnEpgUiToggle)
         }
     )
 }

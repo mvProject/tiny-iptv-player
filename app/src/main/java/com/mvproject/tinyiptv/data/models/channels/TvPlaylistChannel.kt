@@ -11,9 +11,9 @@ import com.mvproject.tinyiptv.data.models.epg.EpgProgram
 import com.mvproject.tinyiptv.utils.AppConstants.EMPTY_STRING
 
 data class TvPlaylistChannel(
-    val channelName: String,
-    val channelUrl: String,
-    val channelLogo: String,
+    val channelName: String = EMPTY_STRING,
+    val channelUrl: String = EMPTY_STRING,
+    val channelLogo: String = EMPTY_STRING,
     val epgId: String = EMPTY_STRING,
     val isInFavorites: Boolean = false,
     val isEpgUsing: Boolean = false,

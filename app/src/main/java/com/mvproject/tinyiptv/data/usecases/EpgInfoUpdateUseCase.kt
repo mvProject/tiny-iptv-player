@@ -35,7 +35,7 @@ class EpgInfoUpdateUseCase(
                 setChannelsEpgInfoUpdateRequired(state = true)
             }
         } else {
-            Napier.w("testing last update less then 10 minutes")
+            Napier.w("testing EpgInfoUpdateUseCase update not required")
         }
     }
 }

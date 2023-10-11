@@ -31,13 +31,12 @@ import com.mvproject.tinyiptv.ui.theme.VideoAppTheme
 import com.mvproject.tinyiptv.ui.theme.dimens
 
 @Composable
-fun PlayerOverlayEpgView(
+fun PlayerEpgContent(
     modifier: Modifier = Modifier,
     epgList: List<EpgProgram>,
 ) {
     Box(
-        modifier = modifier
-            .fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         if (epgList.isEmpty()) {
             Text(
@@ -52,8 +51,7 @@ fun PlayerOverlayEpgView(
         }
 
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             state = rememberLazyListState(),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.size8),
             contentPadding = PaddingValues(
@@ -65,7 +63,7 @@ fun PlayerOverlayEpgView(
                     items = epgList,
                     key = { (it.start.toString() + it.title) }
                 ) { epg ->
-                    PlayerOverlayEpgItemView(
+                    PlayerEpgItem(
                         modifier = Modifier
                             .padding(start = MaterialTheme.dimens.size4),
                         program = epg,
@@ -80,7 +78,7 @@ fun PlayerOverlayEpgView(
 @Preview(showBackground = true)
 fun PreviewPlayerOverlayEpgView() {
     VideoAppTheme() {
-        PlayerOverlayEpgView(epgList = PreviewTestData.testEpgPrograms)
+        PlayerEpgContent(epgList = PreviewTestData.testEpgPrograms)
     }
 }
 
@@ -88,6 +86,6 @@ fun PreviewPlayerOverlayEpgView() {
 @Preview(showBackground = true)
 fun DarkPreviewPlayerOverlayEpgView() {
     VideoAppTheme(darkTheme = true) {
-        PlayerOverlayEpgView(epgList = PreviewTestData.testEpgPrograms)
+        PlayerEpgContent(epgList = PreviewTestData.testEpgPrograms)
     }
 }

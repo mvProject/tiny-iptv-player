@@ -35,7 +35,7 @@ import com.mvproject.tinyiptv.utils.AppConstants.PROGRESS_STATE_COMPLETE
 import com.mvproject.tinyiptv.utils.TimeUtils.convertTimeToReadableFormat
 
 @Composable
-fun PlayerEpgItemView(
+fun PlayerChannelEpgItem(
     epgProgram: EpgProgram
 ) {
     Column(
@@ -97,7 +97,7 @@ fun PlayerEpgItemView(
 @Preview(showBackground = true)
 fun PreviewPlayerEpgItemView() {
     VideoAppTheme() {
-        PlayerEpgItemView(epgProgram = PreviewTestData.testEpgProgram)
+        PlayerChannelEpgItem(epgProgram = PreviewTestData.testEpgProgram)
     }
 }
 
@@ -105,6 +105,6 @@ fun PreviewPlayerEpgItemView() {
 @Preview(showBackground = true)
 fun DarkPreviewPlayerEpgItemView() {
     VideoAppTheme(darkTheme = true) {
-        PlayerEpgItemView(epgProgram = PreviewTestData.testEpgProgram)
+        PlayerChannelEpgItem(epgProgram = PreviewTestData.testEpgProgram)
     }
 }

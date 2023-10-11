@@ -28,7 +28,7 @@ import com.mvproject.tinyiptv.utils.AppConstants.PROGRESS_STATE_COMPLETE
 import com.mvproject.tinyiptv.utils.TimeUtils.convertTimeToReadableFormat
 
 @Composable
-fun PlayerOverlayEpgItemView(
+fun PlayerEpgItem(
     modifier: Modifier = Modifier,
     program: EpgProgram,
 ) {
@@ -79,7 +79,7 @@ fun PlayerOverlayEpgItemView(
 @Preview(showBackground = true)
 fun PreviewPlayerOverlayEpgItemView() {
     VideoAppTheme() {
-        PlayerOverlayEpgItemView(program = PreviewTestData.testEpgProgram)
+        PlayerEpgItem(program = PreviewTestData.testEpgProgram)
     }
 }
 
@@ -87,6 +87,6 @@ fun PreviewPlayerOverlayEpgItemView() {
 @Preview(showBackground = true)
 fun DarkPreviewPlayerOverlayEpgItemView() {
     VideoAppTheme(darkTheme = true) {
-        PlayerOverlayEpgItemView(program = PreviewTestData.testEpgProgram)
+        PlayerEpgItem(program = PreviewTestData.testEpgProgram)
     }
 }

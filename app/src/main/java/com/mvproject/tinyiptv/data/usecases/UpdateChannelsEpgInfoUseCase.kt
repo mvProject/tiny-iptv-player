@@ -24,8 +24,8 @@ class UpdateChannelsEpgInfoUseCase(
         if (preferenceRepository.isEpgInfoDataExist()) {
             Napier.i("testing start UpdateChannelsEpgInfoUseCase")
 
-            val epgInfos = epgInfoRepository.loadEpgInfoData()
-            val channels = playlistChannelsRepository.loadChannels()
+            val epgInfos = epgInfoRepository.loadEpgInfoData().asSequence()
+            val channels = playlistChannelsRepository.loadChannels().asSequence()
             val favorites = favoriteChannelsRepository.loadFavoriteChannelUrls()
 
             val duration = measureTime {
@@ -54,7 +54,7 @@ class UpdateChannelsEpgInfoUseCase(
 
                 Napier.w("testing mappedChannels count:${mappedChannels.count()}")
 
-                playlistChannelsRepository.updatePlaylistChannels(mappedChannels)
+                playlistChannelsRepository.updatePlaylistChannels(mappedChannels.toList())
 
                 mappedChannels.forEach { channel ->
                     if (channel.channelUrl in favorites) {
