@@ -7,6 +7,8 @@
 
 package com.mvproject.tinyiptv.ui.components.channels
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -29,19 +31,26 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.mvproject.tinyiptv.R
 import com.mvproject.tinyiptv.data.PreviewTestData
-import com.mvproject.tinyiptv.data.models.channels.PlaylistChannelWithEpg
+import com.mvproject.tinyiptv.data.models.channels.TvPlaylistChannel
 import com.mvproject.tinyiptv.ui.theme.VideoAppTheme
 import com.mvproject.tinyiptv.ui.theme.dimens
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ChannelCardView(
     modifier: Modifier = Modifier,
-    channel: PlaylistChannelWithEpg
+    channel: TvPlaylistChannel,
+    onChannelSelect: () -> Unit = {},
+    onOptionSelect: () -> Unit = {}
 ) {
     Card(
         modifier = modifier
             .heightIn(MaterialTheme.dimens.size200)
-            .clip(MaterialTheme.shapes.extraSmall),
+            .clip(MaterialTheme.shapes.extraSmall)
+            .combinedClickable(
+                onClick = onChannelSelect,
+                onLongClick = onOptionSelect
+            ),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         )
@@ -68,7 +77,10 @@ fun ChannelCardView(
             Text(
                 text = channel.channelName,
                 style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = if (channel.isInFavorites)
+                    MaterialTheme.colorScheme.onPrimaryContainer
+                else
+                    MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()

@@ -24,18 +24,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.style.TextAlign
-import com.mvproject.tinyiptv.data.models.epg.EpgProgram
-import com.mvproject.tinyiptv.ui.components.epg.PlayerEpgItemView
-import com.mvproject.tinyiptv.ui.screens.player.VideoPlayerState
+import com.mvproject.tinyiptv.data.mappers.ListMappers.toActual
+import com.mvproject.tinyiptv.data.models.channels.TvPlaylistChannel
+import com.mvproject.tinyiptv.ui.components.epg.PlayerChannelEpgItem
 import com.mvproject.tinyiptv.ui.screens.player.action.PlaybackActions
+import com.mvproject.tinyiptv.ui.screens.player.state.VideoPlayerState
 import com.mvproject.tinyiptv.ui.theme.dimens
 import com.mvproject.tinyiptv.utils.AppConstants
 
 @Composable
 fun PlayerChannelView(
     modifier: Modifier = Modifier,
-    channelName: String,
-    epgPrograms: List<EpgProgram>,
+    currentChannel: TvPlaylistChannel,
     programCount: Int = AppConstants.INT_VALUE_1,
     playerState: VideoPlayerState,
     onPlaybackAction: (PlaybackActions) -> Unit = {}
@@ -62,7 +62,7 @@ fun PlayerChannelView(
             Text(
                 modifier = Modifier
                     .fillMaxWidth(),
-                text = channelName,
+                text = currentChannel.channelName,
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
@@ -70,8 +70,8 @@ fun PlayerChannelView(
 
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2))
 
-            epgPrograms.take(programCount).forEach { epg ->
-                PlayerEpgItemView(epgProgram = epg)
+            currentChannel.channelEpg.toActual().take(programCount).forEach { epg ->
+                PlayerChannelEpgItem(epgProgram = epg)
             }
 
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2))
@@ -80,8 +80,12 @@ fun PlayerChannelView(
                 modifier = Modifier
                     .fillMaxWidth()
                     .alpha(MaterialTheme.dimens.alpha70),
+                isFavorite = currentChannel.isInFavorites,
                 isPlaying = playerState.isPlaying.value,
                 isFullScreen = playerState.isFullscreen.value,
+                onFavoriteToggle = {
+                    //onPlaybackAction(PlaybackActions.OnPlaybackToggle)
+                },
                 onPlaybackToggle = {
                     onPlaybackAction(PlaybackActions.OnPlaybackToggle)
                 },

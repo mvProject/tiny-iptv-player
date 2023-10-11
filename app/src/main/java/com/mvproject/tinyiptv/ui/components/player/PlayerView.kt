@@ -22,22 +22,19 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
-import com.mvproject.tinyiptv.data.enums.player.ViewSettingsRequest
-import com.mvproject.tinyiptv.data.models.epg.EpgProgram
+import com.mvproject.tinyiptv.data.models.channels.TvPlaylistChannel
 import com.mvproject.tinyiptv.ui.components.modifiers.adaptiveLayout
 import com.mvproject.tinyiptv.ui.components.modifiers.defaultPlayerHorizontalGestures
 import com.mvproject.tinyiptv.ui.components.modifiers.defaultPlayerTapGesturesState
 import com.mvproject.tinyiptv.ui.components.modifiers.defaultPlayerVerticalGestures
-import com.mvproject.tinyiptv.ui.screens.player.VideoPlayerState
 import com.mvproject.tinyiptv.ui.screens.player.action.PlaybackActions
+import com.mvproject.tinyiptv.ui.screens.player.state.VideoPlayerState
 
 @Composable
 fun PlayerView(
     modifier: Modifier = Modifier,
     playerState: VideoPlayerState,
-    programs: List<EpgProgram>,
-    onViewSettingsAction: (action: ViewSettingsRequest) -> Unit = {},
-    channelName: String,
+    currentChannel: TvPlaylistChannel,
     onPlaybackAction: (PlaybackActions) -> Unit = {}
 ) {
 
@@ -76,8 +73,7 @@ fun PlayerView(
         ) {
             PlayerChannelView(
                 modifier = Modifier.fillMaxSize(),
-                channelName = channelName,
-                epgPrograms = programs,
+                currentChannel = currentChannel,
                 playerState = playerState,
                 onPlaybackAction = onPlaybackAction
             )

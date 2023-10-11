@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Crop
+import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.Fullscreen
 import androidx.compose.material.icons.rounded.FullscreenExit
 import androidx.compose.material.icons.rounded.Pause
@@ -31,8 +33,10 @@ import com.mvproject.tinyiptv.ui.theme.dimens
 @Composable
 fun PlayerControlView(
     modifier: Modifier = Modifier,
+    isFavorite: Boolean,
     isPlaying: Boolean,
     isFullScreen: Boolean,
+    onFavoriteToggle: () -> Unit,
     onPlaybackToggle: () -> Unit,
     onVideoResizeToggle: () -> Unit,
     onFullScreenToggle: () -> Unit
@@ -60,6 +64,21 @@ fun PlayerControlView(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.End
         ) {
+            IconButton(
+                onClick = onFavoriteToggle,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.onSurfaceVariant)
+            ) {
+                Icon(
+                    imageVector = if (isFavorite) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
+                    contentDescription = "FAVORITE_TOGGLE",
+                    tint = MaterialTheme.colorScheme.surfaceVariant
+                )
+            }
+
+            Spacer(modifier = Modifier.width(MaterialTheme.dimens.size8))
+
             IconButton(
                 onClick = onVideoResizeToggle,
                 modifier = Modifier
