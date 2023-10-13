@@ -1,11 +1,11 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 31.08.23, 12:58
+ *  last modified : 10.10.23, 15:28
  *
  */
 
-package com.mvproject.tinyiptv.ui.screens.player
+package com.mvproject.tinyiptv.ui.screens.player.state
 
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -26,7 +26,6 @@ import androidx.media3.exoplayer.hls.HlsMediaSource
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import com.mvproject.tinyiptv.data.enums.ResizeMode
 import com.mvproject.tinyiptv.ui.screens.player.action.PlaybackStateActions
-import com.mvproject.tinyiptv.ui.screens.player.state.VideoPlaybackState
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job

@@ -84,7 +84,7 @@ fun PlayerChannelView(
                 isPlaying = playerState.isPlaying.value,
                 isFullScreen = playerState.isFullscreen.value,
                 onFavoriteToggle = {
-                    //onPlaybackAction(PlaybackActions.OnPlaybackToggle)
+                    onPlaybackAction(PlaybackActions.OnFavoriteToggle)
                 },
                 onPlaybackToggle = {
                     onPlaybackAction(PlaybackActions.OnPlaybackToggle)

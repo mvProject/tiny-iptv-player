@@ -10,15 +10,18 @@ package com.mvproject.tinyiptv.ui.screens.player
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mvproject.tinyiptv.data.enums.ResizeMode
+import com.mvproject.tinyiptv.data.mappers.ListMappers.withRefreshedEpg
 import com.mvproject.tinyiptv.data.models.channels.TvPlaylistChannel
-import com.mvproject.tinyiptv.data.models.epg.EpgProgram
 import com.mvproject.tinyiptv.data.network.NetworkConnectivityObserver
 import com.mvproject.tinyiptv.data.repository.PreferenceRepository
 import com.mvproject.tinyiptv.data.usecases.GetGroupChannelsUseCase
+import com.mvproject.tinyiptv.data.usecases.ToggleFavoriteChannelUseCase
 import com.mvproject.tinyiptv.ui.screens.player.action.PlaybackActions
 import com.mvproject.tinyiptv.ui.screens.player.action.PlaybackStateActions
 import com.mvproject.tinyiptv.ui.screens.player.events.PlaybackEvents
 import com.mvproject.tinyiptv.ui.screens.player.state.VideoPlaybackState
+import com.mvproject.tinyiptv.ui.screens.player.state.VideoViewState
+import com.mvproject.tinyiptv.utils.AppConstants.INT_NO_VALUE
 import com.mvproject.tinyiptv.utils.isMediaPlayable
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.channels.Channel
@@ -31,11 +34,12 @@ import kotlinx.coroutines.launch
 class VideoViewViewModel(
     private val preferenceRepository: PreferenceRepository,
     private val networkConnectivityObserver: NetworkConnectivityObserver,
-    private val getGroupChannelsUseCase: GetGroupChannelsUseCase
+    private val getGroupChannelsUseCase: GetGroupChannelsUseCase,
+    private val toggleFavoriteChannelUseCase: ToggleFavoriteChannelUseCase,
 ) : ViewModel() {
 
-    private var _playerUIState = MutableStateFlow(ControlUIState())
-    val playerUIState = _playerUIState.asStateFlow()
+    private var _videoViewState = MutableStateFlow(VideoViewState())
+    val videoViewState = _videoViewState.asStateFlow()
 
     private val _playbackEffects: Channel<PlaybackEvents> = Channel()
     val playbackEffects = _playbackEffects.receiveAsFlow()
@@ -43,7 +47,7 @@ class VideoViewViewModel(
     init {
         Napier.i("testing VideoViewViewModel init")
         viewModelScope.launch {
-            _playerUIState.update {
+            _videoViewState.update {
                 it.copy(
                     isFullscreen = preferenceRepository.getDefaultFullscreenMode(),
                     videoResizeMode = ResizeMode.entries[preferenceRepository.getDefaultResizeMode()]
@@ -57,7 +61,7 @@ class VideoViewViewModel(
                     if (isNetworkOn) {
                         restartPlayingIfNeeded()
                     }
-                    _playerUIState.update {
+                    _videoViewState.update {
                         it.copy(
                             isOnline = isNetworkOn
                         )
@@ -75,18 +79,40 @@ class VideoViewViewModel(
     fun initPlayBack(channelUrl: String, channelGroup: String) {
         viewModelScope.launch {
             val channelList = getGroupChannelsUseCase(channelGroup)
-            Napier.w("testing initPlayBack channelList channelUrl:$channelUrl")
             val currentItemPosition = getCurrentMediaPosition(channelUrl, channelList)
-            val programs = getCurrentMediaEpg()
-            Napier.w("testing initPlayBack channelList count:${channelList.count()}")
-            Napier.w("testing initPlayBack currentItemPosition count:$currentItemPosition")
-            Napier.w("testing initPlayBack programs count:${programs.count()}")
-            _playerUIState.update { state ->
+            val currentChannel = channelList[currentItemPosition]
+
+            _videoViewState.update { state ->
                 state.copy(
+                    channelGroup = channelGroup,
                     mediaPosition = currentItemPosition,
                     channels = channelList,
-                    epgs = programs
+                    currentChannel = currentChannel
                 )
+            }
+        }
+    }
+
+    fun switchToChannel(channel: TvPlaylistChannel) {
+        viewModelScope.launch {
+            val channelsRefreshed = videoViewState.value.channels.withRefreshedEpg()
+
+            val newMediaPosition = getCurrentMediaPosition(
+                channel.channelUrl,
+                channelsRefreshed
+            )
+
+            _videoViewState.update { state ->
+                state.copy(
+                    mediaPosition = newMediaPosition,
+                    currentChannel = channel,
+                    channels = channelsRefreshed,
+                    isChannelsVisible = false
+                )
+            }
+
+            viewModelScope.launch {
+                _playbackEffects.send(PlaybackEvents.OnSpecifiedSelected)
             }
         }
     }
@@ -95,14 +121,12 @@ class VideoViewViewModel(
         channelUrl: String,
         channels: List<TvPlaylistChannel>
     ): Int {
-        val currentPos = playerUIState.value.mediaPosition
-        channels.forEach {
-            Napier.w("testing getCurrentMediaPosition channel:${it.channelName}")
-        }
+        val currentPos = videoViewState.value.mediaPosition
+
         val targetPos = channels
             .indexOfFirst { it.channelUrl == channelUrl }
 
-        val mediaPosition = if (currentPos < 0) {
+        val mediaPosition = if (targetPos > INT_NO_VALUE) {
             targetPos
         } else {
             currentPos
@@ -125,6 +149,7 @@ class VideoViewViewModel(
             PlaybackActions.OnVolumeDown -> PlaybackEvents.OnVolumeDown
             PlaybackActions.OnVolumeUp -> PlaybackEvents.OnVolumeUp
             PlaybackActions.OnChannelInfoUiToggle -> PlaybackEvents.OnChannelInfoUiToggle
+            PlaybackActions.OnFavoriteToggle -> PlaybackEvents.OnFavoriteToggle
         }
         viewModelScope.launch {
             _playbackEffects.send(effect)
@@ -133,16 +158,20 @@ class VideoViewViewModel(
     }
 
     fun processPlaybackStateActions(action: PlaybackStateActions) {
-        var isMediaPlayable = playerUIState.value.isMediaPlayable
-        var isBuffering = playerUIState.value.isBuffering
+        var isMediaPlayable = videoViewState.value.isMediaPlayable
+        var isBuffering = videoViewState.value.isBuffering
 
         when (action) {
             is PlaybackStateActions.OnMediaItemTransition -> {
-                Napier.w("testing index ${action.index}")
-                _playerUIState.update { state ->
+
+                val currentMediaPosition = action.index
+                val current = videoViewState.value.channels[currentMediaPosition]
+                val channelsRefreshed = videoViewState.value.channels.withRefreshedEpg()
+                _videoViewState.update { state ->
                     state.copy(
-                        currentChannel = action.mediaTitle,
-                        epgs = getCurrentMediaEpg(),
+                        mediaPosition = currentMediaPosition,
+                        currentChannel = current,
+                        channels = channelsRefreshed
                     )
                 }
 
@@ -172,7 +201,7 @@ class VideoViewViewModel(
             }
         }
 
-        _playerUIState.update { state ->
+        _videoViewState.update { state ->
             state.copy(
                 isMediaPlayable = isMediaPlayable,
                 isBuffering = isBuffering
@@ -180,51 +209,71 @@ class VideoViewViewModel(
         }
     }
 
-    private fun getCurrentMediaEpg(): List<EpgProgram> {
-        /*        val currentMedia =
-                    playerUIState.value.channels.firstOrNull { it.channelName == playerUIState.value.currentChannel }
-
-                return currentMedia?.let { channel ->
-                    val id = listOf(channel.epgId).firstNotNullOfOrNull { it }
-                    val programs =
-                        id?.let { playlistChannelManager.getEpgListForChannel(it) } ?: emptyList()
-                    Napier.w("testing getCurrentMediaEpg programs $programs")
-                    programs
-                } ?: emptyList()*/
-        return emptyList()
-    }
-
     fun toggleEpgVisibility() {
-        val currentEpgVisibleState = playerUIState.value.isEpgVisible
+        val currentEpgVisibleState = videoViewState.value.isEpgVisible
+
         if (!currentEpgVisibleState) {
-            val programs = getCurrentMediaEpg()
-            _playerUIState.update { state ->
-                state.copy(epgs = programs)
+            val channelsRefreshed = videoViewState.value.channels.withRefreshedEpg()
+            _videoViewState.update { state ->
+                state.copy(
+                    channels = channelsRefreshed
+                )
             }
         }
 
-        _playerUIState.update { state ->
+        _videoViewState.update { state ->
             state.copy(
                 isEpgVisible = !currentEpgVisibleState
             )
         }
     }
 
-    data class ControlUIState(
-        val currentChannel: String = "",
-        val isUseSubtitle: Boolean = false,
-        val isTracksAvailable: Boolean = false,
-        val isUiVisible: Boolean = false,
-        val isEpgVisible: Boolean = false,
-        val isFullscreen: Boolean = false,
-        val isPlaying: Boolean = false,
-        val isBuffering: Boolean = false,
-        val isMediaPlayable: Boolean = true,
-        val isOnline: Boolean = true,
-        val videoSizeRatio: Float = 1.7777778f,
-        val videoResizeMode: ResizeMode = ResizeMode.Fit,
-        val mediaPosition: Int = -1,
-        val channels: List<TvPlaylistChannel> = emptyList(),
-        val epgs: List<EpgProgram> = emptyList()
-    )
+    fun toggleChannelsVisibility() {
+        val currentChannelsVisibleState = videoViewState.value.isChannelsVisible
+
+        _videoViewState.update { state ->
+            state.copy(
+                isChannelsVisible = !currentChannelsVisibleState
+            )
+        }
+    }
+
+    fun toggleChannelInfoVisibility() {
+        val currentChannelInfoVisibleState = videoViewState.value.isChannelInfoVisible
+
+        _videoViewState.update { state ->
+            state.copy(
+                isChannelInfoVisible = !currentChannelInfoVisibleState
+            )
+        }
+    }
+
+    fun toggleChannelFavorite() {
+        val currentChannel = videoViewState.value.currentChannel
+        val currentChannels = videoViewState.value.channels
+        val currentIndex = videoViewState.value.mediaPosition
+
+        val currentChannelFavoriteChanged = currentChannel.copy(
+            isInFavorites = !currentChannel.isInFavorites
+        )
+
+        val updatedFavoriteChangedChannels = currentChannels.mapIndexed { index, channel ->
+            if (index == currentIndex) {
+                currentChannelFavoriteChanged
+            } else
+                channel
+        }
+
+        viewModelScope.launch {
+            _videoViewState.update { state ->
+                state.copy(
+                    currentChannel = currentChannelFavoriteChanged,
+                    channels = updatedFavoriteChangedChannels
+                )
+            }
+
+            toggleFavoriteChannelUseCase(channel = currentChannel)
+        }
+
+    }
 }

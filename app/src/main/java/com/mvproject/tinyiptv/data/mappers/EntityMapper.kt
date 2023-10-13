@@ -47,13 +47,15 @@ object EntityMapper {
 
     fun PlaylistChannel.toTvPlaylistChannel(
         isFavorite: Boolean = false,
-        isEpgUsing: Boolean = false
+        isEpgUsing: Boolean = false,
+        epgContent: List<EpgProgram> = emptyList()
     ) = with(this) {
         TvPlaylistChannel(
             channelName = channelName,
             channelLogo = channelLogo,
             channelUrl = channelUrl,
             epgId = epgId,
+            channelEpg = epgContent,
             isInFavorites = isFavorite,
             isEpgUsing = isEpgUsing
         )
