@@ -11,7 +11,6 @@ import com.mvproject.tinyiptv.data.datasource.EpgInfoDataSource
 import com.mvproject.tinyiptv.data.repository.EpgInfoRepository
 import com.mvproject.tinyiptv.data.repository.PreferenceRepository
 import com.mvproject.tinyiptv.utils.TimeUtils
-import io.github.aakira.napier.Napier
 
 class EpgInfoUpdateUseCase(
     private val epgInfoDataSource: EpgInfoDataSource,
@@ -19,23 +18,19 @@ class EpgInfoUpdateUseCase(
     private val epgInfoRepository: EpgInfoRepository
 ) {
     suspend operator fun invoke() {
-        val isUpdateRequired = preferenceRepository.isEpgInfoDataUpdateRequired()
-        if (isUpdateRequired) {
-            val epgInfo = epgInfoDataSource.getEpgInfo().distinctBy { it.channelNames }
+        val epgInfo = epgInfoDataSource.getEpgInfo().distinctBy { it.channelNames }
 
-            if (preferenceRepository.isEpgInfoDataExist()) {
-                epgInfoRepository.updateEpgInfoData(epgInfo)
-            } else {
-                epgInfoRepository.addEpgInfoData(epgInfo)
-                preferenceRepository.setEpgInfoDataExist(state = true)
-            }
-
-            preferenceRepository.apply {
-                setEpgInfoDataLastUpdate(timestamp = TimeUtils.actualDate)
-                setChannelsEpgInfoUpdateRequired(state = true)
-            }
+        if (preferenceRepository.isEpgInfoDataExist()) {
+            epgInfoRepository.updateEpgInfoData(epgInfo)
         } else {
-            Napier.w("testing EpgInfoUpdateUseCase update not required")
+            epgInfoRepository.addEpgInfoData(epgInfo)
+            preferenceRepository.setEpgInfoDataExist(state = true)
         }
+
+        preferenceRepository.apply {
+            setEpgInfoDataLastUpdate(timestamp = TimeUtils.actualDate)
+            setChannelsEpgInfoUpdateRequired(state = true)
+        }
+
     }
 }

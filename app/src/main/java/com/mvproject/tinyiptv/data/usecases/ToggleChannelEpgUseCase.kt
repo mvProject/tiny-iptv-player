@@ -34,7 +34,7 @@ class ToggleChannelEpgUseCase(
                 )
             )
 
-            preferenceRepository.setEpgUpdateRequired(state = true)
+            preferenceRepository.setEpgUnplannedUpdateRequired(state = true)
         }
     }
 }

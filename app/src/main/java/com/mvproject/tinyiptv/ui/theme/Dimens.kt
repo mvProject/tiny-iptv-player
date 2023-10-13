@@ -55,6 +55,7 @@ data class Dimens(
     val size200: Dp = 200.dp,
     val size250: Dp = 250.dp,
 
+    val font10: TextUnit = 10.sp,
     val font12: TextUnit = 12.sp,
     val font14: TextUnit = 14.sp,
     val font16: TextUnit = 16.sp,
@@ -81,6 +82,7 @@ data class Dimens(
     val alpha60: Float = 0.6f,
     val alpha70: Float = 0.7f,
     val alpha80: Float = 0.8f,
+    val alpha90: Float = 0.9f,
     val alphaDefault: Float = 1f
 
 )

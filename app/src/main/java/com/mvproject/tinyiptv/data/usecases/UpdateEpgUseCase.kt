@@ -11,6 +11,7 @@ import com.mvproject.tinyiptv.data.datasource.EpgDataSource
 import com.mvproject.tinyiptv.data.repository.EpgProgramRepository
 import com.mvproject.tinyiptv.data.repository.PreferenceRepository
 import com.mvproject.tinyiptv.data.repository.SelectedEpgRepository
+import com.mvproject.tinyiptv.utils.TimeUtils.actualDate
 import io.github.aakira.napier.Napier
 
 class UpdateEpgUseCase(
@@ -26,8 +27,6 @@ class UpdateEpgUseCase(
                 selected.channelEpgId
             }
 
-        Napier.w("testing UpdateEpgUseCase updateEpgIds:$updateEpgIds")
-
         if (updateEpgIds.isNotEmpty()) {
             updateEpgIds.forEach { id ->
                 val programs = epgDataSource.getRemoteEpg(channelsId = id)
@@ -41,6 +40,9 @@ class UpdateEpgUseCase(
             }
         }
 
-        preferenceRepository.setEpgUpdateRequired(state = false)
+        preferenceRepository.apply {
+            setEpgUnplannedUpdateRequired(state = false)
+            setEpgLastUpdate(timestamp = actualDate)
+        }
     }
 }

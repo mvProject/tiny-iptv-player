@@ -34,7 +34,6 @@ class MainViewModel(
         viewModelScope.launch {
             preferenceRepository.isChannelsEpgInfoUpdateRequired()
                 .collect { isRequired ->
-                    Napier.w("testing isChannelsEpgInfoUpdateRequired $isRequired")
                     if (isRequired) {
                         updateChannelsEpgInfoUseCase()
                     }
@@ -44,7 +43,6 @@ class MainViewModel(
         viewModelScope.launch {
             preferenceRepository.isEpgUpdateRequired()
                 .collect { isRequired ->
-                    Napier.w("testing isEpgUpdateRequired $isRequired")
                     if (isRequired) {
                         updateEpgUseCase()
                     }
@@ -52,7 +50,10 @@ class MainViewModel(
         }
 
         viewModelScope.launch {
-            epgInfoUpdateUseCase()
+            val isEpgInfoDataUpdateRequired = preferenceRepository.isEpgInfoDataUpdateRequired()
+            if (isEpgInfoDataUpdateRequired) {
+                epgInfoUpdateUseCase()
+            }
         }
 
         viewModelScope.launch {
