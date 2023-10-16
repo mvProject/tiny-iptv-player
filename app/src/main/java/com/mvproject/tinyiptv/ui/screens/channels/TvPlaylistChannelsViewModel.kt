@@ -50,16 +50,18 @@ class TvPlaylistChannelsViewModel(
     }
 
     fun loadChannelsByGroups(group: String) {
-        if (viewState.value.currentGroup != group) {
-            _viewState.update {
-                it.copy(currentGroup = group, isLoading = true)
+        _viewState.update {
+            it.copy(currentGroup = group, isLoading = true)
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            val groupChannels = getGroupChannelsUseCase(group)
+            channels.apply {
+                clear()
+                addAll(groupChannels)
             }
-            viewModelScope.launch(Dispatchers.IO) {
-                channels.addAll(getGroupChannelsUseCase(group))
 
-                _viewState.update {
-                    it.copy(isLoading = false)
-                }
+            _viewState.update {
+                it.copy(isLoading = false)
             }
         }
     }

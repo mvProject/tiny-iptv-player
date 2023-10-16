@@ -7,6 +7,9 @@
 
 package com.mvproject.tinyiptv.ui.screens.channels
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,18 +34,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
 import com.mvproject.tinyiptv.data.enums.ChannelsViewType
 import com.mvproject.tinyiptv.data.models.channels.TvPlaylistChannel
-import com.mvproject.tinyiptv.ui.components.ConnectionState
 import com.mvproject.tinyiptv.ui.components.channels.ChannelView
 import com.mvproject.tinyiptv.ui.components.dialogs.ChannelOptionsDialog
-import com.mvproject.tinyiptv.ui.components.networkConnectionState
+import com.mvproject.tinyiptv.ui.components.overlay.OverlayContent
+import com.mvproject.tinyiptv.ui.components.overlay.OverlayEpg
 import com.mvproject.tinyiptv.ui.components.toolbars.AppBarWithSearch
 import com.mvproject.tinyiptv.ui.components.views.LoadingView
 import com.mvproject.tinyiptv.ui.screens.channels.action.TvPlaylistChannelAction
 import com.mvproject.tinyiptv.ui.theme.dimens
 import com.mvproject.tinyiptv.utils.AppConstants.INT_VALUE_1
-import io.github.aakira.napier.Napier
+import com.mvproject.tinyiptv.utils.rememberLifecycleEvent
 
 @Composable
 fun TvPlaylistChannelsView(
@@ -52,15 +56,14 @@ fun TvPlaylistChannelsView(
     onAction: (TvPlaylistChannelAction) -> Unit,
     groupSelected: String
 ) {
-    LaunchedEffect(key1 = groupSelected) {
-        viewModel.loadChannelsByGroups(groupSelected)
-    }
 
-    val connection by networkConnectionState()
 
-    when (connection) {
-        ConnectionState.Available -> Napier.w("testing connectivity is available")
-        ConnectionState.Unavailable -> Napier.w("testing connectivity is unavailable")
+    val lifecycleEvent = rememberLifecycleEvent()
+
+    LaunchedEffect(key1 = lifecycleEvent) {
+        if (lifecycleEvent == Lifecycle.Event.ON_RESUME) {
+            viewModel.loadChannelsByGroups(groupSelected)
+        }
     }
 
     val viewState by viewModel.viewState.collectAsState()
@@ -90,7 +93,7 @@ fun TvPlaylistChannelsView(
 
         val isChannelOptionOpen = remember { mutableStateOf(false) }
         var selected by remember {
-            mutableStateOf<TvPlaylistChannel?>(null)
+            mutableStateOf(TvPlaylistChannel())
         }
 
         val channelsList by remember {
@@ -124,12 +127,12 @@ fun TvPlaylistChannelsView(
                     .background(MaterialTheme.colorScheme.inverseOnSurface),
                 columns = columns,
                 state = rememberLazyGridState(),
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.size2),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.size4),
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.size2),
                 contentPadding = PaddingValues(MaterialTheme.dimens.size2),
                 content = {
                     items(
-                        channelsList,
+                        items = channelsList,
                         key = { it.channelUrl }
                     ) { item ->
                         ChannelView(
@@ -141,7 +144,6 @@ fun TvPlaylistChannelsView(
                                 isChannelOptionOpen.value = true
                             },
                             onChannelSelect = {
-                                Napier.e("testing channel selected $item")
                                 onNavigateSelected(item.channelUrl)
                             }
                         )
@@ -154,21 +156,15 @@ fun TvPlaylistChannelsView(
 
             ChannelOptionsDialog(
                 isDialogOpen = isChannelOptionOpen,
-                isInFavorite = selected?.isInFavorites ?: false,
-                isEpgEnabled = selected?.isEpgUsing ?: false,
-                isEpgUsing = !selected?.epgId.isNullOrEmpty(),
+                isInFavorite = selected.isInFavorites,
+                isEpgEnabled = selected.isEpgUsing,
+                isEpgUsing = selected.epgId.isNotEmpty(),
                 onToggleFavorite = {
-                    selected?.let {
-                        onAction(TvPlaylistChannelAction.ToggleFavourites(it))
-                        selected = null
-                    }
+                    onAction(TvPlaylistChannelAction.ToggleFavourites(selected))
                     isChannelOptionOpen.value = false
                 },
                 onToggleEpgState = {
-                    selected?.let {
-                        onAction(TvPlaylistChannelAction.ToggleEpgState(it))
-                        selected = null
-                    }
+                    onAction(TvPlaylistChannelAction.ToggleEpgState(selected))
                     isChannelOptionOpen.value = false
 
                 },
@@ -177,6 +173,21 @@ fun TvPlaylistChannelsView(
                     isChannelOptionOpen.value = false
                 }
             )
+
+            AnimatedVisibility(
+                visible = viewState.isEpgVisible,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                OverlayContent(
+                    onViewTap = { onAction(TvPlaylistChannelAction.ToggleEpgVisibility) }
+                ) {
+                    OverlayEpg(
+                        isFullScreen = false,
+                        currentChannel = selected
+                    )
+                }
+            }
         }
     }
 }
