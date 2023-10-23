@@ -64,6 +64,7 @@ used to create material 3 theme and directly export it for Compose.
 <img src="screenshots/tiny_iptv_player_2.png" height="680" width="340">
 <img src="screenshots/tiny_iptv_player_3.png" height="680" width="340">
 <img src="screenshots/tiny_iptv_player_4.png" height="680" width="340">
+<img src="screenshots/tiny_iptv_player_5.png" height="680" width="340">
 
 
 
