@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 11.10.23, 11:09
+ *  last modified : 23.10.23, 19:15
  *
  */
 
@@ -29,7 +29,7 @@ import kotlin.time.Duration.Companion.minutes
 
 @Composable
 fun OverlayEpg(
-    isFullScreen: Boolean,
+    isFullScreen: Boolean = false,
     currentChannel: TvPlaylistChannel
 ) {
     Column(
@@ -40,16 +40,16 @@ fun OverlayEpg(
                     AppConstants.WEIGHT_50
                 else AppConstants.WEIGHT_80
             )
-            .background(
-                color = MaterialTheme.colorScheme.inverseOnSurface,
-                shape = MaterialTheme.shapes.small
-            )
+        /*            .background(
+                        color = MaterialTheme.colorScheme.onSurface,
+                        shape = MaterialTheme.shapes.small
+                    )*/
     ) {
         Text(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    color = MaterialTheme.colorScheme.tertiaryContainer,
+                    color = MaterialTheme.colorScheme.onSurface,
                     shape = RoundedCornerShape(
                         topStart = MaterialTheme.dimens.size8,
                         topEnd = MaterialTheme.dimens.size8
@@ -58,13 +58,13 @@ fun OverlayEpg(
                 .padding(all = MaterialTheme.dimens.size8),
             text = currentChannel.channelName,
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onTertiaryContainer,
+            color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center
         )
 
         PlayerEpgContent(
             modifier = Modifier.background(
-                color = MaterialTheme.colorScheme.inverseOnSurface,
+                color = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(
                     bottomStart = MaterialTheme.dimens.size8,
                     bottomEnd = MaterialTheme.dimens.size8
@@ -80,7 +80,6 @@ fun OverlayEpg(
 fun DarkPreviewOverlayEpg() {
     VideoAppTheme(darkTheme = true) {
         OverlayEpg(
-            isFullScreen = false,
             currentChannel = TvPlaylistChannel(
                 channelName = "test",
                 channelEpg = listOf(

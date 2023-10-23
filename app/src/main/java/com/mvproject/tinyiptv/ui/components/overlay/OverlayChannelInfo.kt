@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 11.10.23, 11:09
+ *  last modified : 20.10.23, 18:53
  *
  */
 
@@ -32,7 +32,7 @@ import kotlin.time.Duration.Companion.minutes
 
 @Composable
 fun OverlayChannelInfo(
-    isFullScreen: Boolean,
+    isFullScreen: Boolean = false,
     currentChannel: TvPlaylistChannel
 ) {
     Column(
@@ -44,7 +44,7 @@ fun OverlayChannelInfo(
                 else AppConstants.WEIGHT_80
             )
             .background(
-                color = MaterialTheme.colorScheme.inverseOnSurface,
+                color = MaterialTheme.colorScheme.primary,
                 shape = MaterialTheme.shapes.small
             )
     ) {
@@ -52,7 +52,7 @@ fun OverlayChannelInfo(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    color = MaterialTheme.colorScheme.tertiaryContainer,
+                    color = MaterialTheme.colorScheme.onSurface,
                     shape = RoundedCornerShape(
                         topStart = MaterialTheme.dimens.size8,
                         topEnd = MaterialTheme.dimens.size8
@@ -61,7 +61,7 @@ fun OverlayChannelInfo(
                 .padding(all = MaterialTheme.dimens.size8),
             text = currentChannel.channelName,
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onTertiaryContainer,
+            color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center
         )
 
@@ -77,7 +77,7 @@ fun OverlayChannelInfo(
                     ),
                 text = stringResource(id = R.string.msg_no_epg_found),
                 style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
             )
         } else {
@@ -87,7 +87,7 @@ fun OverlayChannelInfo(
                     .padding(all = MaterialTheme.dimens.size8),
                 text = description,
                 style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onTertiaryContainer
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }
@@ -98,7 +98,6 @@ fun OverlayChannelInfo(
 fun DarkPreviewOverlayChannelInfo() {
     VideoAppTheme(darkTheme = true) {
         OverlayChannelInfo(
-            isFullScreen = false,
             currentChannel = TvPlaylistChannel(
                 channelName = "Test",
                 channelEpg = listOf(

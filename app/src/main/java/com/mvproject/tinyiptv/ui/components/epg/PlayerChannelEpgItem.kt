@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 10.05.23, 20:19
+ *  last modified : 20.10.23, 18:54
  *
  */
 
@@ -49,7 +49,7 @@ fun PlayerChannelEpgItem(
             modifier = Modifier.fillMaxWidth(),
             text = epgProgram.title,
             style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
         Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2))
@@ -71,8 +71,8 @@ fun PlayerChannelEpgItem(
                 Text(
                     modifier = Modifier.wrapContentWidth(),
                     text = epgProgram.start.convertTimeToReadableFormat(),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
                 )
 
@@ -84,8 +84,8 @@ fun PlayerChannelEpgItem(
                 Text(
                     modifier = Modifier.wrapContentWidth(),
                     text = epgProgram.stop.convertTimeToReadableFormat(),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
                 )
             }

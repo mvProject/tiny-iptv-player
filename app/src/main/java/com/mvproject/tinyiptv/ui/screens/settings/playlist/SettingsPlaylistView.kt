@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 08.09.23, 18:07
+ *  last modified : 23.10.23, 18:19
  *
  */
 
@@ -48,14 +48,12 @@ fun SettingsPlaylistView(
         modifier = Modifier
             .fillMaxSize()
             .navigationBarsPadding(),
-        containerColor = MaterialTheme.colorScheme.inverseOnSurface,
         topBar = {
             AppBarWithBackNav(
                 appBarTitle = stringResource(id = R.string.scr_playlist_settings_title),
                 onBackClick = onNavigateBack,
             )
         },
-
         bottomBar = {
             ElevatedButton(
                 onClick = {
@@ -65,13 +63,13 @@ fun SettingsPlaylistView(
                     .padding(MaterialTheme.dimens.size8)
                     .fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.tertiary
+                    containerColor = MaterialTheme.colorScheme.onSurface
                 ),
                 shape = MaterialTheme.shapes.small
             ) {
                 Text(
                     text = stringResource(id = R.string.pl_btn_add_new),
-                    color = MaterialTheme.colorScheme.onTertiary,
+                    color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.titleMedium
                 )
             }

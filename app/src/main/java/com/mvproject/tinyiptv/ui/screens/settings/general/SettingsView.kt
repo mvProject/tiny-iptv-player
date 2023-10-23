@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 31.08.23, 11:26
+ *  last modified : 23.10.23, 19:16
  *
  */
 
@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowRight
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
@@ -61,8 +60,7 @@ fun SettingsView(
                 appBarTitle = stringResource(id = R.string.scr_settings_title),
                 onBackClick = onNavigateBack,
             )
-        },
-        containerColor = MaterialTheme.colorScheme.inverseOnSurface,
+        }
     ) { paddingValues ->
 
         val isSelectInfoUpdateOpen = remember { mutableStateOf(false) }
@@ -77,14 +75,11 @@ fun SettingsView(
 
             TextButton(
                 onClick = onNavigatePlaylistSettings,
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.inverseOnSurface
-                )
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     text = stringResource(id = R.string.scr_playlist_settings_title),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(modifier = Modifier.weight(WEIGHT_1))
@@ -92,8 +87,8 @@ fun SettingsView(
                 FilledIconButton(
                     onClick = onNavigatePlaylistSettings,
                     colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        contentColor = MaterialTheme.colorScheme.onSurface
+                        containerColor = MaterialTheme.colorScheme.onPrimary,
+                        contentColor = MaterialTheme.colorScheme.primary
                     )
                 ) {
                     Icon(
@@ -107,20 +102,17 @@ fun SettingsView(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = MaterialTheme.dimens.size8),
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onPrimary
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.size12))
 
             TextButton(
                 onClick = onNavigatePlayerSettings,
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.inverseOnSurface
-                )
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     text = stringResource(id = R.string.scr_player_settings_title),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(modifier = Modifier.weight(WEIGHT_1))
@@ -128,8 +120,8 @@ fun SettingsView(
                 FilledIconButton(
                     onClick = onNavigatePlayerSettings,
                     colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        contentColor = MaterialTheme.colorScheme.onSurface
+                        containerColor = MaterialTheme.colorScheme.onPrimary,
+                        contentColor = MaterialTheme.colorScheme.primary
                     )
                 ) {
                     Icon(
@@ -143,7 +135,7 @@ fun SettingsView(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = MaterialTheme.dimens.size8),
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onPrimary
             )
 
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.size12))
@@ -159,18 +151,18 @@ fun SettingsView(
             ) {
                 Divider(
                     modifier = Modifier.weight(WEIGHT_1),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
 
                 Text(
                     text = stringResource(id = R.string.option_update_title),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
                 Divider(
                     modifier = Modifier.weight(WEIGHT_1),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
             }
 

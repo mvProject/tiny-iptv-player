@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 22.05.23, 15:38
+ *  last modified : 13.10.23, 17:39
  *
  */
 
@@ -45,7 +45,7 @@ fun PlaylistGroupItemView(
                 .clip(MaterialTheme.shapes.small),
             imageVector = Icons.Filled.Folder,
             contentDescription = group.groupName,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant
+            tint = MaterialTheme.colorScheme.onSurface
         )
 
         Spacer(modifier = Modifier.width(MaterialTheme.dimens.size8))
@@ -54,7 +54,7 @@ fun PlaylistGroupItemView(
             modifier = Modifier.weight(MaterialTheme.dimens.weight5),
             text = group.groupName,
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = MaterialTheme.colorScheme.onPrimary,
         )
 
         if (group.groupContentCount > AppConstants.INT_VALUE_ZERO) {
@@ -62,7 +62,7 @@ fun PlaylistGroupItemView(
                 modifier = Modifier.weight(MaterialTheme.dimens.weight1),
                 text = group.groupContentCount.toString(),
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = MaterialTheme.colorScheme.onPrimary,
                 textAlign = TextAlign.Center
             )
         }

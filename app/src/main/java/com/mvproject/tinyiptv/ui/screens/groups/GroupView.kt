@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 04.09.23, 12:24
+ *  last modified : 23.10.23, 18:17
  *
  */
 
@@ -55,8 +55,6 @@ fun GroupView(
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        containerColor = MaterialTheme.colorScheme.inverseOnSurface,
-        contentColor = MaterialTheme.colorScheme.onSurface,
         topBar = {
             AppBarWithSettings(
                 onSettingsClicked = onNavigateToSettings

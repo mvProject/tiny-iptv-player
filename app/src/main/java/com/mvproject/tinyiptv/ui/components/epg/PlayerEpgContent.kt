@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 10.05.23, 20:19
+ *  last modified : 20.10.23, 18:51
  *
  */
 
@@ -53,7 +53,7 @@ fun PlayerEpgContent(
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             state = rememberLazyListState(),
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.size8),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.size10),
             contentPadding = PaddingValues(
                 vertical = MaterialTheme.dimens.size4,
                 horizontal = MaterialTheme.dimens.size2

@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 10.05.23, 20:19
+ *  last modified : 20.10.23, 18:51
  *
  */
 
@@ -65,8 +65,10 @@ fun PlayerEpgItem(
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = text.toString(),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.labelLarge,
+            color = if (isProgramProgressShow)
+                MaterialTheme.colorScheme.onSurfaceVariant
+            else MaterialTheme.colorScheme.onSurface,
         )
 
         if (isProgramProgressShow) {

@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 11.10.23, 11:08
+ *  last modified : 23.10.23, 10:20
  *
  */
 
@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,11 +36,16 @@ import kotlin.time.Duration.Companion.minutes
 
 @Composable
 fun OverlayChannels(
-    isFullScreen: Boolean,
+    isFullScreen: Boolean = false,
     group: String,
     channels: List<TvPlaylistChannel>,
+    current: Int = 0,
     onChannelSelect: (TvPlaylistChannel) -> Unit = {},
 ) {
+    val listState = rememberLazyListState()
+    LaunchedEffect(key1 = current) {
+        listState.animateScrollToItem(current)
+    }
     Column(
         modifier = Modifier
             .fillMaxHeight(MaterialTheme.dimens.fraction90)
@@ -49,7 +55,7 @@ fun OverlayChannels(
                 else AppConstants.WEIGHT_80
             )
             .background(
-                color = MaterialTheme.colorScheme.inverseOnSurface,
+                color = MaterialTheme.colorScheme.primary,
                 shape = MaterialTheme.shapes.small
             )
     ) {
@@ -57,7 +63,7 @@ fun OverlayChannels(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    color = MaterialTheme.colorScheme.tertiaryContainer,
+                    color = MaterialTheme.colorScheme.onSurface,
                     shape = RoundedCornerShape(
                         topStart = MaterialTheme.dimens.size8,
                         topEnd = MaterialTheme.dimens.size8
@@ -66,13 +72,13 @@ fun OverlayChannels(
                 .padding(all = MaterialTheme.dimens.size8),
             text = group,
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onTertiaryContainer,
+            color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center
         )
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            state = rememberLazyListState(),
+            state = listState,
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.size8),
             contentPadding = PaddingValues(
                 vertical = MaterialTheme.dimens.size4,
@@ -98,7 +104,6 @@ fun OverlayChannels(
 fun DarkPreviewOOverlayChannels() {
     VideoAppTheme(darkTheme = true) {
         OverlayChannels(
-            isFullScreen = false,
             group = "TestGroup",
             channels = listOf(
                 TvPlaylistChannel(

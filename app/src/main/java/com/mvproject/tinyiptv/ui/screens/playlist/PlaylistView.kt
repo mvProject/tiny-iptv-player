@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 04.09.23, 12:25
+ *  last modified : 23.10.23, 19:15
  *
  */
 
@@ -93,7 +93,7 @@ fun PlaylistView(
                     .padding(MaterialTheme.dimens.size8)
                     .fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.tertiary
+                    containerColor = MaterialTheme.colorScheme.onSurface
                 ),
                 shape = MaterialTheme.shapes.small
             ) {
@@ -105,7 +105,7 @@ fun PlaylistView(
 
                 Text(
                     text = text,
-                    color = MaterialTheme.colorScheme.onTertiary,
+                    color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.titleMedium
                 )
             }
@@ -139,11 +139,11 @@ fun PlaylistView(
                     },
                     textStyle = MaterialTheme.typography.labelMedium,
                     colors = TextFieldDefaults.colors(
-                        focusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
                         focusedContainerColor = Color.Transparent,
                         unfocusedContainerColor = Color.Transparent,
-                        cursorColor = MaterialTheme.colorScheme.onSurface,
-                        focusedIndicatorColor = MaterialTheme.colorScheme.onSurface
+                        cursorColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        focusedIndicatorColor = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 )
 
@@ -166,11 +166,12 @@ fun PlaylistView(
                     },
                     textStyle = MaterialTheme.typography.labelMedium,
                     colors = TextFieldDefaults.colors(
-                        focusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
                         focusedContainerColor = Color.Transparent,
                         unfocusedContainerColor = Color.Transparent,
-                        cursorColor = MaterialTheme.colorScheme.onSurface,
-                        focusedIndicatorColor = MaterialTheme.colorScheme.onSurface
+                        disabledContainerColor = Color.DarkGray,
+                        cursorColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        focusedIndicatorColor = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 )
 
@@ -200,18 +201,18 @@ fun PlaylistView(
                 ) {
                     Divider(
                         modifier = Modifier.weight(WEIGHT_1),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
 
                     Text(
                         text = stringResource(id = R.string.pl_title_or),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurface
                     )
 
                     Divider(
                         modifier = Modifier.weight(WEIGHT_1),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                 }
 
@@ -221,13 +222,13 @@ fun PlaylistView(
                     onClick = { fileSelectLauncher.launch(arrayOf(PLAYLIST_MIME_TYPE)) },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.surface
+                        containerColor = MaterialTheme.colorScheme.primary
                     ),
                     shape = MaterialTheme.shapes.small
                 ) {
                     Text(
                         text = stringResource(id = R.string.pl_btn_add_local),
-                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        color = MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }

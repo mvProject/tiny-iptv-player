@@ -1,14 +1,16 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 10.05.23, 20:19
+ *  last modified : 13.10.23, 17:33
  *
  */
 
 package com.mvproject.tinyiptv.ui.components.epg
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -57,6 +59,7 @@ fun ScheduleEpgItemView(
     ) {
         if (isProgramProgressShow) {
             DurationProgressView(progress = program.programProgress)
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2))
         }
 
         val text = StringBuilder().apply {
@@ -68,7 +71,7 @@ fun ScheduleEpgItemView(
             modifier = Modifier.fillMaxWidth(),
             text = text.toString(),
             style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.outline,
+            color = MaterialTheme.colorScheme.onSurface,
         )
     }
 }

@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 01.09.23, 13:22
+ *  last modified : 23.10.23, 19:16
  *
  */
 
@@ -24,9 +24,12 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
+import com.mvproject.tinyiptv.ui.theme.VideoAppTheme
 import com.mvproject.tinyiptv.ui.theme.dimens
 import com.mvproject.tinyiptv.utils.AppConstants
 
@@ -57,21 +60,24 @@ fun OptionsDialog(
                     }
                 }
 
-                LazyColumn(modifier = Modifier.fillMaxWidth(), state = listState) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                    state = listState
+                ) {
                     title?.let { text ->
                         item {
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .background(
-                                        color = MaterialTheme.colorScheme.tertiaryContainer
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
                                     .padding(MaterialTheme.dimens.size12)
                             ) {
                                 Text(
                                     text = text,
                                     style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.onTertiaryContainer,
+                                    color = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.align(Alignment.Center)
                                 )
                             }
@@ -90,7 +96,7 @@ fun OptionsDialog(
                                 text = item,
                                 style = MaterialTheme.typography.titleSmall,
                                 color = if (selectedItem)
-                                    MaterialTheme.colorScheme.tertiary
+                                    MaterialTheme.colorScheme.onSurfaceVariant
                                 else
                                     MaterialTheme.colorScheme.onSurface,
 
@@ -102,12 +108,25 @@ fun OptionsDialog(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(horizontal = MaterialTheme.dimens.size16),
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                         }
                     }
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewOptionsDialog() {
+    VideoAppTheme(darkTheme = true) {
+        OptionsDialog(
+            isDialogOpen = mutableStateOf(true),
+            selectedIndex = 1,
+            title = "Title",
+            items = listOf("Option1", "Option2", "Option3", "Option4")
+        )
     }
 }

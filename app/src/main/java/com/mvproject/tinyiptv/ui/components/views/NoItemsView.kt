@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 18.05.23, 15:41
+ *  last modified : 23.10.23, 18:13
  *
  */
 
@@ -37,8 +37,7 @@ fun NoItemsView(
     onNavigateClick: () -> Unit = {}
 ) {
     Surface(
-        modifier = modifier,
-        color = MaterialTheme.colorScheme.primaryContainer
+        modifier = modifier
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),

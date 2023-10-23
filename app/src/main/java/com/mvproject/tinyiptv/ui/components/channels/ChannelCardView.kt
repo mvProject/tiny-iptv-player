@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 10.05.23, 20:19
+ *  last modified : 20.10.23, 18:13
  *
  */
 
@@ -78,9 +78,9 @@ fun ChannelCardView(
                 text = channel.channelName,
                 style = MaterialTheme.typography.headlineMedium,
                 color = if (channel.isInFavorites)
-                    MaterialTheme.colorScheme.onPrimaryContainer
+                    MaterialTheme.colorScheme.onSurfaceVariant
                 else
-                    MaterialTheme.colorScheme.onSurface,
+                    MaterialTheme.colorScheme.onPrimary,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -92,15 +92,15 @@ fun ChannelCardView(
 @Composable
 @Preview(showBackground = true)
 fun PreviewChannelCardView() {
-    VideoAppTheme() {
+    VideoAppTheme(darkTheme = true) {
         ChannelCardView(channel = PreviewTestData.testProgram)
     }
 }
 
 @Composable
 @Preview(showBackground = true)
-fun DarkPreviewChannelCardView() {
+fun PreviewChannelCardViewFavorite() {
     VideoAppTheme(darkTheme = true) {
-        ChannelCardView(channel = PreviewTestData.testProgram)
+        ChannelCardView(channel = PreviewTestData.testProgram.copy(isInFavorites = true))
     }
 }

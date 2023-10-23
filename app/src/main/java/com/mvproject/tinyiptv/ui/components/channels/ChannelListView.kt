@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 10.05.23, 20:39
+ *  last modified : 23.10.23, 18:15
  *
  */
 
@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
@@ -50,8 +50,7 @@ fun ChannelListView(
             .combinedClickable(
                 onClick = onChannelSelect,
                 onLongClick = onOptionSelect
-            ),
-        color = MaterialTheme.colorScheme.surface
+            )
     ) {
         Row(
             modifier = modifier
@@ -81,47 +80,29 @@ fun ChannelListView(
                     text = channel.channelName,
                     style = MaterialTheme.typography.bodyMedium,
                     color = if (channel.isInFavorites)
-                        MaterialTheme.colorScheme.tertiary
+                        MaterialTheme.colorScheme.onSurfaceVariant
                     else
-                        MaterialTheme.colorScheme.onSurface
+                        MaterialTheme.colorScheme.onPrimary
                 )
+
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.size4))
 
                 // todo epg count view
                 channel.channelEpg.toActual().take(1).forEach {
-                    ScheduleEpgItemView(
-                        modifier = Modifier
-                            .padding(start = MaterialTheme.dimens.size4),
-                        program = it
-                    )
+                    ScheduleEpgItemView(program = it)
                 }
 
                 if (channel.channelEpg.isEmpty()) {
                     Text(
                         text = stringResource(id = R.string.msg_no_epg_found),
                         style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.outline,
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                 }
             }
         }
     }
 
-}
-
-@Composable
-@Preview(showBackground = true)
-fun PreviewChannelListView() {
-    VideoAppTheme() {
-        ChannelListView(channel = testProgram)
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun PreviewChannelListViewFav() {
-    VideoAppTheme() {
-        ChannelListView(channel = testProgram.copy(isInFavorites = true))
-    }
 }
 
 @Composable

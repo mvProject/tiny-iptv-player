@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 01.09.23, 13:22
+ *  last modified : 23.10.23, 19:16
  *
  */
 
@@ -22,9 +22,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
+import com.mvproject.tinyiptv.ui.theme.VideoAppTheme
 import com.mvproject.tinyiptv.ui.theme.dimens
 
 @Composable
@@ -113,5 +116,15 @@ fun ChannelOptionsDialog(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewChannelOptionsDialog() {
+    VideoAppTheme(darkTheme = true) {
+        ChannelOptionsDialog(
+            isDialogOpen = mutableStateOf(true)
+        )
     }
 }

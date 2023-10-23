@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject] 
  *  Copyright © 2023
- *  last modified : 05.10.23, 18:34
+ *  last modified : 20.10.23, 16:29
  *
  */
 
@@ -50,12 +50,12 @@ fun PlayerControlView(
             onClick = onPlaybackToggle,
             modifier = Modifier
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.onSurfaceVariant)
+                .background(MaterialTheme.colorScheme.onSurface)
         ) {
             Icon(
                 imageVector = if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow,
                 contentDescription = "PLAYBACK_TOGGLE",
-                tint = MaterialTheme.colorScheme.surfaceVariant
+                tint = MaterialTheme.colorScheme.primary
             )
         }
 
@@ -68,12 +68,12 @@ fun PlayerControlView(
                 onClick = onFavoriteToggle,
                 modifier = Modifier
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.onSurfaceVariant)
+                    .background(MaterialTheme.colorScheme.onSurface)
             ) {
                 Icon(
                     imageVector = if (isFavorite) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
                     contentDescription = "FAVORITE_TOGGLE",
-                    tint = MaterialTheme.colorScheme.surfaceVariant
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
 
@@ -83,12 +83,12 @@ fun PlayerControlView(
                 onClick = onVideoResizeToggle,
                 modifier = Modifier
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.onSurfaceVariant)
+                    .background(MaterialTheme.colorScheme.onSurface)
             ) {
                 Icon(
                     imageVector = Icons.Rounded.Crop,
                     contentDescription = "TOGGLE_RESIZE_MODE",
-                    tint = MaterialTheme.colorScheme.surfaceVariant
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
 
@@ -98,12 +98,12 @@ fun PlayerControlView(
                 onClick = onFullScreenToggle,
                 modifier = Modifier
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.onSurfaceVariant)
+                    .background(MaterialTheme.colorScheme.onSurface)
             ) {
                 Icon(
                     imageVector = if (isFullScreen) Icons.Rounded.FullscreenExit else Icons.Rounded.Fullscreen,
                     contentDescription = "TOGGLE_FULL_SCREEN",
-                    tint = MaterialTheme.colorScheme.surfaceVariant
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
         }

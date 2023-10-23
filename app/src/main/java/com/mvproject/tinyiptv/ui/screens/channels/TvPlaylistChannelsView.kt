@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 04.09.23, 12:24
+ *  last modified : 23.10.23, 19:16
  *
  */
 
@@ -10,7 +10,6 @@ package com.mvproject.tinyiptv.ui.screens.channels
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -122,9 +121,7 @@ fun TvPlaylistChannelsView(
             }
 
             LazyVerticalGrid(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .background(MaterialTheme.colorScheme.inverseOnSurface),
+                modifier = Modifier.fillMaxHeight(),
                 columns = columns,
                 state = rememberLazyGridState(),
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.size4),

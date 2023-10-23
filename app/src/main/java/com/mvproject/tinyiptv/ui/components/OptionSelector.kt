@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 04.09.23, 17:13
+ *  last modified : 17.10.23, 14:44
  *
  */
 
@@ -40,11 +40,11 @@ fun OptionSelector(
 ) {
     OutlinedButton(
         modifier = modifier,
-        shape = MaterialTheme.shapes.small,
+        shape = MaterialTheme.shapes.extraSmall,
         enabled = enabled,
         border = BorderStroke(
             width = MaterialTheme.dimens.size1,
-            color = MaterialTheme.colorScheme.outline
+            color = MaterialTheme.colorScheme.onSurface
         ),
         contentPadding = PaddingValues(
             start = MaterialTheme.dimens.size12
@@ -58,7 +58,8 @@ fun OptionSelector(
                 Text(
                     text = title,
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.outline
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = MaterialTheme.dimens.font10
                 )
 
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.size8))
@@ -83,7 +84,7 @@ fun OptionSelector(
             onClick = onClick,
             modifier = Modifier.padding(MaterialTheme.dimens.size8),
             colors = IconButtonDefaults.filledIconButtonColors(
-                containerColor = MaterialTheme.colorScheme.surface,
+                containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onSurface
             )
         ) {

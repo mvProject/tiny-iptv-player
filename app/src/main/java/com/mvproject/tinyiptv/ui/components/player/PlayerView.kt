@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 05.10.23, 18:32
+ *  last modified : 20.10.23, 13:53
  *
  */
 
@@ -74,7 +74,8 @@ fun PlayerView(
             PlayerChannelView(
                 modifier = Modifier.fillMaxSize(),
                 currentChannel = currentChannel,
-                playerState = playerState,
+                isPlaying = playerState.isPlaying.value,
+                isFullScreen = playerState.isFullscreen.value,
                 onPlaybackAction = onPlaybackAction
             )
         }

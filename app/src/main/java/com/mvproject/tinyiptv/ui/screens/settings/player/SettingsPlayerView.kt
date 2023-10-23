@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 08.09.23, 18:08
+ *  last modified : 23.10.23, 18:46
  *
  */
 
@@ -73,22 +73,20 @@ fun SettingsPlayerView(
                 Text(
                     text = stringResource(id = R.string.option_default_fullscreen_mode),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
                 Switch(
                     checked = state.isFullscreenEnabled,
                     colors = SwitchDefaults.colors(
-                        checkedThumbColor = MaterialTheme.colorScheme.tertiaryContainer,
-                        checkedTrackColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                        uncheckedThumbColor = MaterialTheme.colorScheme.tertiary,
-                        uncheckedTrackColor = MaterialTheme.colorScheme.onTertiary
+                        checkedThumbColor = MaterialTheme.colorScheme.primary,
+                        uncheckedThumbColor = MaterialTheme.colorScheme.primary.copy(
+                            alpha = MaterialTheme.dimens.alpha50
+                        ),
+                        checkedTrackColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        uncheckedTrackColor = MaterialTheme.colorScheme.onSurface
                     ),
                     onCheckedChange = { state ->
-                        onSettingsPlayerAction(
-                            SettingsPlayerAction.SetFullScreenMode(
-                                state
-                            )
-                        )
+                        onSettingsPlayerAction(SettingsPlayerAction.SetFullScreenMode(state))
                     }
                 )
             }

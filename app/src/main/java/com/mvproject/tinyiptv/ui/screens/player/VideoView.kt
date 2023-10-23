@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 10.05.23, 20:26
+ *  last modified : 23.10.23, 10:18
  *
  */
 
@@ -189,7 +189,7 @@ fun VideoView(
                 second = {
                     PlayerEpgContent(
                         modifier = Modifier.background(
-                            color = MaterialTheme.colorScheme.surface
+                            color = MaterialTheme.colorScheme.primary
                         ),
                         epgList = videoViewState.currentChannel.channelEpg
                     )
@@ -230,6 +230,7 @@ fun VideoView(
                 OverlayChannels(
                     isFullScreen = videoViewState.isFullscreen,
                     channels = videoViewState.channels,
+                    current = videoViewState.mediaPosition,
                     group = videoViewState.channelGroup,
                     onChannelSelect = viewModel::switchToChannel
                 )

@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 19.05.23, 10:23
+ *  last modified : 23.10.23, 18:05
  *
  */
 
@@ -55,7 +55,7 @@ fun AppBarWithActions(
             Text(
                 text = appBarTitle,
                 style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onPrimary
             )
         },
         navigationIcon = {
@@ -63,8 +63,8 @@ fun AppBarWithActions(
                 onClick = onBackClick,
                 modifier = Modifier.padding(MaterialTheme.dimens.size8),
                 colors = IconButtonDefaults.filledIconButtonColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    contentColor = MaterialTheme.colorScheme.onSurface
+                    containerColor = MaterialTheme.colorScheme.onPrimary,
+                    contentColor = MaterialTheme.colorScheme.primary
                 )
             ) {
                 Icon(
@@ -80,7 +80,7 @@ fun AppBarWithActions(
                 Icon(
                     imageVector = Icons.Outlined.Search,
                     contentDescription = "Search Icon",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
 
@@ -90,14 +90,14 @@ fun AppBarWithActions(
                 Icon(
                     imageVector = Icons.Outlined.ViewList,
                     contentDescription = "Change Grid",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
 
             DropdownMenu(
                 modifier = Modifier
                     .background(
-                        color = MaterialTheme.colorScheme.inverseOnSurface
+                        color = MaterialTheme.colorScheme.primary
                     ),
                 expanded = isMenuOpen,
                 onDismissRequest = { isMenuOpen = false }
@@ -114,7 +114,7 @@ fun AppBarWithActions(
                         isMenuOpen = !isMenuOpen
                     },
                     colors = MenuDefaults.itemColors(
-                        textColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        textColor = MaterialTheme.colorScheme.onSurface
                     )
                 )
                 Divider(
@@ -135,7 +135,7 @@ fun AppBarWithActions(
                         isMenuOpen = !isMenuOpen
                     },
                     colors = MenuDefaults.itemColors(
-                        textColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        textColor = MaterialTheme.colorScheme.onSurface
                     )
                 )
                 Divider(
@@ -156,13 +156,13 @@ fun AppBarWithActions(
                         isMenuOpen = !isMenuOpen
                     },
                     colors = MenuDefaults.itemColors(
-                        textColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        textColor = MaterialTheme.colorScheme.onSurface
                     )
                 )
             }
         },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.inverseOnSurface
+            containerColor = MaterialTheme.colorScheme.primary
         )
     )
 }

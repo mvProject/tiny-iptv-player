@@ -1,13 +1,15 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 22.05.23, 10:56
+ *  last modified : 23.10.23, 19:15
  *
  */
 
 package com.mvproject.tinyiptv.ui.components.playlist
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -44,9 +46,14 @@ fun PlaylistItemView(
     Card(
         modifier = modifier,
         shape = MaterialTheme.shapes.small,
+        border = BorderStroke(
+            width = MaterialTheme.dimens.size1,
+            color = MaterialTheme.colorScheme.onSurface
+        ),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.primary
         )
+
     ) {
         Row(
             modifier = modifier
@@ -59,21 +66,24 @@ fun PlaylistItemView(
                     .weight(MaterialTheme.dimens.weight1)
                     .clickable {
                         onSelect()
-                    }
+                    },
+                verticalArrangement = Arrangement.Center
             ) {
                 Text(
                     text = item.playlistTitle,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
 
-                Spacer(modifier = Modifier.height(MaterialTheme.dimens.size4))
+                if (item.playlistUrl.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.size4))
 
-                Text(
-                    text = item.playlistUrl,
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.outline,
-                )
+                    Text(
+                        text = item.playlistUrl,
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.width(MaterialTheme.dimens.size8))
@@ -84,8 +94,8 @@ fun PlaylistItemView(
                 },
                 modifier = Modifier.padding(MaterialTheme.dimens.size8),
                 colors = IconButtonDefaults.filledIconButtonColors(
-                    containerColor = MaterialTheme.colorScheme.tertiary,
-                    contentColor = MaterialTheme.colorScheme.onTertiary
+                    containerColor = MaterialTheme.colorScheme.onSurface,
+                    contentColor = MaterialTheme.colorScheme.primary
                 )
             ) {
                 Icon(

@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 10.05.23, 20:39
+ *  last modified : 20.10.23, 18:12
  *
  */
 
@@ -88,9 +88,9 @@ fun ChannelGridView(
                     text = channel.channelName,
                     style = MaterialTheme.typography.bodyLarge,
                     color = if (channel.isInFavorites)
-                        MaterialTheme.colorScheme.onPrimaryContainer
+                        MaterialTheme.colorScheme.onSurfaceVariant
                     else
-                        MaterialTheme.colorScheme.onSurface,
+                        MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier
                         .weight(MaterialTheme.dimens.weight5)
                 )
@@ -113,7 +113,7 @@ fun ChannelGridView(
                     Text(
                         text = stringResource(id = R.string.msg_no_epg_found),
                         style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.outline,
+                        color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(start = MaterialTheme.dimens.size4),
@@ -127,15 +127,15 @@ fun ChannelGridView(
 @Composable
 @Preview(showBackground = true)
 fun PreviewChannelGridView() {
-    VideoAppTheme() {
+    VideoAppTheme(darkTheme = true) {
         ChannelGridView(channel = testProgram)
     }
 }
 
 @Composable
 @Preview(showBackground = true)
-fun DarkPreviewChannelGridView() {
+fun PreviewChannelGridViewFavorite() {
     VideoAppTheme(darkTheme = true) {
-        ChannelGridView(channel = testProgram)
+        ChannelGridView(channel = testProgram.copy(isInFavorites = true))
     }
 }
