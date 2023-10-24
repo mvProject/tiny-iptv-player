@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 10.05.23, 20:21
+ *  last modified : 23.10.23, 19:28
  *
  */
 
@@ -24,11 +24,6 @@ class PlaylistDataRoute : AndroidScreen() {
         val groupViewModel: GroupViewModel = koinViewModel()
         val navigator = LocalNavigator.currentOrThrow
         val playlistDataState by groupViewModel.playlistDataState.collectAsState()
-
-        //  LaunchedEffect(key1 = groupViewModel) {
-        //      Napier.e("testing PlaylistDataView LaunchedEffect")
-        //      groupViewModel.dataInit()
-        //  }
 
         GroupView(
             dataState = playlistDataState,

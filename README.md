@@ -37,7 +37,7 @@ A multiplatform navigation library built for Compose
 
 ## Database
 
-#### [SQLDelight](https://cashapp.github.io/sqldelight/1.5.4/)
+#### [SQLDelight](https://cashapp.github.io/sqldelight/2.0.0/)
 
 SQLDelight generates typesafe kotlin APIs from your SQL statements. It verifies your schema,
 statements, and migrations at compile-time and provides IDE features like autocomplete and
