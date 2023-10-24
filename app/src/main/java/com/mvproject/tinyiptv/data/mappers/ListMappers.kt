@@ -9,10 +9,12 @@ package com.mvproject.tinyiptv.data.mappers
 
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import com.mvproject.tinyiptv.data.models.channels.PlaylistChannel
+import com.mvproject.tinyiptv.data.models.channels.TvPlaylistChannel
+import com.mvproject.tinyiptv.data.models.epg.EpgProgram
+import com.mvproject.tinyiptv.utils.TimeUtils.actualDate
 
 object ListMappers {
-    fun List<PlaylistChannel>.createMediaItems(): List<MediaItem> {
+    fun List<TvPlaylistChannel>.createMediaItems(): List<MediaItem> {
         return buildList {
             this@createMediaItems.forEach { video ->
                 add(
@@ -26,6 +28,17 @@ object ListMappers {
                         ).build()
                 )
             }
+        }
+    }
+
+    fun List<EpgProgram>.toActual(): List<EpgProgram> {
+        return this.filter { it.stop > actualDate }
+    }
+
+    fun List<TvPlaylistChannel>.withRefreshedEpg(): List<TvPlaylistChannel> {
+        return this.map {
+            val epg = it.channelEpg.toActual()
+            it.copy(channelEpg = epg)
         }
     }
 }

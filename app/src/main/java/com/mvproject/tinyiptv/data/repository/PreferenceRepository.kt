@@ -17,8 +17,13 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.mvproject.tinyiptv.utils.AppConstants.INT_VALUE_5
 import com.mvproject.tinyiptv.utils.AppConstants.INT_VALUE_ZERO
 import com.mvproject.tinyiptv.utils.AppConstants.LONG_NO_VALUE
+import com.mvproject.tinyiptv.utils.AppConstants.LONG_VALUE_ZERO
+import com.mvproject.tinyiptv.utils.TimeUtils.actualDate
+import com.mvproject.tinyiptv.utils.typeToDuration
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlin.time.Duration.Companion.days
 
 class PreferenceRepository(
     private val dataStore: DataStore<Preferences>
@@ -38,47 +43,6 @@ class PreferenceRepository(
             preferences[SELECTED_PLAYLIST] ?: LONG_NO_VALUE
         }
 
-    suspend fun setMainInfoExist(state: Boolean) {
-        dataStore.edit { settings ->
-            settings[MAIN_INFO_EXIST] = state
-        }
-    }
-
-    suspend fun getMainInfoExist() = dataStore.data.map { preferences ->
-        preferences[MAIN_INFO_EXIST] ?: false
-    }.first()
-
-    suspend fun setMainInfoUse(state: Boolean) {
-        dataStore.edit { settings ->
-            settings[MAIN_INFO_USE] = state
-        }
-    }
-
-    suspend fun getMainInfoUse() = dataStore.data.map { preferences ->
-        preferences[MAIN_INFO_USE] ?: false
-    }.first()
-
-
-    suspend fun setAlterInfoExist(state: Boolean) {
-        dataStore.edit { settings ->
-            settings[ALTER_INFO_EXIST] = state
-        }
-    }
-
-    suspend fun getAlterInfoExist() = dataStore.data.map { preferences ->
-        preferences[ALTER_INFO_EXIST] ?: false
-    }.first()
-
-    suspend fun setAlterInfoUse(state: Boolean) {
-        dataStore.edit { settings ->
-            settings[ALTER_INFO_USE] = state
-        }
-    }
-
-    suspend fun getAlterInfoUse() = dataStore.data.map { preferences ->
-        preferences[ALTER_INFO_USE] ?: false
-    }.first()
-
     suspend fun setChannelsViewType(type: String) {
         dataStore.edit { settings ->
             settings[CHANNELS_VIEW_TYPE] = type
@@ -88,52 +52,6 @@ class PreferenceRepository(
     suspend fun getChannelsViewType() = dataStore.data.map { preferences ->
         preferences[CHANNELS_VIEW_TYPE]
     }.first()
-
-
-    suspend fun setEpgInfoLastUpdate(timestamp: Long) {
-        dataStore.edit { settings ->
-            settings[EPG_INFO_LAST_UPDATE] = timestamp
-        }
-    }
-
-    suspend fun getEpgInfoLastUpdate() = dataStore.data.map { preferences ->
-        preferences[EPG_INFO_LAST_UPDATE] ?: LONG_NO_VALUE
-    }.first()
-
-    suspend fun setPlaylistLastUpdate(playlistId: Long, timestamp: Long) {
-        dataStore.edit { settings ->
-            val playlistLastUpdateKey =
-                longPreferencesKey(PLAYLIST_LAST_UPDATE + playlistId.toString())
-            settings[playlistLastUpdateKey] = timestamp
-        }
-    }
-
-    suspend fun getPlaylistLastUpdate(playlistId: Long) = dataStore.data.map { preferences ->
-        val playlistLastUpdateKey =
-            longPreferencesKey(PLAYLIST_LAST_UPDATE + playlistId.toString())
-        preferences[playlistLastUpdateKey] ?: LONG_NO_VALUE
-    }.first()
-
-    suspend fun setMainEpgLastUpdate(timestamp: Long) {
-        dataStore.edit { settings ->
-            settings[EPG_MAIN_LAST_UPDATE] = timestamp
-        }
-    }
-
-    suspend fun getMainEpgLastUpdate() = dataStore.data.map { preferences ->
-        preferences[EPG_MAIN_LAST_UPDATE] ?: LONG_NO_VALUE
-    }.first()
-
-    suspend fun setAlterEpgLastUpdate(timestamp: Long) {
-        dataStore.edit { settings ->
-            settings[EPG_ALTER_LAST_UPDATE] = timestamp
-        }
-    }
-
-    suspend fun getAlterEpgLastUpdate() = dataStore.data.map { preferences ->
-        preferences[EPG_ALTER_LAST_UPDATE]
-    }.first()
-
 
     suspend fun setEpgInfoUpdatePeriod(type: Int) {
         dataStore.edit { settings ->
@@ -154,16 +72,6 @@ class PreferenceRepository(
 
     suspend fun getMainEpgUpdatePeriod() = dataStore.data.map { preferences ->
         preferences[EPG_MAIN_LAST_UPDATE_PERIOD] ?: INT_VALUE_5
-    }.first()
-
-    suspend fun setAlterEpgUpdatePeriod(type: Int) {
-        dataStore.edit { settings ->
-            settings[EPG_ALTER_LAST_UPDATE_PERIOD] = type
-        }
-    }
-
-    suspend fun getAlterEpgUpdatePeriod() = dataStore.data.map { preferences ->
-        preferences[EPG_ALTER_LAST_UPDATE_PERIOD] ?: INT_VALUE_5
     }.first()
 
     suspend fun setDefaultResizeMode(mode: Int) {
@@ -187,26 +95,89 @@ class PreferenceRepository(
         preferences[DEFAULT_FULLSCREEN_MODE] ?: false
     }.first()
 
+
+    suspend fun setEpgInfoDataExist(state: Boolean) {
+        dataStore.edit { settings ->
+            settings[EPG_INFO_DATA_IS_EXIST] = state
+        }
+    }
+
+    suspend fun isEpgInfoDataExist() = dataStore.data.map { preferences ->
+        preferences[EPG_INFO_DATA_IS_EXIST] ?: false
+    }.first()
+
+
+    suspend fun setEpgInfoDataLastUpdate(timestamp: Long) {
+        dataStore.edit { settings ->
+            settings[EPG_INFO_DATA_LAST_UPDATE] = timestamp
+        }
+    }
+
+    suspend fun isEpgInfoDataUpdateRequired() = dataStore.data.map { preferences ->
+        val lastUpdate = preferences[EPG_INFO_DATA_LAST_UPDATE] ?: LONG_VALUE_ZERO
+        val updatePeriod = 7.days.inWholeMilliseconds
+        (actualDate - lastUpdate) > updatePeriod
+    }.first()
+
+
+    suspend fun setChannelsEpgInfoUpdateRequired(state: Boolean) {
+        dataStore.edit { settings ->
+            settings[CHANNELS_EPG_INFO_UPDATE_REQUIRED] = state
+        }
+    }
+
+    fun isChannelsEpgInfoUpdateRequired() = dataStore.data.map { preferences ->
+        val isUpdateRequired = preferences[CHANNELS_EPG_INFO_UPDATE_REQUIRED] ?: false
+        val selectedId = preferences[SELECTED_PLAYLIST] ?: LONG_NO_VALUE
+        if (selectedId != LONG_NO_VALUE) isUpdateRequired else false
+    }
+
+    suspend fun setEpgUnplannedUpdateRequired(state: Boolean) {
+        dataStore.edit { settings ->
+            settings[EPG_UNPLANNED_UPDATE_REQUIRED] = state
+        }
+    }
+
+    private fun isEpgUnplannedUpdateRequired() = dataStore.data.map { preferences ->
+        preferences[EPG_UNPLANNED_UPDATE_REQUIRED] ?: false
+    }
+
+    suspend fun setEpgLastUpdate(timestamp: Long) {
+        dataStore.edit { settings ->
+            settings[EPG_DATA_LAST_UPDATE] = timestamp
+        }
+    }
+
+    private fun isEpgPlannedUpdateRequired() = dataStore.data.map { preferences ->
+        val updatePeriod = preferences[EPG_MAIN_LAST_UPDATE_PERIOD] ?: INT_VALUE_5
+        val lastUpdate = preferences[EPG_DATA_LAST_UPDATE] ?: LONG_NO_VALUE
+        actualDate - lastUpdate > typeToDuration(updatePeriod)
+    }
+
+    suspend fun isEpgUpdateRequired() = combine(
+        isEpgUnplannedUpdateRequired(),
+        isEpgPlannedUpdateRequired()
+    ) { unplanned, planned ->
+        return@combine unplanned || planned
+    }
+
     private companion object {
         val SELECTED_PLAYLIST = longPreferencesKey("SelectedPlaylist")
-        val MAIN_INFO_EXIST = booleanPreferencesKey("MainInfoExist")
-        val MAIN_INFO_USE = booleanPreferencesKey("AlterInfoExist")
-        val ALTER_INFO_EXIST = booleanPreferencesKey("MainInfoUsing")
-        val ALTER_INFO_USE = booleanPreferencesKey("AlterInfoUsing")
         val CHANNELS_VIEW_TYPE = stringPreferencesKey("ChannelsViewType")
 
-        val EPG_INFO_LAST_UPDATE = longPreferencesKey("EpgInfoLastUpdate")
-        val EPG_MAIN_LAST_UPDATE = longPreferencesKey("EpgMainLastUpdate")
-        val EPG_ALTER_LAST_UPDATE = longPreferencesKey("EpgAlterLastUpdate")
+        val EPG_DATA_LAST_UPDATE = longPreferencesKey("EpgDaTaLastUpdate")
 
         val EPG_INFO_LAST_UPDATE_PERIOD = intPreferencesKey("EpgInfoLastUpdatePeriod")
         val EPG_MAIN_LAST_UPDATE_PERIOD = intPreferencesKey("EpgMainLastUpdatePeriod")
-        val EPG_ALTER_LAST_UPDATE_PERIOD = intPreferencesKey("EpgAlterLastUpdatePeriod")
 
         val DEFAULT_RESIZE_MODE = intPreferencesKey("DefaultResizeMode")
         val DEFAULT_FULLSCREEN_MODE = booleanPreferencesKey("DefaultFullscreenMode")
 
-
-        const val PLAYLIST_LAST_UPDATE = "PlaylistLastUpdate"
+        val EPG_INFO_DATA_IS_EXIST = booleanPreferencesKey("EpgInfoDataIsExist")
+        val EPG_INFO_DATA_LAST_UPDATE = longPreferencesKey("EpgInfoDataIsLastUpdate")
+        val CHANNELS_EPG_INFO_UPDATE_REQUIRED =
+            booleanPreferencesKey("ChannelsEpgInfoUpdateRequired")
+        val EPG_UNPLANNED_UPDATE_REQUIRED =
+            booleanPreferencesKey("EpgUnplannedUpdateRequired")
     }
 }

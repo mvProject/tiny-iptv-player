@@ -13,48 +13,68 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
-import com.mvproject.tinyiptv.data.enums.player.PlayerCommands
-import com.mvproject.tinyiptv.data.enums.player.ViewSettingsRequest
+import com.mvproject.tinyiptv.ui.screens.player.action.PlaybackActions
 import kotlin.math.abs
 
 fun Modifier.defaultPlayerVerticalGestures(
-    onAction: (request: ViewSettingsRequest) -> Unit
+    onAction: (PlaybackActions) -> Unit
 ) =
     pointerInput(Unit) {
+        var startY = 0f
+        var startX = 0f
+        var enxY = 0f
+
+        val screenMiddle = (size.width * 0.3).toInt()..(size.width * 0.7).toInt()
+        val screenLeftPart = 0..(size.width * 0.3).toInt()
+        val screenRightPart = (size.width * 0.7).toInt()..size.width
+
         detectVerticalDragGestures(
-            onDragEnd = {
-                onAction(ViewSettingsRequest.NONE)
+            onDragStart = {
+                startY = it.y
+                startX = it.x
             },
-            onVerticalDrag = { change, dragAmount ->
-                val request = when {
-                    change.position.x < size.width * 0.3 -> {
-                        if (dragAmount > 0) {
-                            ViewSettingsRequest.BRIGHTNESS_DOWN
-                        } else {
-                            ViewSettingsRequest.BRIGHTNESS_UP
-                        }
-                    }
+            onDragEnd = {
 
-                    change.position.x > size.width * 0.7 -> {
-                        if (dragAmount > 0) {
-                            ViewSettingsRequest.VOLUME_DOWN
-                        } else {
-                            ViewSettingsRequest.VOLUME_UP
-                        }
-                    }
+                if (startX.toInt() in screenMiddle) {
+                    val moveOffset = (enxY - startY).toInt()
 
-                    else -> {
-                        ViewSettingsRequest.NONE
+                    if (abs(moveOffset) > (size.height * 0.4)) {
+                        val directionRequestType = if (moveOffset > 0) {
+                            PlaybackActions.OnChannelsUiToggle
+                        } else
+                            PlaybackActions.OnChannelInfoUiToggle
+                        onAction(directionRequestType)
                     }
                 }
-                onAction(request)
+
+                startY = 0f
+                startX = 0f
+                enxY = 0f
+            },
+            onVerticalDrag = { change, dragAmount ->
+                enxY = change.position.y
+                val moveOffset = (enxY - startY).toInt()
+                val movement = moveOffset.div(10)
+                if (movement.mod(5) > 1) {
+
+                    if (startX.toInt() in screenLeftPart || startX.toInt() in screenRightPart) {
+                        if (dragAmount > 5) {
+                            onAction(PlaybackActions.OnVolumeDown)
+                        }
+
+                        if (dragAmount < -5) {
+                            onAction(PlaybackActions.OnVolumeUp)
+                        }
+                    }
+                }
+
                 if (change.positionChange() != Offset.Zero) change.consume()
             }
         )
     }
 
 fun Modifier.defaultPlayerHorizontalGestures(
-    onPlayerCommand: (command: PlayerCommands) -> Unit
+    onAction: (PlaybackActions) -> Unit
 ) = pointerInput(Unit) {
     var startX = -1f
     var endX = -1f
@@ -67,10 +87,10 @@ fun Modifier.defaultPlayerHorizontalGestures(
             val moveOffset = endX - startX
             if (abs(moveOffset) > (size.width * 0.25)) {
                 val directionRequestType = if (moveOffset > 0) {
-                    PlayerCommands.NEXT_VIDEO
-                } else PlayerCommands.PREVIOUS_VIDEO
-                onPlayerCommand(directionRequestType)
-
+                    PlaybackActions.OnNextSelected
+                } else
+                    PlaybackActions.OnPreviousSelected
+                onAction(directionRequestType)
             }
         },
         onHorizontalDrag = { change, _ ->

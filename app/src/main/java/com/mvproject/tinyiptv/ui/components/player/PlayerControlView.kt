@@ -1,7 +1,7 @@
 /*
- *  Created by Medvediev Viktor [mvproject]
+ *  Created by Medvediev Viktor [mvproject] 
  *  Copyright © 2023
- *  last modified : 10.05.23, 20:21
+ *  last modified : 20.10.23, 16:29
  *
  */
 
@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Crop
+import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.Fullscreen
 import androidx.compose.material.icons.rounded.FullscreenExit
 import androidx.compose.material.icons.rounded.Pause
@@ -26,19 +28,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.tooling.preview.Preview
-import com.mvproject.tinyiptv.data.enums.player.PlayerCommands
-import com.mvproject.tinyiptv.data.enums.player.PlayerUICommands
-import com.mvproject.tinyiptv.ui.screens.player.VideoViewViewModel
-import com.mvproject.tinyiptv.ui.theme.VideoAppTheme
 import com.mvproject.tinyiptv.ui.theme.dimens
 
 @Composable
 fun PlayerControlView(
     modifier: Modifier = Modifier,
-    playerState: VideoViewViewModel.ControlUIState,
-    onPlayerCommand: (command: PlayerCommands) -> Unit = {},
-    onPlayerUICommand: (command: PlayerUICommands) -> Unit = {}
+    isFavorite: Boolean,
+    isPlaying: Boolean,
+    isFullScreen: Boolean,
+    onFavoriteToggle: () -> Unit,
+    onPlaybackToggle: () -> Unit,
+    onVideoResizeToggle: () -> Unit,
+    onFullScreenToggle: () -> Unit
 ) {
     Row(
         modifier = modifier,
@@ -46,15 +47,15 @@ fun PlayerControlView(
         horizontalArrangement = Arrangement.Start
     ) {
         IconButton(
-            onClick = { onPlayerCommand(PlayerCommands.PLAYBACK_TOGGLE) },
+            onClick = onPlaybackToggle,
             modifier = Modifier
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.onSurfaceVariant)
+                .background(MaterialTheme.colorScheme.onSurface)
         ) {
             Icon(
-                imageVector = if (playerState.isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow,
+                imageVector = if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow,
                 contentDescription = "PLAYBACK_TOGGLE",
-                tint = MaterialTheme.colorScheme.surfaceVariant
+                tint = MaterialTheme.colorScheme.primary
             )
         }
 
@@ -64,52 +65,47 @@ fun PlayerControlView(
             horizontalArrangement = Arrangement.End
         ) {
             IconButton(
-                onClick = { onPlayerUICommand(PlayerUICommands.TOGGLE_RESIZE_MODE) },
+                onClick = onFavoriteToggle,
                 modifier = Modifier
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.onSurfaceVariant)
+                    .background(MaterialTheme.colorScheme.onSurface)
             ) {
                 Icon(
-                    imageVector = Icons.Rounded.Crop,
-                    contentDescription = "TOGGLE_RESIZE_MODE",
-                    tint = MaterialTheme.colorScheme.surfaceVariant
+                    imageVector = if (isFavorite) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
+                    contentDescription = "FAVORITE_TOGGLE",
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
 
             Spacer(modifier = Modifier.width(MaterialTheme.dimens.size8))
 
             IconButton(
-                onClick = { onPlayerUICommand(PlayerUICommands.TOGGLE_FULL_SCREEN) },
+                onClick = onVideoResizeToggle,
                 modifier = Modifier
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.onSurfaceVariant)
+                    .background(MaterialTheme.colorScheme.onSurface)
             ) {
                 Icon(
-                    imageVector = if (playerState.isFullscreen) Icons.Rounded.FullscreenExit else Icons.Rounded.Fullscreen,
+                    imageVector = Icons.Rounded.Crop,
+                    contentDescription = "TOGGLE_RESIZE_MODE",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
+
+            Spacer(modifier = Modifier.width(MaterialTheme.dimens.size8))
+
+            IconButton(
+                onClick = onFullScreenToggle,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.onSurface)
+            ) {
+                Icon(
+                    imageVector = if (isFullScreen) Icons.Rounded.FullscreenExit else Icons.Rounded.Fullscreen,
                     contentDescription = "TOGGLE_FULL_SCREEN",
-                    tint = MaterialTheme.colorScheme.surfaceVariant
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
         }
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun PreviewPlayerControls() {
-    VideoAppTheme() {
-        PlayerControlView(
-            playerState = VideoViewViewModel.ControlUIState(50, 15)
-        )
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun DarkPreviewPlayerControls() {
-    VideoAppTheme(darkTheme = true) {
-        PlayerControlView(
-            playerState = VideoViewViewModel.ControlUIState(50, 15)
-        )
     }
 }

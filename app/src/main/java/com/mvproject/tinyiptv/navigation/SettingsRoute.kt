@@ -8,36 +8,38 @@
 package com.mvproject.tinyiptv.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.mvproject.tinyiptv.ui.screens.settings.actions.SettingsAction
-import com.mvproject.tinyiptv.ui.screens.settings.view.SettingsView
+import com.mvproject.tinyiptv.ui.screens.settings.general.SettingsView
+import com.mvproject.tinyiptv.ui.screens.settings.general.SettingsViewModel
+import org.koin.androidx.compose.koinViewModel
 
 class SettingsRoute : AndroidScreen() {
 
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
+        val settingsViewModel: SettingsViewModel = koinViewModel()
+        val settingsState by settingsViewModel.state.collectAsState()
 
         SettingsView(
-            onSettingsAction = { action ->
-                when (action) {
-                    is SettingsAction.NavigateBack -> navigator.pop()
-                    is SettingsAction.NavigatePlaylistSettings -> navigator.push(
-                        SettingsPlaylistRoute
-                    )
-
-                    is SettingsAction.NavigateEpgSettings -> navigator.push(
-                        SettingsEpgRoute
-                    )
-
-                    is SettingsAction.NavigatePlayerSettings -> navigator.push(
-                        SettingsPlayerRoute
-                    )
-
-                    is SettingsAction.NavigateAppSettings -> {}
-                }
+            state = settingsState,
+            onSettingsAction = settingsViewModel::processAction,
+            onNavigateBack = {
+                navigator.pop()
+            },
+            onNavigatePlayerSettings = {
+                navigator.push(
+                    SettingsPlayerRoute
+                )
+            },
+            onNavigatePlaylistSettings = {
+                navigator.push(
+                    SettingsPlaylistRoute
+                )
             }
         )
     }

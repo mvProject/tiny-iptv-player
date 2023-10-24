@@ -13,9 +13,8 @@ import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.mvproject.tinyiptv.ui.screens.settings.actions.SettingsPlaylistAction
-import com.mvproject.tinyiptv.ui.screens.settings.view.SettingsPlaylistView
-import com.mvproject.tinyiptv.ui.screens.settings.viewmodel.SettingsPlaylistViewModel
+import com.mvproject.tinyiptv.ui.screens.settings.playlist.SettingsPlaylistView
+import com.mvproject.tinyiptv.ui.screens.settings.playlist.SettingsPlaylistViewModel
 import org.koin.androidx.compose.koinViewModel
 
 object SettingsPlaylistRoute : AndroidScreen() {
@@ -28,19 +27,12 @@ object SettingsPlaylistRoute : AndroidScreen() {
 
         SettingsPlaylistView(
             dataState = playlistDataState,
-            onPlaylistAction = { action ->
-                when (action) {
-                    is SettingsPlaylistAction.NewPlaylist ->
-                        navigator.push(PlaylistDetailRoute())
-
-                    is SettingsPlaylistAction.SelectPlaylist ->
-                        navigator.push(PlaylistDetailRoute(id = action.id))
-
-                    is SettingsPlaylistAction.DeletePlaylist ->
-                        settingsPlaylistViewModel.deletePlaylist(action.id)
-
-                    is SettingsPlaylistAction.NavigateBack -> navigator.pop()
-                }
+            onPlaylistAction = settingsPlaylistViewModel::processAction,
+            onNavigatePlaylist = { playlistId ->
+                navigator.push(PlaylistDetailRoute(id = playlistId))
+            },
+            onNavigateBack = {
+                navigator.pop()
             }
         )
     }

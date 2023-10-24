@@ -7,9 +7,11 @@
 
 package com.mvproject.tinyiptv.data.models.channels
 
+import com.mvproject.tinyiptv.utils.AppConstants.INT_VALUE_ZERO
+
 data class ChannelsGroup(
     val groupName: String,
-    val groupContentCount: Int
+    val groupContentCount: Int = INT_VALUE_ZERO
 ) {
     override fun toString() =
         StringBuilder()

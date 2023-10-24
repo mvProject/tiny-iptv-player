@@ -8,38 +8,32 @@
 package com.mvproject.tinyiptv.data.models.playlist
 
 import com.mvproject.tinyiptv.utils.AppConstants
+import com.mvproject.tinyiptv.utils.AppConstants.EMPTY_STRING
+import kotlin.random.Random
 
 data class Playlist(
-    val id: Long,
-    val listName: String,
-    val listUrl: String,
-    val lastUpdateDate: Long,
-    val updatePeriod: Long,
-    val isMainInfoUse: Boolean = true,
-    val isAlterInfoUse: Boolean = true,
-    val isRemoteSource: Boolean = false,
-
-    ) {
-    val isLocal
-        get() = listUrl.contains(AppConstants.PLAYLIST_LOCAL_TYPE)
-
-    val isRemote
-        get() = listUrl.contains(AppConstants.PLAYLIST_REMOTE_TYPE) || listUrl.contains(AppConstants.PLAYLIST_REMOTE_SEC_TYPE)
-
+    val id: Long = Random.nextLong(),
+    val playlistTitle: String = EMPTY_STRING,
+    val playlistUrl: String = EMPTY_STRING,
+    val playlistLocalName: String = EMPTY_STRING,
+    val lastUpdateDate: Long = AppConstants.LONG_VALUE_ZERO,
+    val updatePeriod: Long = AppConstants.LONG_VALUE_ZERO,
+    val isLocalSource: Boolean = false
+) {
     override fun toString(): String {
         return StringBuilder()
             .append("\n")
-            .append("name - $listName")
+            .append("name - $playlistTitle")
             .append("\n")
-            .append("listUrl - $listUrl")
+            .append("listUrl - $playlistUrl")
             .append("\n")
-            .append("isLocal - $isLocal")
+            .append("listUrl - $playlistLocalName")
+            .append("\n")
+            .append("isLocalSource - $isLocalSource")
             .append("\n")
             .append("updatePeriod - $updatePeriod")
             .append("\n")
             .append("lastUpdateDate - $lastUpdateDate")
-            .append("\n")
-            .append("isMainInfoUse - $isMainInfoUse, isAlterInfoUse - $isAlterInfoUse")
             .toString()
     }
 }

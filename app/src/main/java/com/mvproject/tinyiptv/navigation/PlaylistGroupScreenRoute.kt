@@ -11,9 +11,8 @@ import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.mvproject.tinyiptv.ui.screens.playlist.actions.PlaylistGroupAction
-import com.mvproject.tinyiptv.ui.screens.playlist.view.PlaylistGroupView
-import com.mvproject.tinyiptv.ui.screens.playlist.viewmodel.PlaylistGroupViewModel
+import com.mvproject.tinyiptv.ui.screens.channels.TvPlaylistChannelsView
+import com.mvproject.tinyiptv.ui.screens.channels.TvPlaylistChannelsViewModel
 import org.koin.androidx.compose.koinViewModel
 
 data class PlaylistGroupScreenRoute(
@@ -22,27 +21,23 @@ data class PlaylistGroupScreenRoute(
 
     @Composable
     override fun Content() {
-        val playlistGroupViewModel: PlaylistGroupViewModel = koinViewModel()
+        val tvPlaylistChannelsViewModel: TvPlaylistChannelsViewModel = koinViewModel()
         val navigator = LocalNavigator.currentOrThrow
 
-        PlaylistGroupView(
-            viewModel = playlistGroupViewModel,
+        TvPlaylistChannelsView(
+            viewModel = tvPlaylistChannelsViewModel,
             groupSelected = group,
-            onGroupAction = { action ->
-                when (action) {
-                    is PlaylistGroupAction.NavigateBack -> {
-                        navigator.pop()
-                    }
-
-                    is PlaylistGroupAction.NavigateToGroup -> {
-                        navigator.push(
-                            PlayerScreenRoute(
-                                mediaId = action.id,
-                                mediaGroup = group
-                            )
-                        )
-                    }
-                }
+            onAction = tvPlaylistChannelsViewModel::processAction,
+            onNavigateBack = {
+                navigator.pop()
+            },
+            onNavigateSelected = { url ->
+                navigator.push(
+                    PlayerScreenRoute(
+                        mediaUrl = url,
+                        mediaGroup = group
+                    )
+                )
             }
         )
     }

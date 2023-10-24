@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 10.05.23, 20:28
+ *  last modified : 23.10.23, 19:16
  *
  */
 
@@ -25,36 +25,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.mvproject.tinyiptv.data.PreviewTestData.testEpgPrograms
-import com.mvproject.tinyiptv.data.enums.player.PlayerCommands
-import com.mvproject.tinyiptv.data.enums.player.PlayerUICommands
+import com.mvproject.tinyiptv.data.mappers.ListMappers.toActual
+import com.mvproject.tinyiptv.data.models.channels.TvPlaylistChannel
 import com.mvproject.tinyiptv.data.models.epg.EpgProgram
-import com.mvproject.tinyiptv.ui.components.epg.PlayerEpgItemView
-import com.mvproject.tinyiptv.ui.screens.player.VideoViewViewModel
+import com.mvproject.tinyiptv.ui.components.epg.PlayerChannelEpgItem
+import com.mvproject.tinyiptv.ui.screens.player.action.PlaybackActions
 import com.mvproject.tinyiptv.ui.theme.VideoAppTheme
 import com.mvproject.tinyiptv.ui.theme.dimens
-import com.mvproject.tinyiptv.utils.AppConstants.INT_VALUE_1
+import com.mvproject.tinyiptv.utils.AppConstants
+import kotlin.time.Duration.Companion.minutes
 
 @Composable
 fun PlayerChannelView(
     modifier: Modifier = Modifier,
-    channelName: String,
-    epgPrograms: List<EpgProgram>,
-    programCount: Int = INT_VALUE_1,
-    playerState: VideoViewViewModel.ControlUIState,
-    onPlayerCommand: (command: PlayerCommands) -> Unit = {},
-    onPlayerUICommand: (command: PlayerUICommands) -> Unit = {}
+    currentChannel: TvPlaylistChannel,
+    programCount: Int = AppConstants.INT_VALUE_1,
+    isPlaying: Boolean = false,
+    isFullScreen: Boolean = false,
+    onPlaybackAction: (PlaybackActions) -> Unit = {}
 ) {
     Box(
         modifier = modifier
-            .alpha(MaterialTheme.dimens.alpha70)
+            .alpha(MaterialTheme.dimens.alpha80)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .background(
-                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    color = MaterialTheme.colorScheme.primary,
                     shape = RoundedCornerShape(
                         topStart = MaterialTheme.dimens.size16,
                         topEnd = MaterialTheme.dimens.size16
@@ -67,16 +66,16 @@ fun PlayerChannelView(
             Text(
                 modifier = Modifier
                     .fillMaxWidth(),
-                text = channelName,
+                text = currentChannel.channelName,
                 style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = MaterialTheme.colorScheme.onPrimary,
                 textAlign = TextAlign.Center
             )
 
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2))
 
-            epgPrograms.take(programCount).forEach { epg ->
-                PlayerEpgItemView(epgProgram = epg)
+            currentChannel.channelEpg.toActual().take(programCount).forEach { epg ->
+                PlayerChannelEpgItem(epgProgram = epg)
             }
 
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2))
@@ -85,23 +84,23 @@ fun PlayerChannelView(
                 modifier = Modifier
                     .fillMaxWidth()
                     .alpha(MaterialTheme.dimens.alpha70),
-                playerState = playerState,
-                onPlayerCommand = onPlayerCommand,
-                onPlayerUICommand = onPlayerUICommand
+                isFavorite = currentChannel.isInFavorites,
+                isPlaying = isPlaying,
+                isFullScreen = isFullScreen,
+                onFavoriteToggle = {
+                    onPlaybackAction(PlaybackActions.OnFavoriteToggle)
+                },
+                onPlaybackToggle = {
+                    onPlaybackAction(PlaybackActions.OnPlaybackToggle)
+                },
+                onFullScreenToggle = {
+                    onPlaybackAction(PlaybackActions.OnFullScreenToggle)
+                },
+                onVideoResizeToggle = {
+                    onPlaybackAction(PlaybackActions.OnVideoResizeToggle)
+                }
             )
         }
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun PreviewPlayerChannelView() {
-    VideoAppTheme() {
-        PlayerChannelView(
-            epgPrograms = testEpgPrograms,
-            channelName = "Current Channel",
-            playerState = VideoViewViewModel.ControlUIState(50, 15)
-        )
     }
 }
 
@@ -110,9 +109,18 @@ fun PreviewPlayerChannelView() {
 fun DarkPreviewPlayerChannelView() {
     VideoAppTheme(darkTheme = true) {
         PlayerChannelView(
-            epgPrograms = testEpgPrograms,
-            channelName = "Current Channel",
-            playerState = VideoViewViewModel.ControlUIState(50, 15)
+            currentChannel = TvPlaylistChannel(
+                channelName = "Test",
+                channelEpg = listOf(
+                    EpgProgram(
+                        title = "Epg Title",
+                        channelId = "id",
+                        start = System.currentTimeMillis() - 30.minutes.inWholeMilliseconds,
+                        stop = System.currentTimeMillis() + 30.minutes.inWholeMilliseconds,
+                        description = "Epg Description"
+                    )
+                )
+            )
         )
     }
 }

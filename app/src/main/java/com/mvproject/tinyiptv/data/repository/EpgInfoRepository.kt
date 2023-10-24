@@ -8,120 +8,125 @@
 package com.mvproject.tinyiptv.data.repository
 
 import com.mvproject.tinyiptv.VideoAppDatabase
-import com.mvproject.tinyiptv.data.mappers.EntityMapper.toChannelInfoAlter
-import com.mvproject.tinyiptv.data.mappers.ParseMappers.toChannelInfoAlterEntity
-import com.mvproject.tinyiptv.data.mappers.ParseMappers.toChannelInfoMainEntity
-import com.mvproject.tinyiptv.data.models.epg.ChannelInfoAlter
-import com.mvproject.tinyiptv.data.models.parse.AvailableChannelParseModel
-import com.mvproject.tinyiptv.data.models.parse.ChannelsInfoParseModel
-import com.mvproject.tinyiptv.data.network.NetworkRepository
-import com.mvproject.tinyiptv.data.parser.M3UParser
+import com.mvproject.tinyiptv.data.mappers.EntityMapper.toEpgInfo
+import com.mvproject.tinyiptv.data.mappers.ParseMappers.toEpgInfoEntity
+import com.mvproject.tinyiptv.data.models.epg.EpgInfo
+import com.mvproject.tinyiptv.data.models.response.EpgInfoResponse
 import io.github.aakira.napier.Napier
-import io.ktor.utils.io.jvm.javaio.toInputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.BufferedReader
-import java.io.InputStreamReader
 
 class EpgInfoRepository(
-    private val db: VideoAppDatabase,
-    private val networkRepository: NetworkRepository,
-    private val preferenceRepository: PreferenceRepository
+    private val db: VideoAppDatabase
 ) {
+    private val epgInfoQueries = db.epgInfoEntityQueries
+    /*    suspend fun getEpgInfo(): List<AvailableChannelParseModel> {
+            val infoResult = networkRepository.loadAlterInfo().channels
 
-    private val queries = db.epgProgramQueries
+            val filtered =
+                infoResult.filter { it.channelId.isNotEmpty() && it.channelIcon.isNotEmpty() }
 
-    suspend fun prepareEpgInfo() {
-        updateChannelInfoMainData()
-
-        updateChannelInfoAlterData()
-        Napier.i("testing prepareEpgInfo complete")
-    }
-
-    fun getEpgInfoByAlterIds(): List<ChannelInfoAlter> {
-        return queries.getAlterEpgInfo().executeAsList().map {
-            it.toChannelInfoAlter()
-        }
-    }
-
-    private suspend fun updateChannelInfoAlterData() {
-        val infoResult = networkRepository.loadAlterInfo().channels
-
-        val filtered =
-            infoResult.filter { it.channelId.isNotEmpty() && it.channelIcon.isNotEmpty() }
-
-        val properList = buildList {
-            filtered.forEach { chn ->
-                if (chn.channelNames.contains(CHANNEL_NAME_SPLIT_DELIMITER)) {
-                    val splitNames = chn.channelNames.split(CHANNEL_NAME_SPLIT_DELIMITER)
-                    splitNames.forEach { spl ->
-                        add(
-                            AvailableChannelParseModel(
-                                channelId = chn.channelId,
-                                channelIcon = chn.channelIcon,
-                                channelNames = spl
+            return buildList {
+                filtered.forEach { chn ->
+                    if (chn.channelNames.contains(CHANNEL_NAME_SPLIT_DELIMITER)) {
+                        val splitNames = chn.channelNames.split(CHANNEL_NAME_SPLIT_DELIMITER)
+                        splitNames.forEach { spl ->
+                            add(
+                                AvailableChannelParseModel(
+                                    channelId = chn.channelId,
+                                    channelIcon = chn.channelIcon,
+                                    channelNames = spl
+                                )
                             )
-                        )
+                        }
+                    } else add(chn)
+                }
+            }
+        }*/
+
+    /*    suspend fun saveEpgInfo(ephInfo: List<AvailableChannelParseModel>) {
+            Napier.w("testing saveEpgInfo")
+            addEpgInfoData(infoData = ephInfo)
+            preferenceRepository.apply {
+                setEpgInfoDataExist(state = true)
+                setEpgInfoDataLastUpdate(timestamp = actualDate)
+            }
+            Napier.i("testing saveEpgInfo complete ${ephInfo.count()}")
+        }
+
+        suspend fun updateEpgInfo(ephInfo: List<AvailableChannelParseModel>) {
+            Napier.w("testing updateEpgInfo")
+            updateEpgInfoData(infoData = ephInfo)
+            preferenceRepository.apply {
+                setEpgInfoDataLastUpdate(timestamp = actualDate)
+            }
+            Napier.i("testing updateEpgInfo complete ${ephInfo.count()}")
+        }*/
+
+    fun loadEpgInfoData(): List<EpgInfo> {
+        return epgInfoQueries.getEpgInfoEntity()
+            .executeAsList()
+            .map { entity ->
+                entity.toEpgInfo()
+            }
+    }
+
+    /*    private suspend fun parseChannelInfoMainData(): List<ChannelsInfoParseModel> {
+            val resultStream = networkRepository.loadMainInfo().toInputStream()
+
+            return buildList {
+                BufferedReader(
+                    InputStreamReader(resultStream)
+                ).use {
+                    it.readText().also { content ->
+                        val result = M3UParser.parseInfo(content)
+                        addAll(result)
                     }
-                } else add(chn)
-            }
-        }
-        insertChannelInfoAlterData(infoData = properList)
-        preferenceRepository.setAlterInfoExist(state = true)
-        Napier.i("testing updateChannelInfoAlterData complete ${properList.count()}")
-    }
-
-    private suspend fun updateChannelInfoMainData() {
-        val infoResult = parseChannelInfoMainData()
-        val filtered =
-            infoResult.filter { it.id.isNotEmpty() && it.logo.isNotEmpty() }
-        insertChannelInfoMainData(infoData = filtered)
-        preferenceRepository.setMainInfoExist(state = true)
-        Napier.i("testing updateChannelInfoMainData complete ${filtered.count()}")
-    }
-
-    private suspend fun parseChannelInfoMainData(): List<ChannelsInfoParseModel> {
-        val resultStream = networkRepository.loadMainInfo().toInputStream()
-
-        return buildList {
-            BufferedReader(
-                InputStreamReader(resultStream)
-            ).use {
-                it.readText().also { content ->
-                    val result = M3UParser.parseInfo(content)
-                    addAll(result)
                 }
             }
-        }
-    }
+        }*/
 
-    private suspend fun insertChannelInfoMainData(infoData: List<ChannelsInfoParseModel>) {
+    suspend fun addEpgInfoData(infoData: List<EpgInfoResponse>) {
+        Napier.w("testing addEpgInfoData")
         withContext(Dispatchers.IO) {
-            queries.transaction {
-                queries.deleteChannelInfoMainEntities()
+            epgInfoQueries.transaction {
                 infoData.forEach { item ->
-                    queries.insertChannelInfoMainEntity(
-                        item.toChannelInfoMainEntity()
-                    )
+                    try {
+                        epgInfoQueries.addEpgInfoEntity(
+                            item.toEpgInfoEntity()
+                        )
+                    } catch (ex: Exception) {
+                        Napier.e("testing addEpgInfoData Exception ${ex.localizedMessage}")
+                        Napier.e("testing addEpgInfoData Exception id:${item.channelId}, name:${item.channelNames}")
+                    }
                 }
             }
         }
     }
 
-    private suspend fun insertChannelInfoAlterData(infoData: List<AvailableChannelParseModel>) {
+    suspend fun updateEpgInfoData(infoData: List<EpgInfoResponse>) {
+        Napier.w("testing updateEpgInfoData")
         withContext(Dispatchers.IO) {
-            queries.transaction {
-                queries.deleteChannelInfoAlterEntities()
+            epgInfoQueries.transaction {
                 infoData.forEach { item ->
-                    queries.insertChannelInfoAlterEntity(
-                        item.toChannelInfoAlterEntity()
-                    )
+                    try {
+                        epgInfoQueries.updateEpgInfoEntity(
+                            channelId = item.channelId,
+                            channelName = item.channelNames.trim(),
+                            channelLogo = item.channelIcon,
+                        )
+                    } catch (ex: Exception) {
+                        Napier.e("testing updateEpgInfoData Exception ${ex.localizedMessage}")
+                        Napier.e("testing updateEpgInfoData Exception id:${item.channelId}, name:${item.channelNames}")
+                    }
                 }
             }
         }
     }
-
-    private companion object {
-        const val CHANNEL_NAME_SPLIT_DELIMITER = " • "
-    }
+    /*
+        private companion object {
+            const val CHANNEL_NAME_SPLIT_DELIMITER = " • "
+        }*/
 }
+
+

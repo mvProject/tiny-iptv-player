@@ -1,12 +1,15 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 10.05.23, 20:26
+ *  last modified : 23.10.23, 10:18
  *
  */
 
 package com.mvproject.tinyiptv.ui.screens.player
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,86 +21,177 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Companion
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.media3.common.Player
 import com.google.accompanist.adaptive.HorizontalTwoPaneStrategy
 import com.google.accompanist.adaptive.TwoPane
 import com.google.accompanist.adaptive.VerticalTwoPaneStrategy
 import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.mvproject.tinyiptv.ui.components.epg.PlayerOverlayEpg
-import com.mvproject.tinyiptv.ui.components.epg.PlayerOverlayEpgView
+import com.mvproject.tinyiptv.R
+import com.mvproject.tinyiptv.data.mappers.ListMappers.createMediaItems
+import com.mvproject.tinyiptv.ui.components.ConnectionState
+import com.mvproject.tinyiptv.ui.components.epg.PlayerEpgContent
+import com.mvproject.tinyiptv.ui.components.networkConnectionState
+import com.mvproject.tinyiptv.ui.components.overlay.OverlayChannelInfo
+import com.mvproject.tinyiptv.ui.components.overlay.OverlayChannels
+import com.mvproject.tinyiptv.ui.components.overlay.OverlayContent
+import com.mvproject.tinyiptv.ui.components.overlay.OverlayEpg
 import com.mvproject.tinyiptv.ui.components.player.PlayerView
+import com.mvproject.tinyiptv.ui.components.views.LoadingView
+import com.mvproject.tinyiptv.ui.components.views.NoPlaybackView
+import com.mvproject.tinyiptv.ui.components.views.VolumeProgressView
+import com.mvproject.tinyiptv.ui.screens.player.events.PlaybackEvents
+import com.mvproject.tinyiptv.ui.screens.player.state.rememberVideoPlayerState
 import com.mvproject.tinyiptv.ui.theme.dimens
-import com.mvproject.tinyiptv.utils.calculateProperBrightnessValue
+import com.mvproject.tinyiptv.utils.AppConstants.PLAYBACK_START_POSITION
 import com.mvproject.tinyiptv.utils.findActivity
-import com.mvproject.tinyiptv.utils.setBrightness
+import io.github.aakira.napier.Napier
+import kotlinx.coroutines.flow.onEach
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun VideoView(
     viewModel: VideoViewViewModel,
-    channelId: String,
+    channelUrl: String,
     channelGroup: String
 ) {
     val context = LocalContext.current
     val activity = context.findActivity()
-    val controlState by viewModel.playerUIState.collectAsState()
-    val epgState by viewModel.currentEpg.collectAsState()
-    val systemUIController = rememberSystemUiController()
-
     val windowSizeClass = calculateWindowSizeClass(activity)
     val displayFeatures = calculateDisplayFeatures(activity)
 
-    val targetBrightness by remember {
-        derivedStateOf {
-            calculateProperBrightnessValue(controlState.brightnessValue)
-        }
+    val connection by networkConnectionState()
+    when (connection) {
+        ConnectionState.Available -> Napier.w("testing connectivity is available")
+        ConnectionState.Unavailable -> Napier.w("testing connectivity is unavailable")
     }
 
-    activity.setBrightness(targetBrightness)
+    val videoViewState by viewModel.videoViewState.collectAsState()
 
-    systemUIController.isNavigationBarVisible = !controlState.isFullscreen
-    systemUIController.isStatusBarVisible = !controlState.isFullscreen
+    val playerState = rememberVideoPlayerState(
+        isPlayerFullscreen = videoViewState.isFullscreen,
+        videoResizeMode = videoViewState.videoResizeMode,
+        onPlaybackStateAction = viewModel::processPlaybackStateActions
+    )
+    val systemUIController = rememberSystemUiController()
+
+    systemUIController.isNavigationBarVisible = !playerState.isFullscreen.value
+    systemUIController.isStatusBarVisible = !playerState.isFullscreen.value
+
+    LaunchedEffect(Unit) {
+        viewModel.playbackEffects.onEach { effect ->
+            when (effect) {
+                PlaybackEvents.OnPlaybackRestart -> {
+                    Napier.e("testing playbackEffects OnPlaybackRestart")
+                    if (playerState.playerState.value == Player.STATE_IDLE) {
+                        playerState.player.apply {
+                            prepare()
+                            playWhenReady = true
+                        }
+                    }
+                }
+
+                PlaybackEvents.OnChannelsUiToggle -> {
+                    viewModel.toggleChannelsVisibility()
+                }
+
+                PlaybackEvents.OnChannelInfoUiToggle -> {
+                    viewModel.toggleChannelInfoVisibility()
+                }
+
+                PlaybackEvents.OnEpgUiToggle -> {
+                    viewModel.toggleEpgVisibility()
+                }
+
+                PlaybackEvents.OnFullScreenToggle -> {
+                    playerState.toggleFullscreen()
+                }
+
+                PlaybackEvents.OnNextSelected -> {
+                    playerState.next()
+                }
+
+                PlaybackEvents.OnPlaybackToggle -> {
+                    playerState.togglePlayingState()
+                }
+
+                PlaybackEvents.OnPlayerUiToggle -> {
+                    playerState.toggleControlUiState()
+                }
+
+                PlaybackEvents.OnPreviousSelected -> {
+                    playerState.previous()
+                }
+
+                PlaybackEvents.OnVideoResizeToggle -> {
+                    playerState.toggleVideoResizeMode()
+                }
+
+                PlaybackEvents.OnVolumeDown -> {
+                    playerState.volumeDown()
+                }
+
+                PlaybackEvents.OnVolumeUp -> {
+                    playerState.volumeUp()
+                }
+
+                PlaybackEvents.OnSpecifiedSelected -> {
+                    playerState.player.stop()
+                    playerState.player.apply {
+                        setMediaItems(
+                            videoViewState.channels.createMediaItems(),
+                            videoViewState.mediaPosition,
+                            PLAYBACK_START_POSITION
+                        )
+                        repeatMode = Player.REPEAT_MODE_ALL
+                        prepare()
+                        playWhenReady = true
+                    }
+                }
+
+                PlaybackEvents.OnFavoriteToggle -> {
+                    viewModel.toggleChannelFavorite()
+                }
+            }
+        }.collect {}
+    }
 
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.scrim)
             .systemBarsPadding()
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.scrim),
+        contentAlignment = Alignment.TopCenter
     ) {
-        if (controlState.isFullscreen) {
+        if (playerState.isFullscreen.value) {
             PlayerView(
                 modifier = Modifier,
-                playerState = controlState,
-                player = viewModel.player,
-                programs = epgState,
-                onViewSettingsAction = viewModel::processViewSettingsChange,
-                onPlayerCommand = viewModel::processPlayerCommand,
-                onPlayerUICommand = viewModel::processPlayerUICommand
+                playerState = playerState,
+                currentChannel = videoViewState.currentChannel,
+                onPlaybackAction = viewModel::processPlaybackActions
             )
         } else {
             TwoPane(
                 first = {
                     PlayerView(
                         modifier = Modifier,
-                        playerState = controlState,
-                        player = viewModel.player,
-                        programs = epgState,
-                        onViewSettingsAction = viewModel::processViewSettingsChange,
-                        onPlayerCommand = viewModel::processPlayerCommand,
-                        onPlayerUICommand = viewModel::processPlayerUICommand
+                        playerState = playerState,
+                        currentChannel = videoViewState.currentChannel,
+                        onPlaybackAction = viewModel::processPlaybackActions
                     )
                 },
                 second = {
-                    PlayerOverlayEpgView(
-                        modifier = Modifier
-                            .background(color = MaterialTheme.colorScheme.surface),
-                        epgList = epgState
+                    PlayerEpgContent(
+                        modifier = Modifier.background(
+                            color = MaterialTheme.colorScheme.primary
+                        ),
+                        epgList = videoViewState.currentChannel.channelEpg
                     )
                 },
                 strategy = when (windowSizeClass.widthSizeClass) {
@@ -109,22 +203,131 @@ fun VideoView(
             )
         }
 
-        if (controlState.isEpgVisible) {
-            PlayerOverlayEpg(
-                controlState = controlState,
-                epgList = epgState,
+        AnimatedVisibility(
+            visible = videoViewState.isEpgVisible,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            OverlayContent(
                 onViewTap = viewModel::toggleEpgVisibility
+            ) {
+                OverlayEpg(
+                    isFullScreen = videoViewState.isFullscreen,
+                    currentChannel = videoViewState.currentChannel
+                )
+            }
+        }
+
+        AnimatedVisibility(
+            visible = videoViewState.isChannelsVisible,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            OverlayContent(
+                onViewTap = viewModel::toggleChannelsVisibility,
+                contentAlpha = MaterialTheme.dimens.alpha90
+            ) {
+                OverlayChannels(
+                    isFullScreen = videoViewState.isFullscreen,
+                    channels = videoViewState.channels,
+                    current = videoViewState.mediaPosition,
+                    group = videoViewState.channelGroup,
+                    onChannelSelect = viewModel::switchToChannel
+                )
+            }
+        }
+
+        AnimatedVisibility(
+            visible = videoViewState.isChannelInfoVisible,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            OverlayContent(
+                onViewTap = viewModel::toggleChannelInfoVisibility
+            ) {
+                OverlayChannelInfo(
+                    isFullScreen = videoViewState.isFullscreen,
+                    currentChannel = videoViewState.currentChannel
+                )
+            }
+        }
+
+        AnimatedVisibility(
+            visible = !videoViewState.isOnline,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            Box(
+                modifier = Modifier
+            ) {
+                NoPlaybackView(
+                    textRes = R.string.msg_no_internet_found,
+                    iconRes = R.drawable.ic_no_network
+                )
+            }
+        }
+
+        AnimatedVisibility(
+            visible = !videoViewState.isMediaPlayable,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            Box(
+                modifier = Modifier.fillMaxSize(0.5f),
+                contentAlignment = Alignment.Center
+            ) {
+                NoPlaybackView(
+                    textRes = R.string.msg_no_playable_media_found,
+                    iconRes = R.drawable.ic_sad_face
+                )
+            }
+        }
+
+        AnimatedVisibility(
+            visible = videoViewState.isBuffering,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            LoadingView()
+        }
+
+        AnimatedVisibility(
+            visible = playerState.isVolumeUiVisible.value,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            Box(
+                modifier = Modifier.fillMaxSize(0.5f),
+                contentAlignment = Alignment.Center
+            ) {
+                VolumeProgressView(
+                    value = playerState.player.volume
+                )
+            }
+        }
+    }
+
+    LaunchedEffect(videoViewState.channels.count()) {
+        playerState.player.apply {
+            setMediaItems(
+                videoViewState.channels.createMediaItems(),
+                videoViewState.mediaPosition,
+                PLAYBACK_START_POSITION
             )
+            repeatMode = Player.REPEAT_MODE_ALL
+            prepare()
+            playWhenReady = true
         }
     }
 
     DisposableEffect(viewModel) {
         viewModel.initPlayBack(
-            channelId = channelId,
+            channelUrl = channelUrl,
             channelGroup = channelGroup
         )
+
         onDispose {
-            viewModel.cleanPlayback()
+            playerState.player.stop()
         }
     }
 }

@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 18.05.23, 19:09
+ *  last modified : 23.10.23, 17:43
  *
  */
 
@@ -37,7 +37,7 @@ fun AppBarWithBackNav(
             Text(
                 text = appBarTitle,
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onPrimary
             )
         },
         navigationIcon = {
@@ -45,8 +45,8 @@ fun AppBarWithBackNav(
                 onClick = onBackClick,
                 modifier = Modifier.padding(MaterialTheme.dimens.size8),
                 colors = IconButtonDefaults.filledIconButtonColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    contentColor = MaterialTheme.colorScheme.onSurface
+                    containerColor = MaterialTheme.colorScheme.onPrimary,
+                    contentColor = MaterialTheme.colorScheme.primary
                 )
             ) {
                 Icon(
@@ -56,7 +56,7 @@ fun AppBarWithBackNav(
             }
         },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.inverseOnSurface
+            containerColor = MaterialTheme.colorScheme.primary
         )
     )
 }

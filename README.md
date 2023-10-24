@@ -37,7 +37,7 @@ A multiplatform navigation library built for Compose
 
 ## Database
 
-#### [SQLDelight](https://cashapp.github.io/sqldelight/1.5.4/)
+#### [SQLDelight](https://cashapp.github.io/sqldelight/2.0.0/)
 
 SQLDelight generates typesafe kotlin APIs from your SQL statements. It verifies your schema,
 statements, and migrations at compile-time and provides IDE features like autocomplete and
@@ -64,6 +64,7 @@ used to create material 3 theme and directly export it for Compose.
 <img src="screenshots/tiny_iptv_player_2.png" height="680" width="340">
 <img src="screenshots/tiny_iptv_player_3.png" height="680" width="340">
 <img src="screenshots/tiny_iptv_player_4.png" height="680" width="340">
+<img src="screenshots/tiny_iptv_player_5.png" height="680" width="340">
 
 
 

@@ -8,105 +8,80 @@
 package com.mvproject.tinyiptv.data.mappers
 
 import com.mvproject.tinyiptv.data.models.channels.PlaylistChannel
-import com.mvproject.tinyiptv.data.models.channels.PlaylistChannelWithEpg
-import com.mvproject.tinyiptv.data.models.epg.ChannelInfoAlter
+import com.mvproject.tinyiptv.data.models.channels.TvPlaylistChannel
+import com.mvproject.tinyiptv.data.models.epg.EpgInfo
 import com.mvproject.tinyiptv.data.models.epg.EpgProgram
+import com.mvproject.tinyiptv.data.models.epg.SelectedEpg
 import com.mvproject.tinyiptv.data.models.playlist.Playlist
 import com.mvproject.tinyiptv.utils.TimeUtils.correctTimeZone
 import com.mvproject.tinyiptv.utils.TimeUtils.toBoolean
 import com.mvproject.tinyiptv.utils.TimeUtils.toLong
-import videoappdb.ChannelInfoAlterEntity
+import videoappdb.EpgInfoEntity
 import videoappdb.EpgProgramEntity
-import videoappdb.GetChannelsWithAlterInfo
-import videoappdb.GetChannelsWithMainInfo
 import videoappdb.PlaylistChannelEntity
 import videoappdb.PlaylistEntity
+import videoappdb.SelectedEpgEntity
 
 object EntityMapper {
-    fun GetChannelsWithMainInfo.toPlaylistChannel() = with(this) {
-        PlaylistChannel(
-            id = channelId,
-            channelName = channelName,
-            channelLogo = channelInfoLogo,
-            channelUrl = channelUrl,
-            channelGroup = channelGroup,
-            epgId = channelInfoId,
-            parentListId = parentListId
-        )
-    }
-
-    fun GetChannelsWithAlterInfo.toPlaylistChannel() = with(this) {
-        PlaylistChannel(
-            id = channelId,
-            channelName = channelName,
-            channelLogo = channelInfoLogo,
-            channelUrl = channelUrl,
-            channelGroup = channelGroup,
-            epgAlterId = channelInfoId,
-            parentListId = parentListId
-        )
-    }
-
     fun PlaylistChannelEntity.toPlaylistChannel() = with(this) {
         PlaylistChannel(
-            id = id,
             channelName = channelName,
             channelLogo = channelLogo,
             channelUrl = channelUrl,
             channelGroup = channelGroup,
             epgId = epgId,
-            epgAlterId = epgAlterId,
             parentListId = parentListId
         )
     }
 
-    fun PlaylistChannel.toChannelEntity() = with(this) {
+    fun PlaylistChannel.toPlaylistChannelEntity() = with(this) {
         PlaylistChannelEntity(
-            id = id,
             channelName = channelName,
             channelLogo = channelLogo,
             channelUrl = channelUrl,
             channelGroup = channelGroup,
             epgId = epgId,
-            epgAlterId = epgAlterId,
             parentListId = parentListId
         )
     }
 
-    fun PlaylistChannel.toPlaylistChannelWithEpg() = with(this) {
-        val epgIds = listOf(epgId, epgAlterId).firstNotNullOfOrNull { it }
-        PlaylistChannelWithEpg(
-            id = id,
+    fun PlaylistChannel.toTvPlaylistChannel(
+        isFavorite: Boolean = false,
+        isEpgUsing: Boolean = false,
+        epgContent: List<EpgProgram> = emptyList()
+    ) = with(this) {
+        TvPlaylistChannel(
             channelName = channelName,
             channelLogo = channelLogo,
             channelUrl = channelUrl,
-            epgId = epgIds
+            epgId = epgId,
+            channelEpg = epgContent,
+            isInFavorites = isFavorite,
+            isEpgUsing = isEpgUsing
         )
     }
 
     fun PlaylistEntity.toPlaylist() = with(this) {
         Playlist(
             id = id,
-            listName = listName,
-            listUrl = listUrl,
+            playlistTitle = title,
+            playlistUrl = url,
             lastUpdateDate = lastUpdateDate,
             updatePeriod = updatePeriod,
-            isMainInfoUse = isMainInfoUse.toBoolean(),
-            isAlterInfoUse = isAlterInfoUse.toBoolean(),
-            isRemoteSource = isRemote.toBoolean()
+            playlistLocalName = localFilename,
+            isLocalSource = isLocal.toBoolean()
         )
     }
 
     fun Playlist.toPlaylistEntity() = with(this) {
         PlaylistEntity(
             id = id,
-            listName = listName,
-            listUrl = listUrl,
+            title = playlistTitle,
+            url = playlistUrl,
             lastUpdateDate = lastUpdateDate,
             updatePeriod = updatePeriod,
-            isMainInfoUse = isMainInfoUse.toLong(),
-            isAlterInfoUse = isAlterInfoUse.toLong(),
-            isRemote = isRemoteSource.toLong()
+            localFilename = playlistLocalName,
+            isLocal = isLocalSource.toLong()
         )
     }
 
@@ -130,10 +105,18 @@ object EntityMapper {
         )
     }
 
-    fun ChannelInfoAlterEntity.toChannelInfoAlter() = with(this) {
-        ChannelInfoAlter(
+    fun EpgInfoEntity.toEpgInfo() = with(this) {
+        EpgInfo(
             channelId = channelId,
-            channelAlterId = channelInfoId
+            channelName = channelName,
+            channelLogo = channelLogo
+        )
+    }
+
+    fun SelectedEpgEntity.toSelectedEpg() = with(this) {
+        SelectedEpg(
+            channelName = channelName,
+            channelEpgId = channelEpgId
         )
     }
 }

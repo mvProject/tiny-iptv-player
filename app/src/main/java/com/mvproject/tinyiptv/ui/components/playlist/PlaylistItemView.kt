@@ -1,13 +1,15 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 22.05.23, 10:56
+ *  last modified : 23.10.23, 19:15
  *
  */
 
 package com.mvproject.tinyiptv.ui.components.playlist
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -30,7 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.mvproject.tinyiptv.data.PreviewTestData
 import com.mvproject.tinyiptv.data.models.playlist.Playlist
-import com.mvproject.tinyiptv.ui.screens.settings.actions.SettingsPlaylistAction
+import com.mvproject.tinyiptv.ui.screens.settings.playlist.action.SettingsPlaylistAction
 import com.mvproject.tinyiptv.ui.theme.VideoAppTheme
 import com.mvproject.tinyiptv.ui.theme.dimens
 
@@ -38,14 +40,20 @@ import com.mvproject.tinyiptv.ui.theme.dimens
 fun PlaylistItemView(
     modifier: Modifier = Modifier,
     item: Playlist,
+    onSelect: () -> Unit = {},
     onPlaylistAction: (SettingsPlaylistAction) -> Unit = {}
 ) {
     Card(
         modifier = modifier,
         shape = MaterialTheme.shapes.small,
+        border = BorderStroke(
+            width = MaterialTheme.dimens.size1,
+            color = MaterialTheme.colorScheme.onSurface
+        ),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.primary
         )
+
     ) {
         Row(
             modifier = modifier
@@ -57,34 +65,37 @@ fun PlaylistItemView(
                 modifier = Modifier
                     .weight(MaterialTheme.dimens.weight1)
                     .clickable {
-                        onPlaylistAction(SettingsPlaylistAction.SelectPlaylist(item.id.toString()))
-                    }
+                        onSelect()
+                    },
+                verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = item.listName,
-                    style = MaterialTheme.typography.bodyMedium,
+                    text = item.playlistTitle,
+                    style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
 
-                Spacer(modifier = Modifier.height(MaterialTheme.dimens.size4))
+                if (item.playlistUrl.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.size4))
 
-                Text(
-                    text = item.listUrl,
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.outline,
-                )
+                    Text(
+                        text = item.playlistUrl,
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.width(MaterialTheme.dimens.size8))
 
             FilledIconButton(
                 onClick = {
-                    onPlaylistAction(SettingsPlaylistAction.DeletePlaylist(item.id.toString()))
+                    onPlaylistAction(SettingsPlaylistAction.DeletePlaylist(item))
                 },
                 modifier = Modifier.padding(MaterialTheme.dimens.size8),
                 colors = IconButtonDefaults.filledIconButtonColors(
-                    containerColor = MaterialTheme.colorScheme.tertiary,
-                    contentColor = MaterialTheme.colorScheme.onTertiary
+                    containerColor = MaterialTheme.colorScheme.onSurface,
+                    contentColor = MaterialTheme.colorScheme.primary
                 )
             ) {
                 Icon(

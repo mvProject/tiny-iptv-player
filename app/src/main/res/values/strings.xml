@@ -25,4 +25,7 @@
     <string name="video_resize_mode_fit">Fit</string>
     <string name="video_resize_mode_zoom">Zoom</string>
 
+    <string name="channel_folder_all">All Channels</string>
+    <string name="channel_folder_favorite">Favorites</string>
+
 </resources>
