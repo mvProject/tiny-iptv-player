@@ -11,18 +11,17 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
-    //id("com.google.devtools.ksp")
-    id("com.squareup.sqldelight")
+    id("app.cash.sqldelight")
     id("kotlinx-serialization")
 }
 
 android {
     namespace = "com.mvproject.tinyiptv"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 26
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -75,11 +74,14 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.0"
     }
-    packagingOptions {
-        resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
     }
+
     testOptions {
         unitTests.all {
             it.useJUnitPlatform()
@@ -96,24 +98,21 @@ fun readProperties(propertiesFile: File) = Properties().apply {
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.aar"))))
 
-    implementation("androidx.core:core-ktx:1.10.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
-
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // DateTime
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
 
     //Logging
     implementation("io.github.aakira:napier:2.6.1")
 
     // Integration with activity and viewmodels
-    implementation("androidx.activity:activity-compose:1.7.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+    implementation("androidx.activity:activity-compose:1.8.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
 
     // Compose Bom
-    val composeBom = platform("androidx.compose:compose-bom:2023.05.01")
+    val composeBom = platform("androidx.compose:compose-bom:2023.08.00")
     implementation(composeBom)
     androidTestImplementation(composeBom)
     // Compose UI
@@ -127,7 +126,6 @@ dependencies {
 
     // DI
     implementation("io.insert-koin:koin-androidx-compose:3.4.4")
-    implementation("io.insert-koin:koin-androidx-workmanager:3.4.0")
 
     // WorkManager
     implementation("androidx.work:work-runtime-ktx:2.8.1")
@@ -143,9 +141,9 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.4.0")
 
     // Exoplayer
-    implementation("androidx.media3:media3-exoplayer:1.1.0-alpha01")
-    implementation("androidx.media3:media3-ui:1.1.0-alpha01")
-    implementation("androidx.media3:media3-exoplayer-hls:1.1.0-alpha01")
+    implementation("androidx.media3:media3-exoplayer:1.2.0-beta01")
+    implementation("androidx.media3:media3-ui:1.2.0-beta01")
+    implementation("androidx.media3:media3-exoplayer-hls:1.2.0-beta01")
 
     // Ktor
     implementation("io.ktor:ktor-client-android:2.3.0")
@@ -154,8 +152,8 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.0")
 
     // SQL Delight
-    implementation("com.squareup.sqldelight:android-driver:1.5.5")
-    implementation("com.squareup.sqldelight:coroutines-extensions-jvm:1.5.5")
+    implementation("app.cash.sqldelight:android-driver:2.0.0")
+    implementation("app.cash.sqldelight:coroutines-extensions:2.0.0")
 
     // Misc
     implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
@@ -178,7 +176,9 @@ dependencies {
 }
 
 sqldelight {
-    database("VideoAppDatabase") {
-        packageName = "com.mvproject.tinyiptv"
+    databases {
+        create("VideoAppDatabase") {
+            packageName.set("com.mvproject.tinyiptv")
+        }
     }
 }

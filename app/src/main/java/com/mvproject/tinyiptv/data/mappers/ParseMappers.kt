@@ -8,61 +8,64 @@
 package com.mvproject.tinyiptv.data.mappers
 
 import com.mvproject.tinyiptv.data.models.epg.EpgProgram
-import com.mvproject.tinyiptv.data.models.parse.AlterEpgProgramParseModel
-import com.mvproject.tinyiptv.data.models.parse.AvailableChannelParseModel
-import com.mvproject.tinyiptv.data.models.parse.ChannelsInfoParseModel
-import com.mvproject.tinyiptv.data.models.parse.EpgProgramParseModel
+import com.mvproject.tinyiptv.data.models.response.EpgInfoResponse
+import com.mvproject.tinyiptv.data.models.response.EpgProgramResponse
 import com.mvproject.tinyiptv.utils.AppConstants.INT_VALUE_ZERO
 import com.mvproject.tinyiptv.utils.AppConstants.LONG_NO_VALUE
 import com.mvproject.tinyiptv.utils.AppConstants.LONG_VALUE_ZERO
 import com.mvproject.tinyiptv.utils.TimeUtils.actualDate
-import com.mvproject.tinyiptv.utils.dateEpgToIsoString
-import com.mvproject.tinyiptv.utils.isoStringToMillis
 import kotlinx.datetime.Instant
-import videoappdb.ChannelInfoAlterEntity
-import videoappdb.ChannelInfoMainEntity
+import videoappdb.EpgInfoEntity
 import java.text.SimpleDateFormat
 import java.util.Locale
 import kotlin.time.Duration.Companion.hours
 
 object ParseMappers {
-    fun EpgProgramParseModel.toEpgProgram() = with(this) {
-        EpgProgram(
-            start = start.dateEpgToIsoString().isoStringToMillis(),
-            stop = stop.dateEpgToIsoString().isoStringToMillis(),
-            channelId = channelId.toLong(),
-            title = title,
-            description = description
-        )
-    }
+    /*    fun EpgProgramParseModel.toEpgProgram() = with(this) {
+            EpgProgram(
+                start = start.dateEpgToIsoString().isoStringToMillis(),
+                stop = stop.dateEpgToIsoString().isoStringToMillis(),
+                channelId = channelId,
+                title = title,
+                description = description
+            )
+        }*/
 
-    fun ChannelsInfoParseModel.toChannelInfoMainEntity() = with(this) {
-        ChannelInfoMainEntity(
-            channelInfoId = id.trim().toLong(),
-            channelInfoName = title.trim(),
-            channelInfoLogo = logo,
-        )
-    }
+    /*    fun ChannelsInfoParseModel.toChannelInfoMainEntity() = with(this) {
+            ChannelInfoMainEntity(
+                channelInfoId = id.trim().toLong(),
+                channelInfoName = title.trim(),
+                channelInfoLogo = logo,
+            )
+        }*/
 
-    fun AvailableChannelParseModel.toChannelInfoAlterEntity() = with(this) {
-        ChannelInfoAlterEntity(
+    /*    fun EpgInfoResponse.toChannelInfoAlterEntity() = with(this) {
+            ChannelInfoAlterEntity(
+                channelId = channelId,
+                channelInfoId = channelId.hashCode().toLong(),
+                channelInfoName = channelNames.trim(),
+                channelInfoLogo = channelIcon,
+            )
+        }*/
+
+    fun EpgInfoResponse.toEpgInfoEntity() = with(this) {
+        EpgInfoEntity(
             channelId = channelId,
-            channelInfoId = channelId.hashCode().toLong(),
-            channelInfoName = channelNames.trim(),
-            channelInfoLogo = channelIcon,
+            channelName = channelNames.trim(),
+            channelLogo = channelIcon,
         )
     }
 
     /**
-     * Maps List of [AlterEpgProgramParseModel] from Response to Entity
+     * Maps List of [EpgProgramResponse] from Response to Entity
      * with id and filter for current day
      *
      * @param channelId id of channel for program
      *
      * @return the converted object
      */
-    fun List<AlterEpgProgramParseModel>.asProgramEntities(
-        channelId: Long
+    fun List<EpgProgramResponse>.asProgramEntities(
+        channelId: String
     ): List<EpgProgram> {
         val actualDayFiltered = this.filterToActualDay()
 
@@ -82,7 +85,7 @@ object ParseMappers {
 
 
     /**
-     * Maps List of [AlterEpgProgramParseModel] from Response to Entity.
+     * Maps List of [EpgProgramResponse] from Response to Entity.
      * with id and end time
      *
      * @param channelId id of channel for program
@@ -90,8 +93,8 @@ object ParseMappers {
      *
      * @return the converted object
      */
-    private fun AlterEpgProgramParseModel.asProgramEntity(
-        channelId: Long,
+    private fun EpgProgramResponse.asProgramEntity(
+        channelId: String,
         endTime: Long = LONG_VALUE_ZERO
     ) =
         with(this) {
@@ -105,11 +108,11 @@ object ParseMappers {
         }
 
     /**
-     * Filter List of [AlterEpgProgramParseModel] for current day programs start
+     * Filter List of [EpgProgramResponse] for current day programs start
      *
      * @return the filtered list
      */
-    private fun List<AlterEpgProgramParseModel>.filterToActualDay(): List<AlterEpgProgramParseModel> {
+    private fun List<EpgProgramResponse>.filterToActualDay(): List<EpgProgramResponse> {
         val actual = this.filter { programResponse ->
             programResponse.start.toMillis() > actualDate
         }

@@ -13,9 +13,8 @@ import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.mvproject.tinyiptv.ui.screens.settings.actions.SettingsPlayerAction
-import com.mvproject.tinyiptv.ui.screens.settings.view.SettingsPlayerView
-import com.mvproject.tinyiptv.ui.screens.settings.viewmodel.SettingsPlayerViewModel
+import com.mvproject.tinyiptv.ui.screens.settings.player.SettingsPlayerView
+import com.mvproject.tinyiptv.ui.screens.settings.player.SettingsPlayerViewModel
 import org.koin.androidx.compose.koinViewModel
 
 object SettingsPlayerRoute : AndroidScreen() {
@@ -23,20 +22,14 @@ object SettingsPlayerRoute : AndroidScreen() {
     @Composable
     override fun Content() {
         val settingsPlayerViewModel: SettingsPlayerViewModel = koinViewModel()
-        val state by settingsPlayerViewModel.playerSettingsState.collectAsState()
+        val state by settingsPlayerViewModel.settingsPlayerState.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
 
         SettingsPlayerView(
             state = state,
-            onSettingsPlayerAction = { action ->
-                when (action) {
-                    is SettingsPlayerAction.NavigateBack -> {
-                        navigator.pop()
-                    }
-
-                    else -> settingsPlayerViewModel.processAction(action)
-
-                }
+            onSettingsPlayerAction = settingsPlayerViewModel::processAction,
+            onNavigateBack = {
+                navigator.pop()
             }
         )
     }

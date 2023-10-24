@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 19.05.23, 10:28
+ *  last modified : 23.10.23, 17:44
  *
  */
 
@@ -54,7 +54,7 @@ fun SearchAppBar(
                     Text(
                         text = stringResource(id = R.string.hint_msg_search),
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.outline
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                 },
                 textStyle = MaterialTheme.typography.labelMedium,
@@ -63,6 +63,7 @@ fun SearchAppBar(
                     Icon(
                         imageVector = Icons.Outlined.Search,
                         contentDescription = "Search Icon",
+                        tint = MaterialTheme.colorScheme.onPrimary
                     )
                 },
                 trailingIcon = {
@@ -76,8 +77,8 @@ fun SearchAppBar(
                         },
                         modifier = Modifier.padding(MaterialTheme.dimens.size8),
                         colors = IconButtonDefaults.filledIconButtonColors(
-                            containerColor = MaterialTheme.colorScheme.surface,
-                            contentColor = MaterialTheme.colorScheme.onSurface
+                            containerColor = MaterialTheme.colorScheme.onPrimary,
+                            contentColor = MaterialTheme.colorScheme.primary
                         )
                     ) {
                         Icon(
@@ -90,16 +91,16 @@ fun SearchAppBar(
                     keyboardType = KeyboardType.Text
                 ),
                 colors = TextFieldDefaults.colors(
-                    focusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
-                    cursorColor = MaterialTheme.colorScheme.onSurface,
-                    focusedIndicatorColor = MaterialTheme.colorScheme.onSurface
+                    cursorColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    focusedIndicatorColor = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             )
         },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.inverseOnSurface
+            containerColor = MaterialTheme.colorScheme.primary
         )
     )
 }

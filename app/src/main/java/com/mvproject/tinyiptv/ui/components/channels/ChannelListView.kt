@@ -1,28 +1,25 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 10.05.23, 20:39
+ *  last modified : 23.10.23, 18:15
  *
  */
 
 package com.mvproject.tinyiptv.ui.components.channels
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,26 +30,27 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.mvproject.tinyiptv.R
 import com.mvproject.tinyiptv.data.PreviewTestData.testProgram
-import com.mvproject.tinyiptv.data.models.channels.PlaylistChannelWithEpg
+import com.mvproject.tinyiptv.data.mappers.ListMappers.toActual
+import com.mvproject.tinyiptv.data.models.channels.TvPlaylistChannel
 import com.mvproject.tinyiptv.ui.components.epg.ScheduleEpgItemView
 import com.mvproject.tinyiptv.ui.theme.VideoAppTheme
 import com.mvproject.tinyiptv.ui.theme.dimens
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ChannelListView(
     modifier: Modifier = Modifier,
-    channel: PlaylistChannelWithEpg,
-    onEpgRequest: (PlaylistChannelWithEpg) -> Unit = {},
-    onFavoriteClick: (PlaylistChannelWithEpg) -> Unit = {}
+    channel: TvPlaylistChannel,
+    onChannelSelect: () -> Unit = {},
+    onOptionSelect: () -> Unit = {}
 ) {
-    LaunchedEffect(key1 = channel.id) {
-        onEpgRequest(channel)
-    }
-
     Surface(
         modifier = modifier
-            .clip(MaterialTheme.shapes.small),
-        color = MaterialTheme.colorScheme.surface
+            .clip(MaterialTheme.shapes.small)
+            .combinedClickable(
+                onClick = onChannelSelect,
+                onLongClick = onOptionSelect
+            )
     ) {
         Row(
             modifier = modifier
@@ -81,61 +79,30 @@ fun ChannelListView(
                 Text(
                     text = channel.channelName,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = if (channel.isInFavorites)
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    else
+                        MaterialTheme.colorScheme.onPrimary
                 )
 
-                channel.channelEpg.forEach {
-                    ScheduleEpgItemView(
-                        modifier = Modifier
-                            .padding(start = MaterialTheme.dimens.size4),
-                        program = it
-                    )
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.size4))
+
+                // todo epg count view
+                channel.channelEpg.toActual().take(1).forEach {
+                    ScheduleEpgItemView(program = it)
                 }
 
                 if (channel.channelEpg.isEmpty()) {
                     Text(
                         text = stringResource(id = R.string.msg_no_epg_found),
                         style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.outline,
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                 }
-            }
-
-            Spacer(modifier = Modifier.width(MaterialTheme.dimens.size4))
-
-            IconButton(
-                modifier = Modifier
-                    .weight(MaterialTheme.dimens.weight1)
-                    .clip(MaterialTheme.shapes.small),
-                onClick = { onFavoriteClick(channel) }
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Star,
-                    contentDescription = "Favorites",
-                    tint = if (channel.isInFavorites)
-                        MaterialTheme.colorScheme.tertiary else
-                        MaterialTheme.colorScheme.tertiaryContainer
-                )
             }
         }
     }
 
-}
-
-@Composable
-@Preview(showBackground = true)
-fun PreviewChannelListView() {
-    VideoAppTheme() {
-        ChannelListView(channel = testProgram)
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun PreviewChannelListViewFav() {
-    VideoAppTheme() {
-        ChannelListView(channel = testProgram.copy(isInFavorites = true))
-    }
 }
 
 @Composable

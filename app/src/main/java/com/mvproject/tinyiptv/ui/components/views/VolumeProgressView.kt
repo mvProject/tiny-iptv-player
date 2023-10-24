@@ -9,7 +9,6 @@ package com.mvproject.tinyiptv.ui.components.views
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -28,36 +27,33 @@ import com.mvproject.tinyiptv.utils.getProperVolumeIcon
 @Composable
 fun VolumeProgressView(
     modifier: Modifier = Modifier,
-    value: () -> Int,
+    value: Float,
 ) {
-    Box(
-        modifier = modifier
-    ) {
-        Column(
-            modifier = Modifier
-                .width(MaterialTheme.dimens.size78)
-                .height(MaterialTheme.dimens.size78)
-                .background(
-                    MaterialTheme.colorScheme.surfaceVariant,
-                    shape = MaterialTheme.shapes.small
-                )
-                .align(Alignment.Center),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Icon(
-                modifier = Modifier.size(MaterialTheme.dimens.size48),
-                imageVector = getProperVolumeIcon(value()),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                contentDescription = null
-            )
+    val volumeDisplay = (value * 100).toInt()
 
-            Text(
-                text = "${value()} %",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
+    Column(
+        modifier = modifier
+            .width(MaterialTheme.dimens.size78)
+            .height(MaterialTheme.dimens.size78)
+            .background(
+                MaterialTheme.colorScheme.surfaceVariant,
+                shape = MaterialTheme.shapes.small
+            ),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Icon(
+            modifier = Modifier.size(MaterialTheme.dimens.size48),
+            imageVector = getProperVolumeIcon(volumeDisplay),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            contentDescription = null
+        )
+
+        Text(
+            text = "$volumeDisplay %",
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }
 
@@ -65,7 +61,7 @@ fun VolumeProgressView(
 @Preview(showBackground = true)
 fun PreviewVolumeProgressView() {
     VideoAppTheme() {
-        VolumeProgressView(value = { 7 })
+        VolumeProgressView(value = 0.4f)
     }
 }
 
@@ -73,6 +69,6 @@ fun PreviewVolumeProgressView() {
 @Preview(showBackground = true)
 fun DarkPreviewVolumeProgressView() {
     VideoAppTheme(darkTheme = true) {
-        VolumeProgressView(value = { 7 })
+        VolumeProgressView(value = 0.8f)
     }
 }

@@ -8,155 +8,97 @@
 package com.mvproject.tinyiptv.data.repository
 
 import com.mvproject.tinyiptv.VideoAppDatabase
-import com.mvproject.tinyiptv.data.mappers.EntityMapper.toChannelEntity
 import com.mvproject.tinyiptv.data.mappers.EntityMapper.toPlaylistChannel
+import com.mvproject.tinyiptv.data.mappers.EntityMapper.toPlaylistChannelEntity
 import com.mvproject.tinyiptv.data.models.channels.PlaylistChannel
-import com.mvproject.tinyiptv.utils.AppConstants.INT_VALUE_1
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import videoappdb.FavoriteChannelEntity
-import videoappdb.GetGroupedChannelCountByListId
-import kotlin.random.Random
 
 class PlaylistChannelsRepository(private val db: VideoAppDatabase) {
-    private val queries = db.playlistChannelQueries
+    private val playlistChannelQueries = db.playlistChannelEntityQueries
 
-    fun getAllChannelsByListId(listId: Long): List<PlaylistChannel> {
-        return queries.getAllChannelEntitiesByListId(listId).executeAsList().map {
-            it.toPlaylistChannel()
-        }
-    }
-
-
-    fun getAllChannelGroupsByListId(listId: Long): List<String> {
-        return queries.getAllChannelGroupsByListId(listId).executeAsList().toSet().toList()
-    }
-
-    fun getAllChannelCountByListId(listId: Long): Long {
-        return queries.getAllChannelCountByListId(listId).executeAsOne()
-    }
-
-    fun getAllChannelCountByListId(listId: Long, group: String): GetGroupedChannelCountByListId {
-        return queries.getGroupedChannelCountByListId(listId, group).executeAsOne()
-    }
-
-    fun getChannelsWithMainInfo(listId: Long): List<PlaylistChannel> {
-        return queries.getChannelsWithMainInfo(listId).executeAsList().map {
-            it.toPlaylistChannel()
-        }
-    }
-
-    fun getChannelsWithAlterInfo(listId: Long): List<PlaylistChannel> {
-        return queries.getChannelsWithAlterInfo(listId).executeAsList().map {
-            it.toPlaylistChannel()
-        }
-    }
-
-
-    fun getGroupedChannelsByListId(listId: Long, group: String): List<PlaylistChannel> {
-        return queries.getGroupedChannelEntitiesByListId(listId, group).executeAsList().map {
-            it.toPlaylistChannel()
-        }
-    }
-
-    fun getChannelsEntitiesByIds(listId: Long, ids: List<Long>): List<PlaylistChannel> {
-        return queries.getChannelsEntitiesByIds(listId, ids).executeAsList().map {
-            it.toPlaylistChannel()
-        }
-    }
-
-    fun getFavouriteChannelsIds(listId: Long): List<Long> {
-        return queries.getFavoriteChannelsByListId(listId).executeAsList()
-    }
-
-    fun getFavouriteChannelsNames(listId: Long): List<String> {
-        return queries.getFavoriteChannelsNames(listId).executeAsList()
-    }
-
-    fun getFavouriteChannels(listId: Long): List<FavoriteChannelEntity> {
-        return queries.getFavoriteChannels(listId).executeAsList()
-    }
-
-    suspend fun addChannelToFavorite(id: Long, channelId: Long, channelName: String, listId: Long) {
+    suspend fun addPlaylistChannels(channels: List<PlaylistChannel>) {
         withContext(Dispatchers.IO) {
-            val favs = queries.getFavoriteChannelsByListId(listId).executeAsList().count()
-            val order = (favs + INT_VALUE_1).toLong()
-            queries.insertFavoriteChannelEntity(
-                FavoriteChannelEntity(
-                    id = id,
-                    channelId = channelId,
-                    channelName = channelName,
-                    channelOrder = order,
-                    parentListId = listId
-                )
-            )
-        }
-    }
-
-    suspend fun deleteChannelFromFavorite(channelId: Long, listId: Long) {
-        withContext(Dispatchers.IO) {
-            queries.deleteFavoriteChannelByChannelId(
-                id = listId, channelId = channelId
-            )
-        }
-    }
-
-    suspend fun deleteChannelFromFavoriteByList(listId: Long) {
-        withContext(Dispatchers.IO) {
-            queries.deleteFavoriteChannels(
-                id = listId
-            )
-        }
-    }
-
-    suspend fun deleteAllChannelByListId(listId: Long) {
-        withContext(Dispatchers.IO) {
-            queries.transaction {
-                queries.deleteChannelEntityByListId(listId)
-            }
-        }
-    }
-
-    suspend fun insertChannels(channels: List<PlaylistChannel>) {
-        withContext(Dispatchers.IO) {
-            queries.transaction {
-                channels.forEach { item ->
-                    queries.insertChannelEntity(
-                        item.toChannelEntity()
+            playlistChannelQueries.transaction {
+                channels.forEach { channel ->
+                    playlistChannelQueries.addChannelEntity(
+                        channel.toPlaylistChannelEntity()
                     )
                 }
             }
         }
     }
 
-    suspend fun updateFavorites(channels: List<PlaylistChannel>) {
+    suspend fun updatePlaylistChannels(channels: List<PlaylistChannel>) {
         withContext(Dispatchers.IO) {
-            queries.transaction {
-                val parentListId = channels.map { it.parentListId }.toSet().first()
-                val favChannels = getFavouriteChannels(parentListId).sortedBy { it.channelOrder }
-                val channelNames = channels.map { it.channelName }
-
-                queries.deleteFavoriteChannels(parentListId)
-
-                favChannels.forEachIndexed { index, favChn ->
-                    if (favChn.channelName in channelNames) {
-                        Napier.w("testing updateFavorites favs add to favs:${favChn.channelName}")
-                        val channelId =
-                            channels.firstOrNull { it.channelName == favChn.channelName }?.id
-                        if (channelId != null) {
-                            queries.insertFavoriteChannelEntity(
-                                FavoriteChannelEntity(
-                                    id = Random.nextLong(),
-                                    channelId = channelId,
-                                    channelName = favChn.channelName,
-                                    channelOrder = index.toLong(),
-                                    parentListId = parentListId
-                                )
-                            )
-                        }
-                    }
+            playlistChannelQueries.transaction {
+                channels.forEach { channel ->
+                    playlistChannelQueries.updateChannelEntity(
+                        channelGroup = channel.channelGroup,
+                        channelName = channel.channelName,
+                        channelLogo = channel.channelLogo,
+                        channelUrl = channel.channelUrl,
+                        epgId = channel.epgId
+                    )
                 }
+            }
+        }
+    }
+
+    fun loadPlaylistGroups(listId: Long): List<String> {
+        return playlistChannelQueries.getPlaylistChannelGroups(id = listId)
+            .executeAsList()
+            .distinctBy { it }
+    }
+
+    fun loadPlaylistChannelsCount(listId: Long): Int {
+        return playlistChannelQueries.getPlaylistChannelsCount(id = listId)
+            .executeAsOne()
+            .toInt()
+    }
+
+    fun loadPlaylistGroupChannelsCount(listId: Long, group: String): Int {
+        return playlistChannelQueries.getPlaylistGroupChannelsCount(id = listId, group = group)
+            .executeAsOne()
+            .toInt()
+    }
+
+    fun loadPlaylistChannels(listId: Long): List<PlaylistChannel> {
+        return playlistChannelQueries.getPlaylistChannelsEntities(id = listId)
+            .executeAsList()
+            .map { entity ->
+                entity.toPlaylistChannel()
+            }
+    }
+
+    fun loadChannels(): List<PlaylistChannel> {
+        return playlistChannelQueries.getChannelsEntities()
+            .executeAsList()
+            .map { entity ->
+                entity.toPlaylistChannel()
+            }
+    }
+
+    fun loadPlaylistChannelsByUrls(listId: Long, urls: List<String>): List<PlaylistChannel> {
+        return playlistChannelQueries.getPlaylistChannelsEntitiesByUrls(id = listId, urls = urls)
+            .executeAsList()
+            .map { entity ->
+                entity.toPlaylistChannel()
+            }
+    }
+
+    fun loadPlaylistGroupChannels(listId: Long, group: String): List<PlaylistChannel> {
+        return playlistChannelQueries.getPlaylistGroupChannelEntities(id = listId, group = group)
+            .executeAsList()
+            .map { entity ->
+                entity.toPlaylistChannel()
+            }
+    }
+
+    suspend fun deletePlaylistChannels(listId: Long) {
+        withContext(Dispatchers.IO) {
+            playlistChannelQueries.transaction {
+                playlistChannelQueries.deletePlaylistChannelsEntities(id = listId)
             }
         }
     }

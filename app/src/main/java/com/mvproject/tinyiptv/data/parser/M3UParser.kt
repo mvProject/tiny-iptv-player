@@ -7,7 +7,6 @@
 
 package com.mvproject.tinyiptv.data.parser
 
-import com.mvproject.tinyiptv.data.models.parse.ChannelsInfoParseModel
 import com.mvproject.tinyiptv.data.models.parse.PlaylistChannelParseModel
 import com.mvproject.tinyiptv.utils.AppConstants.EMPTY_STRING
 
@@ -90,7 +89,7 @@ object M3UParser {
     //#EXTINF:0 group-title="спорт" tvg-id="6509" tvg-logo="http://epg.it999.ru/img/6509.png" tvg-rec="0",ESPN HD BR
     //http://localhost/iptv/00000000000000/19056/index.m3u8
 
-    fun parseInfo(infoString: String): List<ChannelsInfoParseModel> {
+   /* fun parseInfo(infoString: String): List<ChannelsInfoParseModel> {
         val lines = infoString.split(TAG_METADATA.toRegex()).toTypedArray()
         return buildList {
             for (_line in lines) {
@@ -126,5 +125,5 @@ object M3UParser {
                 }
             }
         }
-    }
+    }*/
 }

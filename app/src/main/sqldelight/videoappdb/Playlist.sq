@@ -1,12 +1,13 @@
 CREATE TABLE PlaylistEntity (
     id INTEGER NOT NULL,
-    listName TEXT NOT NULL,
-    listUrl TEXT NOT NULL PRIMARY KEY,
+    title TEXT NOT NULL,
+    localFilename TEXT NOT NULL,
+    url TEXT NOT NULL,
     lastUpdateDate INTEGER NOT NULL,
     updatePeriod INTEGER NOT NULL,
-    isMainInfoUse INTEGER NOT NULL,
-    isAlterInfoUse INTEGER NOT NULL,
-    isRemote INTEGER NOT NULL
+    isLocal INTEGER NOT NULL,
+
+    CONSTRAINT PK_EpgProgram PRIMARY KEY (id,url)
 );
 
 CREATE INDEX PlaylistEntity_id ON PlaylistEntity(id);
@@ -16,16 +17,6 @@ SELECT *
 FROM PlaylistEntity
 WHERE id = :id;
 
-getPlaylistEntityByEpgId:
-SELECT id
-FROM PlaylistEntity
-WHERE isMainInfoUse = :state;
-
-getPlaylistEntityByEpgTextId:
-SELECT id
-FROM PlaylistEntity
-WHERE isAlterInfoUse = :state;
-
 getAllPlaylistEntities:
 SELECT *
 FROM PlaylistEntity;
@@ -34,6 +25,15 @@ insertPlaylistEntity:
 INSERT OR REPLACE
 INTO PlaylistEntity
 VALUES ?;
+
+addPlaylist:
+INSERT
+INTO PlaylistEntity
+VALUES ?;
+
+updatePlaylist:
+UPDATE PlaylistEntity
+SET title = ?, url = ?, lastUpdateDate = ?, updatePeriod = ? WHERE id = ?;
 
 deletePlaylistEntityById:
 DELETE FROM PlaylistEntity

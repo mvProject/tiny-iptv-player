@@ -1,21 +1,19 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 10.05.23, 20:19
+ *  last modified : 17.10.23, 14:38
  *
  */
 
 package com.mvproject.tinyiptv.ui.components.toolbars
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.with
+import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import com.mvproject.tinyiptv.data.enums.ChannelsViewType
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AppBarWithSearch(
     searchWidgetState: Boolean,
@@ -31,12 +29,12 @@ fun AppBarWithSearch(
         transitionSpec = {
             slideInHorizontally(
                 initialOffsetX = { it }
-            ) with slideOutHorizontally(
+            ) togetherWith slideOutHorizontally(
                 targetOffsetX = { -it }
             )
-        }
-    ) {
-        if (searchWidgetState) {
+        }, label = ""
+    ) { state ->
+        if (state) {
             SearchAppBar(
                 text = searchTextState,
                 onTextChange = onTextChange,

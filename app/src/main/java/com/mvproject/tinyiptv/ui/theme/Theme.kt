@@ -21,71 +21,31 @@ import androidx.compose.ui.platform.LocalContext
 private val videoAppDarkColorScheme = darkColorScheme(
     primary = videoAppDarkPrimary,
     onPrimary = videoAppDarkOnPrimary,
-    primaryContainer = videoAppDarkPrimaryContainer,
-    onPrimaryContainer = videoAppDarkOnPrimaryContainer,
-    inversePrimary = videoAppDarkPrimaryInverse,
-    secondary = videoAppDarkSecondary,
-    onSecondary = videoAppDarkOnSecondary,
-    secondaryContainer = videoAppDarkSecondaryContainer,
-    onSecondaryContainer = videoAppDarkOnSecondaryContainer,
+    background = videoAppDarkBackground,
+    surface = videoAppDarkSurface,
     tertiary = videoAppDarkTertiary,
     onTertiary = videoAppDarkOnTertiary,
-    tertiaryContainer = videoAppDarkTertiaryContainer,
-    onTertiaryContainer = videoAppDarkOnTertiaryContainer,
-    error = videoAppDarkError,
-    onError = videoAppDarkOnError,
-    errorContainer = videoAppDarkErrorContainer,
-    onErrorContainer = videoAppDarkOnErrorContainer,
-    background = videoAppDarkBackground,
-    onBackground = videoAppDarkOnBackground,
-    surface = videoAppDarkSurface,
     onSurface = videoAppDarkOnSurface,
-    inverseSurface = videoAppDarkInverseSurface,
-    inverseOnSurface = videoAppDarkInverseOnSurface,
-    surfaceVariant = videoAppDarkSurfaceVariant,
     onSurfaceVariant = videoAppDarkOnSurfaceVariant,
-    outline = videoAppDarkOutline,
-    outlineVariant = videoAppDarkOutlineVariant,
-    surfaceTint = videoAppDarkSurfaceTint,
-    scrim = videoAppDarkScrim
+    outline = videoAppDarkOutline
 )
 
 private val videoAppLightColorScheme = lightColorScheme(
     primary = videoAppLightPrimary,
     onPrimary = videoAppLightOnPrimary,
-    primaryContainer = videoAppLightPrimaryContainer,
-    onPrimaryContainer = videoAppLightOnPrimaryContainer,
-    inversePrimary = videoAppLightPrimaryInverse,
-    secondary = videoAppLightSecondary,
-    onSecondary = videoAppLightOnSecondary,
-    secondaryContainer = videoAppLightSecondaryContainer,
-    onSecondaryContainer = videoAppLightOnSecondaryContainer,
+    background = videoAppLightBackground,
+    surface = videoAppLightSurface,
     tertiary = videoAppLightTertiary,
     onTertiary = videoAppLightOnTertiary,
-    tertiaryContainer = videoAppLightTertiaryContainer,
-    onTertiaryContainer = videoAppLightOnTertiaryContainer,
-    error = videoAppLightError,
-    onError = videoAppLightOnError,
-    errorContainer = videoAppLightErrorContainer,
-    onErrorContainer = videoAppLightOnErrorContainer,
-    background = videoAppLightBackground,
-    onBackground = videoAppLightOnBackground,
-    surface = videoAppLightSurface,
     onSurface = videoAppLightOnSurface,
-    inverseSurface = videoAppLightInverseSurface,
-    inverseOnSurface = videoAppLightInverseOnSurface,
-    surfaceVariant = videoAppLightSurfaceVariant,
     onSurfaceVariant = videoAppLightOnSurfaceVariant,
     outline = videoAppLightOutline,
-    outlineVariant = videoAppLightOutlineVariant,
-    surfaceTint = videoAppLightSurfaceTint,
-    scrim = videoAppLightScrim
 )
 
 @Composable
 fun VideoAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val videoAppColorScheme = when {

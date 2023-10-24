@@ -14,7 +14,7 @@ import com.mvproject.tinyiptv.ui.screens.player.VideoViewViewModel
 import org.koin.androidx.compose.koinViewModel
 
 data class PlayerScreenRoute(
-    val mediaId: String,
+    val mediaUrl: String,
     val mediaGroup: String
 ) : AndroidScreen() {
 
@@ -24,7 +24,7 @@ data class PlayerScreenRoute(
 
         VideoView(
             viewModel = videoViewViewModel,
-            channelId = mediaId,
+            channelUrl = mediaUrl,
             channelGroup = mediaGroup
         )
     }

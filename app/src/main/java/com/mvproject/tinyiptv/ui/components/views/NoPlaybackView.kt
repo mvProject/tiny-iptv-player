@@ -13,14 +13,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,15 +33,20 @@ import com.mvproject.tinyiptv.ui.theme.dimens
 
 @Composable
 fun NoPlaybackView(
+    modifier: Modifier = Modifier,
     @StringRes textRes: Int,
     @DrawableRes iconRes: Int
 ) {
-    Surface(
-        modifier = Modifier
-            .fillMaxSize(),
-        color = MaterialTheme.colorScheme.primaryContainer
-    ) {
+    /*    Surface(
+            modifier = Modifier
+                .fillMaxSize(),
+            color = MaterialTheme.colorScheme.primaryContainer
+        ) {*/
         Column(
+            modifier = modifier
+                .background(
+                    color = MaterialTheme.colorScheme.primaryContainer
+                ),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -68,7 +71,7 @@ fun NoPlaybackView(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-    }
+    //}
 }
 
 @Composable

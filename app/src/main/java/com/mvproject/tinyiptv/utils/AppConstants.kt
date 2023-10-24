@@ -17,6 +17,8 @@ object AppConstants {
     const val INT_VALUE_3 = 3
     const val INT_VALUE_5 = 5
 
+    const val WEIGHT_1 = 1f
+
     const val ALPHA_50 = 0.5f
     const val WEIGHT_50 = 0.5f
     const val WEIGHT_80 = 0.8f
@@ -31,5 +33,10 @@ object AppConstants {
     const val PROGRESS_STATE_COMPLETE = 1f
     const val COUNT_ZERO_FLOAT = 0f
 
+    const val PLAYBACK_START_POSITION = 0L
+
     const val PLAYLIST_ID = "PLAYLIST_ID"
+
+    const val FOLDER_CHANNELS_ALL = "All Channels"
+    const val FOLDER_CHANNELS_FAVORITE = "Favorites"
 }

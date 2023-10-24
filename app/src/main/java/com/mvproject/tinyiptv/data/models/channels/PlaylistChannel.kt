@@ -8,22 +8,17 @@
 package com.mvproject.tinyiptv.data.models.channels
 
 import com.mvproject.tinyiptv.utils.AppConstants.EMPTY_STRING
-import kotlin.random.Random
 
 data class PlaylistChannel(
-    val id: Long = Random.nextLong(),
     val channelName: String,
     val channelLogo: String = EMPTY_STRING,
     val channelUrl: String,
     val channelGroup: String,
-    val epgId: Long? = null,
-    val epgAlterId: Long? = null,
+    val epgId: String = EMPTY_STRING,
     val parentListId: Long
 ) {
     override fun toString() =
         StringBuilder()
-            .append("\n")
-            .append("id: $id")
             .append("\n")
             .append("channelName: $channelName")
             .append("\n")
@@ -34,8 +29,6 @@ data class PlaylistChannel(
             .append("channelGroup: $channelGroup")
             .append("\n")
             .append("epgId: $epgId")
-            .append("\n")
-            .append("epgAlterId: $epgAlterId")
             .append("\n")
             .append("parentListId: $parentListId")
             .toString()

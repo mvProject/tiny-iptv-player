@@ -13,7 +13,7 @@ import com.mvproject.tinyiptv.utils.calculateProgramProgress
 data class EpgProgram(
     val start: Long,
     val stop: Long,
-    val channelId: Long,
+    val channelId: String,
     val title: String = AppConstants.EMPTY_STRING,
     val description: String = AppConstants.EMPTY_STRING
 ) {
