@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 10.05.23, 20:19
+ *  last modified : 08.12.23, 14:50
  *
  */
 
@@ -15,7 +15,7 @@ import com.mvproject.tinyiptv.utils.resizeForVideo
 fun Modifier.adaptiveLayout(
     aspectRatio: Float,
     resizeMode: ResizeMode = ResizeMode.Fit
-) = layout { measurable, constraints ->
+) = this then Modifier.layout { measurable, constraints ->
     val resizedConstraint = constraints.resizeForVideo(resizeMode, aspectRatio)
     val placeable = measurable.measure(resizedConstraint)
     layout(constraints.maxWidth, constraints.maxHeight) {

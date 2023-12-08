@@ -1,18 +1,16 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 09.05.23, 12:09
+ *  last modified : 08.12.23, 16:56
  *
  */
 
 plugins {
-    id("com.android.application") version "8.1.0" apply false
-    id("com.android.library") version "8.1.0" apply false
-    id("org.jetbrains.kotlin.android") version "1.9.0" apply false
-    //   id("com.squareup.sqldelight") version "1.5.5" apply false
+    id("com.android.application") version "8.1.2" apply false
+    id("com.android.library") version "8.1.2" apply false
+    id("org.jetbrains.kotlin.android") version "1.9.21" apply false
     id("app.cash.sqldelight") version "2.0.0" apply false
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0" apply false
-    // id("com.google.devtools.ksp").version("1.9.0-1.0.12")
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.21" apply false
 }
 
 tasks.register("clean", Delete::class) {
