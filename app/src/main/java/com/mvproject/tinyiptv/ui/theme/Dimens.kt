@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 04.05.23, 16:34
+ *  last modified : 08.12.23, 15:19
  *
  */
 
@@ -48,12 +48,14 @@ data class Dimens(
     val size60: Dp = 60.dp,
     val size64: Dp = 64.dp,
     val size78: Dp = 78.dp,
+    val size82: Dp = 82.dp,
     val size96: Dp = 96.dp,
     val size112: Dp = 112.dp,
     val size140: Dp = 140.dp,
     val size180: Dp = 180.dp,
     val size200: Dp = 200.dp,
     val size250: Dp = 250.dp,
+    val size310: Dp = 310.dp,
 
     val font10: TextUnit = 10.sp,
     val font12: TextUnit = 12.sp,

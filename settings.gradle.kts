@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 04.05.23, 10:59
+ *  last modified : 07.12.23, 19:59
  *
  */
 
@@ -19,5 +19,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "Video App"
+rootProject.name = "Tiny Iptv"
 include(":app")

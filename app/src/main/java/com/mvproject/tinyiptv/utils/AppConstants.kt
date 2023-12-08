@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 04.05.23, 14:27
+ *  last modified : 08.12.23, 12:57
  *
  */
 
@@ -39,4 +39,21 @@ object AppConstants {
 
     const val FOLDER_CHANNELS_ALL = "All Channels"
     const val FOLDER_CHANNELS_FAVORITE = "Favorites"
+
+    const val FLOAT_VALUE_ZERO = 0f
+    const val FLOAT_VALUE_1 = 1f
+    const val FLOAT_STEP_VOLUME = 0.05f
+    const val FLOAT_DEFAULT_VOLUME = 0.5f
+
+    const val DELAY_50 = 50L
+    const val UI_SHOW_DELAY = 3000L
+    const val VOLUME_SHOW_DELAY = 500L
+
+    const val DRAG_THRESHOLD = 5
+    const val MOVEMENT_THRESHOLD = 10
+
+    const val SCREEN_PERCENTAGE_25 = 0.25
+    const val SCREEN_PERCENTAGE_30 = 0.3
+    const val SCREEN_PERCENTAGE_70 = 0.7
+    const val SCREEN_PERCENTAGE_40 = 0.4
 }

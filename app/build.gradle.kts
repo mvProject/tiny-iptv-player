@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 10.05.23, 10:34
+ *  last modified : 08.12.23, 16:18
  *
  */
 
@@ -108,11 +108,12 @@ dependencies {
     implementation("io.github.aakira:napier:2.6.1")
 
     // Integration with activity and viewmodels
-    implementation("androidx.activity:activity-compose:1.8.0")
+    implementation("androidx.activity:activity-compose:1.8.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0-rc01")
 
     // Compose Bom
-    val composeBom = platform("androidx.compose:compose-bom:2023.08.00")
+    val composeBom = platform("androidx.compose:compose-bom:2023.10.01")
     implementation(composeBom)
     androidTestImplementation(composeBom)
     // Compose UI
@@ -125,10 +126,7 @@ dependencies {
     implementation("androidx.compose.animation:animation")
 
     // DI
-    implementation("io.insert-koin:koin-androidx-compose:3.4.4")
-
-    // WorkManager
-    implementation("androidx.work:work-runtime-ktx:2.8.1")
+    implementation("io.insert-koin:koin-androidx-compose:3.5.0")
 
     // Navigation
     implementation("cafe.adriel.voyager:voyager-androidx:1.0.0-rc06")
@@ -141,9 +139,9 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.4.0")
 
     // Exoplayer
-    implementation("androidx.media3:media3-exoplayer:1.2.0-beta01")
-    implementation("androidx.media3:media3-ui:1.2.0-beta01")
-    implementation("androidx.media3:media3-exoplayer-hls:1.2.0-beta01")
+    implementation("androidx.media3:media3-exoplayer:1.2.0")
+    implementation("androidx.media3:media3-ui:1.2.0")
+    implementation("androidx.media3:media3-exoplayer-hls:1.2.0")
 
     // Ktor
     implementation("io.ktor:ktor-client-android:2.3.0")
@@ -157,8 +155,6 @@ dependencies {
 
     // Misc
     implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
-    implementation("com.google.accompanist:accompanist-permissions:0.28.0")
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.31.2-alpha")
     implementation("com.google.accompanist:accompanist-adaptive:0.31.2-alpha")
 
     // Tests
