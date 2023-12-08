@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 23.10.23, 19:16
+ *  last modified : 08.12.23, 17:16
  *
  */
 
@@ -35,7 +35,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.mvproject.tinyiptv.R
 import com.mvproject.tinyiptv.data.enums.UpdatePeriod
 import com.mvproject.tinyiptv.ui.components.OptionSelector
-import com.mvproject.tinyiptv.ui.components.dialogs.OptionsDialog
+import com.mvproject.tinyiptv.ui.components.overlay.OverlayContent
+import com.mvproject.tinyiptv.ui.components.overlay.OverlayOptionsMenu
 import com.mvproject.tinyiptv.ui.components.toolbars.AppBarWithBackNav
 import com.mvproject.tinyiptv.ui.screens.settings.general.action.SettingsAction
 import com.mvproject.tinyiptv.ui.screens.settings.general.state.SettingsState
@@ -203,31 +204,41 @@ fun SettingsView(
             )
         }
 
-        OptionsDialog(
-            isDialogOpen = isSelectInfoUpdateOpen,
-            title = stringResource(id = R.string.pl_hint_update_period),
-            selectedIndex = state.infoUpdatePeriod,
-            items = UpdatePeriod.entries.map {
-                stringResource(id = it.title)
-            },
-            onItemSelected = { index ->
-                onSettingsAction(SettingsAction.SetInfoUpdatePeriod(index))
-                isSelectInfoUpdateOpen.value = false
-            }
-        )
+        OverlayContent(
+            isVisible = isSelectInfoUpdateOpen.value,
+            contentAlpha = MaterialTheme.dimens.alpha90,
+            onViewTap = { isSelectInfoUpdateOpen.value = false }
+        ) {
+            OverlayOptionsMenu(
+                title = stringResource(id = R.string.hint_update_period),
+                selectedIndex = state.infoUpdatePeriod,
+                items = UpdatePeriod.entries.map {
+                    stringResource(id = it.title)
+                },
+                onItemSelected = { index ->
+                    onSettingsAction(SettingsAction.SetInfoUpdatePeriod(index))
+                    isSelectInfoUpdateOpen.value = false
+                }
+            )
+        }
 
-        OptionsDialog(
-            isDialogOpen = isSelectEpgUpdateOpen,
-            title = stringResource(id = R.string.pl_hint_update_period),
-            selectedIndex = state.epgUpdatePeriod,
-            items = UpdatePeriod.entries.map {
-                stringResource(id = it.title)
-            },
-            onItemSelected = { index ->
-                onSettingsAction(SettingsAction.SetEpgUpdatePeriod(index))
-                isSelectEpgUpdateOpen.value = false
-            }
-        )
+        OverlayContent(
+            isVisible = isSelectEpgUpdateOpen.value,
+            contentAlpha = MaterialTheme.dimens.alpha90,
+            onViewTap = { isSelectEpgUpdateOpen.value = false }
+        ) {
+            OverlayOptionsMenu(
+                title = stringResource(id = R.string.hint_update_period),
+                selectedIndex = state.epgUpdatePeriod,
+                items = UpdatePeriod.entries.map {
+                    stringResource(id = it.title)
+                },
+                onItemSelected = { index ->
+                    onSettingsAction(SettingsAction.SetEpgUpdatePeriod(index))
+                    isSelectEpgUpdateOpen.value = false
+                }
+            )
+        }
     }
 }
 

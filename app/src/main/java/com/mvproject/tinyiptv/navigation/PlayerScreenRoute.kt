@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 10.05.23, 20:21
+ *  last modified : 08.12.23, 13:08
  *
  */
 
@@ -14,7 +14,7 @@ import com.mvproject.tinyiptv.ui.screens.player.VideoViewViewModel
 import org.koin.androidx.compose.koinViewModel
 
 data class PlayerScreenRoute(
-    val mediaUrl: String,
+    val mediaName: String,
     val mediaGroup: String
 ) : AndroidScreen() {
 
@@ -24,7 +24,7 @@ data class PlayerScreenRoute(
 
         VideoView(
             viewModel = videoViewViewModel,
-            channelUrl = mediaUrl,
+            channelName = mediaName,
             channelGroup = mediaGroup
         )
     }
