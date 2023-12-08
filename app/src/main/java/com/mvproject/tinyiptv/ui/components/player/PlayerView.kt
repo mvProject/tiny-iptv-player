@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 20.10.23, 13:53
+ *  last modified : 08.12.23, 17:15
  *
  */
 
@@ -9,36 +9,82 @@ package com.mvproject.tinyiptv.ui.components.player
 
 import android.view.SurfaceView
 import android.view.ViewGroup
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleOwner
-import com.mvproject.tinyiptv.data.models.channels.TvPlaylistChannel
+import androidx.lifecycle.compose.LifecycleStartEffect
+import com.mvproject.tinyiptv.ui.components.ConnectionState
 import com.mvproject.tinyiptv.ui.components.modifiers.adaptiveLayout
 import com.mvproject.tinyiptv.ui.components.modifiers.defaultPlayerHorizontalGestures
 import com.mvproject.tinyiptv.ui.components.modifiers.defaultPlayerTapGesturesState
 import com.mvproject.tinyiptv.ui.components.modifiers.defaultPlayerVerticalGestures
+import com.mvproject.tinyiptv.ui.components.networkConnectionState
+import com.mvproject.tinyiptv.ui.components.rememberSystemUIController
 import com.mvproject.tinyiptv.ui.screens.player.action.PlaybackActions
-import com.mvproject.tinyiptv.ui.screens.player.state.VideoPlayerState
+import com.mvproject.tinyiptv.ui.screens.player.action.PlaybackStateActions
+import com.mvproject.tinyiptv.ui.screens.player.state.VideoViewState
+import com.mvproject.tinyiptv.ui.screens.player.state.rememberVideoPlayerState
+import com.mvproject.tinyiptv.utils.AppConstants
+import io.github.aakira.napier.Napier
 
 @Composable
 fun PlayerView(
     modifier: Modifier = Modifier,
-    playerState: VideoPlayerState,
-    currentChannel: TvPlaylistChannel,
-    onPlaybackAction: (PlaybackActions) -> Unit = {}
+    videoViewState: VideoViewState,
+    onPlaybackAction: (PlaybackActions) -> Unit = {},
+    onPlaybackStateAction: (PlaybackStateActions) -> Unit = {},
+    controls: @Composable () -> Unit
 ) {
 
-    val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
+    val connection by networkConnectionState()
+    when (connection) {
+        ConnectionState.Available -> Napier.w("testing connectivity is available")
+        ConnectionState.Unavailable -> Napier.w("testing connectivity is unavailable")
+    }
+
+    val playerState = rememberVideoPlayerState(
+        onPlaybackStateAction = onPlaybackStateAction
+    )
+    val systemUIController = rememberSystemUIController()
+
+    LaunchedEffect(videoViewState.isFullscreen) {
+        systemUIController.isSystemBarsVisible = !videoViewState.isFullscreen
+    }
+
+
+    LaunchedEffect(videoViewState.isRestartRequired) {
+        if (videoViewState.isRestartRequired) {
+            playerState.restartPlayer()
+            onPlaybackAction(PlaybackActions.OnRestarted)
+        }
+    }
+
+    LaunchedEffect(videoViewState.isFullscreen) {
+        systemUIController.isSystemBarsVisible = !videoViewState.isFullscreen
+    }
+
+    LaunchedEffect(videoViewState.currentVolume) {
+        playerState.setVolume(videoViewState.currentVolume)
+    }
+
+    LaunchedEffect(videoViewState.mediaPosition) {
+        if (videoViewState.mediaPosition > AppConstants.INT_NO_VALUE) {
+            playerState.setPlayerChannel(
+                channelName = videoViewState.currentChannel.channelName,
+                channelUrl = videoViewState.currentChannel.channelUrl
+            )
+        }
+    }
+
+    LaunchedEffect(videoViewState.isPlaying) {
+        if (playerState.player.isPlaying != videoViewState.isPlaying) {
+            playerState.setPlayingState(videoViewState.isPlaying)
+        }
+    }
 
     Box(
         modifier = modifier
@@ -50,8 +96,8 @@ fun PlayerView(
         AndroidView(
             modifier = Modifier
                 .adaptiveLayout(
-                    aspectRatio = playerState.videoSize.value,
-                    resizeMode = playerState.videoResizeMode.value
+                    aspectRatio = videoViewState.videoRatio,
+                    resizeMode = videoViewState.videoResizeMode
                 ),
             factory = { context ->
                 SurfaceView(context).apply {
@@ -66,37 +112,13 @@ fun PlayerView(
             }
         )
 
-        AnimatedVisibility(
-            visible = playerState.isControlUiVisible.value,
-            enter = fadeIn(),
-            exit = fadeOut()
-        ) {
-            PlayerChannelView(
-                modifier = Modifier.fillMaxSize(),
-                currentChannel = currentChannel,
-                isPlaying = playerState.isPlaying.value,
-                isFullScreen = playerState.isFullscreen.value,
-                onPlaybackAction = onPlaybackAction
-            )
-        }
+        controls()
     }
 
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            when (event) {
-                Lifecycle.Event.ON_START -> {
-                    onPlaybackAction(PlaybackActions.OnPlayerUiToggle)
-                }
-
-                Lifecycle.Event.ON_STOP -> playerState.player.pause()
-                else -> Unit
-            }
-        }
-
-        lifecycleOwner.lifecycle.addObserver(observer)
-
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
+    LifecycleStartEffect(playerState) {
+        onStopOrDispose {
+            playerState.player.stop()
+            systemUIController.isSystemBarsVisible = true
         }
     }
 }

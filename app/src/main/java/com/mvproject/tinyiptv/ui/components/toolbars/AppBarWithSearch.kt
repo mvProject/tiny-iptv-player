@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 17.10.23, 14:38
+ *  last modified : 08.12.23, 15:48
  *
  */
 
@@ -32,7 +32,8 @@ fun AppBarWithSearch(
             ) togetherWith slideOutHorizontally(
                 targetOffsetX = { -it }
             )
-        }, label = ""
+        },
+        label = "AppBarWithSearch"
     ) { state ->
         if (state) {
             SearchAppBar(

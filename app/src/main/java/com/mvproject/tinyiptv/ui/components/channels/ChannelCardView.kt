@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 20.10.23, 18:13
+ *  last modified : 08.12.23, 17:15
  *
  */
 
@@ -10,14 +10,15 @@ package com.mvproject.tinyiptv.ui.components.channels
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,21 +44,19 @@ fun ChannelCardView(
     onChannelSelect: () -> Unit = {},
     onOptionSelect: () -> Unit = {}
 ) {
-    Card(
+    ElevatedCard(
         modifier = modifier
-            .heightIn(MaterialTheme.dimens.size200)
+            .height(MaterialTheme.dimens.size200)
             .clip(MaterialTheme.shapes.extraSmall)
             .combinedClickable(
                 onClick = onChannelSelect,
                 onLongClick = onOptionSelect
-            ),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
+            )
     ) {
         Column(
+            modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceEvenly
+            verticalArrangement = Arrangement.Top
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
@@ -68,23 +67,30 @@ fun ChannelCardView(
                     .build(),
                 contentDescription = channel.channelName,
                 modifier = Modifier
-                    .size(MaterialTheme.dimens.size112)
+                    .padding(top = MaterialTheme.dimens.size12)
+                    .size(MaterialTheme.dimens.size64)
                     .clip(MaterialTheme.shapes.extraSmall)
             )
 
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.size12))
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.size8))
 
-            Text(
-                text = channel.channelName,
-                style = MaterialTheme.typography.headlineMedium,
-                color = if (channel.isInFavorites)
-                    MaterialTheme.colorScheme.onSurfaceVariant
-                else
-                    MaterialTheme.colorScheme.onPrimary,
-                textAlign = TextAlign.Center,
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-            )
+                    .fillMaxSize()
+                    .padding(horizontal = MaterialTheme.dimens.size8),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = channel.channelName,
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = if (channel.isInFavorites)
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    else
+                        MaterialTheme.colorScheme.onPrimary,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 }

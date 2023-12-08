@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 23.10.23, 18:05
+ *  last modified : 08.12.23, 15:49
  *
  */
 
@@ -34,11 +34,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.mvproject.tinyiptv.R
 import com.mvproject.tinyiptv.data.enums.ChannelsViewType
 import com.mvproject.tinyiptv.ui.theme.VideoAppTheme
 import com.mvproject.tinyiptv.ui.theme.dimens
+import com.mvproject.tinyiptv.utils.AppConstants.INT_VALUE_1
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,7 +57,9 @@ fun AppBarWithActions(
             Text(
                 text = appBarTitle,
                 style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onPrimary
+                color = MaterialTheme.colorScheme.onPrimary,
+                maxLines = INT_VALUE_1,
+                overflow = TextOverflow.Ellipsis
             )
         },
         navigationIcon = {

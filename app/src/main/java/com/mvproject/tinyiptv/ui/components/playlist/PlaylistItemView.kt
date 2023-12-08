@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 23.10.23, 19:15
+ *  last modified : 08.12.23, 17:15
  *
  */
 
@@ -32,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.mvproject.tinyiptv.data.PreviewTestData
 import com.mvproject.tinyiptv.data.models.playlist.Playlist
-import com.mvproject.tinyiptv.ui.screens.settings.playlist.action.SettingsPlaylistAction
 import com.mvproject.tinyiptv.ui.theme.VideoAppTheme
 import com.mvproject.tinyiptv.ui.theme.dimens
 
@@ -41,7 +40,7 @@ fun PlaylistItemView(
     modifier: Modifier = Modifier,
     item: Playlist,
     onSelect: () -> Unit = {},
-    onPlaylistAction: (SettingsPlaylistAction) -> Unit = {}
+    onDelete: () -> Unit = {}
 ) {
     Card(
         modifier = modifier,
@@ -89,9 +88,7 @@ fun PlaylistItemView(
             Spacer(modifier = Modifier.width(MaterialTheme.dimens.size8))
 
             FilledIconButton(
-                onClick = {
-                    onPlaylistAction(SettingsPlaylistAction.DeletePlaylist(item))
-                },
+                onClick = onDelete,
                 modifier = Modifier.padding(MaterialTheme.dimens.size8),
                 colors = IconButtonDefaults.filledIconButtonColors(
                     containerColor = MaterialTheme.colorScheme.onSurface,
