@@ -1,15 +1,12 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 23.10.23, 19:16
+ *  last modified : 08.12.23, 16:04
  *
  */
 
 package com.mvproject.tinyiptv.ui.screens.channels
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -37,7 +34,7 @@ import androidx.lifecycle.Lifecycle
 import com.mvproject.tinyiptv.data.enums.ChannelsViewType
 import com.mvproject.tinyiptv.data.models.channels.TvPlaylistChannel
 import com.mvproject.tinyiptv.ui.components.channels.ChannelView
-import com.mvproject.tinyiptv.ui.components.dialogs.ChannelOptionsDialog
+import com.mvproject.tinyiptv.ui.components.overlay.OverlayChannelOptions
 import com.mvproject.tinyiptv.ui.components.overlay.OverlayContent
 import com.mvproject.tinyiptv.ui.components.overlay.OverlayEpg
 import com.mvproject.tinyiptv.ui.components.toolbars.AppBarWithSearch
@@ -116,7 +113,7 @@ fun TvPlaylistChannelsView(
                 }
 
                 else -> {
-                    GridCells.Adaptive(190.dp)
+                    GridCells.Adaptive(180.dp)
                 }
             }
 
@@ -124,9 +121,11 @@ fun TvPlaylistChannelsView(
                 modifier = Modifier.fillMaxHeight(),
                 columns = columns,
                 state = rememberLazyGridState(),
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.size4),
-                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.size2),
-                contentPadding = PaddingValues(MaterialTheme.dimens.size2),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.size8),
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.size8),
+                contentPadding = PaddingValues(
+                    vertical = MaterialTheme.dimens.size4
+                ),
                 content = {
                     items(
                         items = channelsList,
@@ -141,7 +140,7 @@ fun TvPlaylistChannelsView(
                                 isChannelOptionOpen.value = true
                             },
                             onChannelSelect = {
-                                onNavigateSelected(item.channelUrl)
+                                onNavigateSelected(item.channelName)
                             }
                         )
                     }
@@ -151,39 +150,39 @@ fun TvPlaylistChannelsView(
                 LoadingView()
             }
 
-            ChannelOptionsDialog(
-                isDialogOpen = isChannelOptionOpen,
-                isInFavorite = selected.isInFavorites,
-                isEpgEnabled = selected.isEpgUsing,
-                isEpgUsing = selected.epgId.isNotEmpty(),
-                onToggleFavorite = {
-                    onAction(TvPlaylistChannelAction.ToggleFavourites(selected))
-                    isChannelOptionOpen.value = false
-                },
-                onToggleEpgState = {
-                    onAction(TvPlaylistChannelAction.ToggleEpgState(selected))
-                    isChannelOptionOpen.value = false
-
-                },
-                onShowEpg = {
-                    onAction(TvPlaylistChannelAction.ToggleEpgVisibility)
-                    isChannelOptionOpen.value = false
-                }
-            )
-
-            AnimatedVisibility(
-                visible = viewState.isEpgVisible,
-                enter = fadeIn(),
-                exit = fadeOut()
+            OverlayContent(
+                isVisible = isChannelOptionOpen.value,
+                contentAlpha = MaterialTheme.dimens.alpha90,
+                onViewTap = { isChannelOptionOpen.value = false }
             ) {
-                OverlayContent(
-                    onViewTap = { onAction(TvPlaylistChannelAction.ToggleEpgVisibility) }
-                ) {
-                    OverlayEpg(
-                        isFullScreen = false,
-                        currentChannel = selected
-                    )
-                }
+                OverlayChannelOptions(
+                    isInFavorite = selected.isInFavorites,
+                    isEpgEnabled = selected.isEpgUsing,
+                    isEpgUsing = selected.epgId.isNotEmpty(),
+                    onToggleFavorite = {
+                        onAction(TvPlaylistChannelAction.ToggleFavourites(selected))
+                        isChannelOptionOpen.value = false
+                    },
+                    onToggleEpgState = {
+                        onAction(TvPlaylistChannelAction.ToggleEpgState(selected))
+                        isChannelOptionOpen.value = false
+
+                    },
+                    onShowEpg = {
+                        onAction(TvPlaylistChannelAction.ToggleEpgVisibility)
+                        isChannelOptionOpen.value = false
+                    }
+                )
+            }
+
+            OverlayContent(
+                isVisible = viewState.isEpgVisible,
+                onViewTap = { onAction(TvPlaylistChannelAction.ToggleEpgVisibility) }
+            ) {
+                OverlayEpg(
+                    isFullScreen = false,
+                    currentChannel = selected
+                )
             }
         }
     }

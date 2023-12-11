@@ -1,22 +1,19 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 23.10.23, 19:16
+ *  last modified : 08.12.23, 17:15
  *
  */
 
 package com.mvproject.tinyiptv.ui.components.player
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +26,7 @@ import com.mvproject.tinyiptv.data.mappers.ListMappers.toActual
 import com.mvproject.tinyiptv.data.models.channels.TvPlaylistChannel
 import com.mvproject.tinyiptv.data.models.epg.EpgProgram
 import com.mvproject.tinyiptv.ui.components.epg.PlayerChannelEpgItem
+import com.mvproject.tinyiptv.ui.components.modifiers.roundedHeader
 import com.mvproject.tinyiptv.ui.screens.player.action.PlaybackActions
 import com.mvproject.tinyiptv.ui.theme.VideoAppTheme
 import com.mvproject.tinyiptv.ui.theme.dimens
@@ -52,20 +50,14 @@ fun PlayerChannelView(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .background(
-                    color = MaterialTheme.colorScheme.primary,
-                    shape = RoundedCornerShape(
-                        topStart = MaterialTheme.dimens.size16,
-                        topEnd = MaterialTheme.dimens.size16
-                    )
+                .roundedHeader(
+                    color = MaterialTheme.colorScheme.primary
                 )
-                .align(Alignment.BottomCenter)
-                .padding(MaterialTheme.dimens.size4),
+                .align(Alignment.BottomCenter),
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 text = currentChannel.channelName,
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onPrimary,
@@ -74,11 +66,12 @@ fun PlayerChannelView(
 
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2))
 
-            currentChannel.channelEpg.toActual().take(programCount).forEach { epg ->
-                PlayerChannelEpgItem(epgProgram = epg)
+            if (currentChannel.channelEpg.isNotEmpty()) {
+                currentChannel.channelEpg.toActual().take(programCount).forEach { epg ->
+                    PlayerChannelEpgItem(epgProgram = epg)
+                }
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2))
             }
-
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2))
 
             PlayerControlView(
                 modifier = Modifier
@@ -87,18 +80,7 @@ fun PlayerChannelView(
                 isFavorite = currentChannel.isInFavorites,
                 isPlaying = isPlaying,
                 isFullScreen = isFullScreen,
-                onFavoriteToggle = {
-                    onPlaybackAction(PlaybackActions.OnFavoriteToggle)
-                },
-                onPlaybackToggle = {
-                    onPlaybackAction(PlaybackActions.OnPlaybackToggle)
-                },
-                onFullScreenToggle = {
-                    onPlaybackAction(PlaybackActions.OnFullScreenToggle)
-                },
-                onVideoResizeToggle = {
-                    onPlaybackAction(PlaybackActions.OnVideoResizeToggle)
-                }
+                onPlaybackAction = onPlaybackAction
             )
         }
     }

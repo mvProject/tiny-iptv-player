@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 20.10.23, 18:12
+ *  last modified : 08.12.23, 17:15
  *
  */
 
@@ -10,16 +10,16 @@ package com.mvproject.tinyiptv.ui.components.channels
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -47,25 +48,26 @@ fun ChannelGridView(
     onChannelSelect: () -> Unit = {},
     onOptionSelect: () -> Unit = {}
 ) {
-    Card(
+    ElevatedCard(
         modifier = modifier
-            .heightIn(MaterialTheme.dimens.size140)
+            .height(MaterialTheme.dimens.size140)
             .clip(MaterialTheme.shapes.extraSmall)
             .combinedClickable(
                 onClick = onChannelSelect,
                 onLongClick = onOptionSelect
-            ),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
+            )
     ) {
         Column(
+            modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.SpaceEvenly
+            verticalArrangement = Arrangement.Top
         ) {
             Row(
-                modifier = modifier
-                    .padding(MaterialTheme.dimens.size8),
+                modifier = Modifier
+                    .padding(
+                        horizontal = MaterialTheme.dimens.size8,
+                        vertical = MaterialTheme.dimens.size4
+                    ),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
 
@@ -95,30 +97,34 @@ fun ChannelGridView(
                         .weight(MaterialTheme.dimens.weight5)
                 )
             }
-            // todo epg count view
-            Row(
-                modifier = modifier
-                    .padding(horizontal = MaterialTheme.dimens.size8),
-                verticalAlignment = Alignment.Top
-            ) {
-                channel.channelEpg.toActual().take(1).forEach {
-                    ScheduleEpgItemView(
-                        modifier = Modifier
-                            .padding(start = MaterialTheme.dimens.size4),
-                        program = it
-                    )
-                }
 
-                if (channel.channelEpg.isEmpty()) {
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.size10))
+
+            if (channel.channelEpg.isEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
                     Text(
                         text = stringResource(id = R.string.msg_no_epg_found),
                         style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurface,
+                        color = MaterialTheme.colorScheme.outline,
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = MaterialTheme.dimens.size4),
+                            .padding(MaterialTheme.dimens.size8),
+                        textAlign = TextAlign.Center
                     )
                 }
+
+            } else {
+                // todo epg count view
+                channel.channelEpg.toActual().take(1)
+                    .forEach {
+                        ScheduleEpgItemView(
+                            modifier = Modifier
+                                .padding(horizontal = MaterialTheme.dimens.size4),
+                            program = it
+                        )
+                    }
             }
         }
     }

@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 10.05.23, 20:21
+ *  last modified : 08.12.23, 13:08
  *
  */
 
@@ -31,10 +31,10 @@ data class PlaylistGroupScreenRoute(
             onNavigateBack = {
                 navigator.pop()
             },
-            onNavigateSelected = { url ->
+            onNavigateSelected = { name ->
                 navigator.push(
                     PlayerScreenRoute(
-                        mediaUrl = url,
+                        mediaName = name,
                         mediaGroup = group
                     )
                 )

@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 23.10.23, 18:17
+ *  last modified : 08.12.23, 13:42
  *
  */
 
@@ -82,7 +82,7 @@ fun GroupView(
 
                     OptionSelector(
                         modifier = Modifier.fillMaxWidth(),
-                        title = stringResource(id = R.string.pl_hint_current_playlist),
+                        title = stringResource(id = R.string.hint_current_playlist),
                         selectedItem = dataState.playlistNames[selectedIndex],
                         isExpanded = isSelectPlaylistOpen.value,
                         onClick = {
@@ -92,7 +92,7 @@ fun GroupView(
 
                     OptionsDialog(
                         isDialogOpen = isSelectPlaylistOpen,
-                        title = stringResource(id = R.string.pl_hint_current_playlist),
+                        title = stringResource(id = R.string.hint_current_playlist),
                         selectedIndex = selectedIndex,
                         items = dataState.playlistNames,
                         onItemSelected = { index ->
@@ -135,7 +135,7 @@ fun GroupView(
             if (dataState.dataIsEmpty) {
                 NoItemsView(
                     modifier = Modifier.fillMaxSize(),
-                    navigateTitle = stringResource(id = R.string.pl_btn_add_first_playlist),
+                    navigateTitle = stringResource(id = R.string.btn_add_first_playlist),
                     onNavigateClick = onNavigateToSettings
                 )
             }

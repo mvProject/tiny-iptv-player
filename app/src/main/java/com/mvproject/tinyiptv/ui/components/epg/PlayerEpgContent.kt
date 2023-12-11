@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 20.10.23, 18:51
+ *  last modified : 08.12.23, 15:51
  *
  */
 
@@ -42,6 +42,7 @@ fun PlayerEpgContent(
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(horizontal = MaterialTheme.dimens.size12)
                     .align(Alignment.Center),
                 text = stringResource(id = R.string.msg_no_epg_found),
                 style = MaterialTheme.typography.titleLarge,

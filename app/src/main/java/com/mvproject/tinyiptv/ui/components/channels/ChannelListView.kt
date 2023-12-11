@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 23.10.23, 18:15
+ *  last modified : 08.12.23, 15:46
  *
  */
 
@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
@@ -54,7 +55,11 @@ fun ChannelListView(
     ) {
         Row(
             modifier = modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(
+                    horizontal = MaterialTheme.dimens.size2,
+                    vertical = MaterialTheme.dimens.size4
+                ),
             verticalAlignment = Alignment.CenterVertically
         ) {
 

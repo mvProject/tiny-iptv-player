@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 23.10.23, 19:15
+ *  last modified : 08.12.23, 15:23
  *
  */
 
@@ -40,7 +40,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.mvproject.tinyiptv.R
 import com.mvproject.tinyiptv.data.enums.UpdatePeriod
 import com.mvproject.tinyiptv.ui.components.OptionSelector
-import com.mvproject.tinyiptv.ui.components.dialogs.OptionsDialog
+import com.mvproject.tinyiptv.ui.components.overlay.OverlayContent
+import com.mvproject.tinyiptv.ui.components.overlay.OverlayOptionsMenu
 import com.mvproject.tinyiptv.ui.components.toolbars.AppBarWithBackNav
 import com.mvproject.tinyiptv.ui.components.views.LoadingView
 import com.mvproject.tinyiptv.ui.screens.playlist.action.PlaylistAction
@@ -49,7 +50,6 @@ import com.mvproject.tinyiptv.ui.theme.VideoAppTheme
 import com.mvproject.tinyiptv.ui.theme.dimens
 import com.mvproject.tinyiptv.utils.AppConstants.PLAYLIST_MIME_TYPE
 import com.mvproject.tinyiptv.utils.AppConstants.WEIGHT_1
-import io.github.aakira.napier.Napier
 
 @Composable
 fun PlaylistView(
@@ -75,7 +75,7 @@ fun PlaylistView(
             .navigationBarsPadding(),
         topBar = {
             AppBarWithBackNav(
-                appBarTitle = stringResource(id = R.string.pl_msg_playlist_details),
+                appBarTitle = stringResource(id = R.string.msg_playlist_details),
                 onBackClick = onNavigateBack,
             )
         },
@@ -98,9 +98,9 @@ fun PlaylistView(
                 shape = MaterialTheme.shapes.small
             ) {
                 val text = if (state.isEdit) {
-                    stringResource(R.string.pl_btn_update)
+                    stringResource(R.string.btn_update)
                 } else {
-                    stringResource(R.string.pl_btn_save)
+                    stringResource(R.string.btn_save)
                 }
 
                 Text(
@@ -132,7 +132,7 @@ fun PlaylistView(
                     },
                     placeholder = {
                         Text(
-                            text = stringResource(id = R.string.pl_hint_name),
+                            text = stringResource(id = R.string.hint_name),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.outline
                         )
@@ -159,7 +159,7 @@ fun PlaylistView(
                     },
                     placeholder = {
                         Text(
-                            text = stringResource(id = R.string.pl_hint_address),
+                            text = stringResource(id = R.string.hint_address),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.outline
                         )
@@ -179,7 +179,7 @@ fun PlaylistView(
 
                 OptionSelector(
                     modifier = Modifier.fillMaxWidth(),
-                    title = stringResource(id = R.string.pl_hint_update_period),
+                    title = stringResource(id = R.string.hint_update_period),
                     enabled = !state.isLocal,
                     selectedItem = stringResource(
                         id = UpdatePeriod.entries[state.updatePeriod].title
@@ -205,7 +205,7 @@ fun PlaylistView(
                     )
 
                     Text(
-                        text = stringResource(id = R.string.pl_title_or),
+                        text = stringResource(id = R.string.label_or),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -227,7 +227,7 @@ fun PlaylistView(
                     shape = MaterialTheme.shapes.small
                 ) {
                     Text(
-                        text = stringResource(id = R.string.pl_btn_add_local),
+                        text = stringResource(id = R.string.btn_add_local),
                         color = MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.bodyLarge
                     )
@@ -238,21 +238,23 @@ fun PlaylistView(
                 LoadingView()
             }
 
-            OptionsDialog(
-                isDialogOpen = isUpdateOptionOpen,
-                title = stringResource(id = R.string.pl_hint_update_period),
-                selectedIndex = state.updatePeriod,
-                items = UpdatePeriod.entries.map {
-                    stringResource(id = it.title)
-                },
-                onItemSelected = { index ->
-                    val sel = UpdatePeriod.entries[index]
-                    Napier.w("testing selected $index")
-                    Napier.w("testing selected $sel")
-                    onPlaylistAction(PlaylistAction.SetUpdatePeriod(index))
-                    isUpdateOptionOpen.value = false
-                }
-            )
+            OverlayContent(
+                isVisible = isUpdateOptionOpen.value,
+                contentAlpha = MaterialTheme.dimens.alpha90,
+                onViewTap = { isUpdateOptionOpen.value = false }
+            ) {
+                OverlayOptionsMenu(
+                    title = stringResource(id = R.string.hint_update_period),
+                    selectedIndex = state.updatePeriod,
+                    items = UpdatePeriod.entries.map {
+                        stringResource(id = it.title)
+                    },
+                    onItemSelected = { index ->
+                        onPlaylistAction(PlaylistAction.SetUpdatePeriod(index))
+                        isUpdateOptionOpen.value = false
+                    }
+                )
+            }
         }
     }
 }

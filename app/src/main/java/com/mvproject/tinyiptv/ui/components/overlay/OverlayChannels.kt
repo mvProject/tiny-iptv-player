@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 23.10.23, 10:20
+ *  last modified : 08.12.23, 17:15
  *
  */
 
@@ -14,11 +14,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,9 +27,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.mvproject.tinyiptv.data.models.channels.TvPlaylistChannel
 import com.mvproject.tinyiptv.data.models.epg.EpgProgram
 import com.mvproject.tinyiptv.ui.components.channels.ChannelListView
+import com.mvproject.tinyiptv.ui.components.modifiers.fullScreenWidth
+import com.mvproject.tinyiptv.ui.components.modifiers.roundedHeader
 import com.mvproject.tinyiptv.ui.theme.VideoAppTheme
 import com.mvproject.tinyiptv.ui.theme.dimens
-import com.mvproject.tinyiptv.utils.AppConstants
+import com.mvproject.tinyiptv.utils.AppConstants.INT_VALUE_ZERO
 import kotlin.time.Duration.Companion.minutes
 
 @Composable
@@ -39,7 +39,7 @@ fun OverlayChannels(
     isFullScreen: Boolean = false,
     group: String,
     channels: List<TvPlaylistChannel>,
-    current: Int = 0,
+    current: Int = INT_VALUE_ZERO,
     onChannelSelect: (TvPlaylistChannel) -> Unit = {},
 ) {
     val listState = rememberLazyListState()
@@ -49,11 +49,7 @@ fun OverlayChannels(
     Column(
         modifier = Modifier
             .fillMaxHeight(MaterialTheme.dimens.fraction90)
-            .fillMaxWidth(
-                if (isFullScreen)
-                    AppConstants.WEIGHT_50
-                else AppConstants.WEIGHT_80
-            )
+            .fullScreenWidth(enabled = isFullScreen)
             .background(
                 color = MaterialTheme.colorScheme.primary,
                 shape = MaterialTheme.shapes.small
@@ -62,14 +58,7 @@ fun OverlayChannels(
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(
-                    color = MaterialTheme.colorScheme.onSurface,
-                    shape = RoundedCornerShape(
-                        topStart = MaterialTheme.dimens.size8,
-                        topEnd = MaterialTheme.dimens.size8
-                    )
-                )
-                .padding(all = MaterialTheme.dimens.size8),
+                .roundedHeader(),
             text = group,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.primary,

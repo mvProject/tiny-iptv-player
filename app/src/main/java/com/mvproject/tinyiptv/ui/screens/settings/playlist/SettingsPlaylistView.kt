@@ -1,7 +1,7 @@
 /*
  *  Created by Medvediev Viktor [mvproject]
  *  Copyright © 2023
- *  last modified : 23.10.23, 18:19
+ *  last modified : 08.12.23, 15:34
  *
  */
 
@@ -68,7 +68,7 @@ fun SettingsPlaylistView(
                 shape = MaterialTheme.shapes.small
             ) {
                 Text(
-                    text = stringResource(id = R.string.pl_btn_add_new),
+                    text = stringResource(id = R.string.btn_add_new),
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.titleMedium
                 )
@@ -97,7 +97,9 @@ fun SettingsPlaylistView(
                         onSelect = {
                             onNavigatePlaylist(item.id.toString())
                         },
-                        onPlaylistAction = onPlaylistAction
+                        onDelete = {
+                            onPlaylistAction(SettingsPlaylistAction.DeletePlaylist(item))
+                        }
                     )
                 }
             }
@@ -105,7 +107,7 @@ fun SettingsPlaylistView(
             if (dataState.dataIsEmpty) {
                 NoItemsView(
                     modifier = Modifier.fillMaxSize(),
-                    navigateTitle = stringResource(id = R.string.pl_msg_no_playlist)
+                    navigateTitle = stringResource(id = R.string.msg_no_playlist)
                 )
             }
         }
